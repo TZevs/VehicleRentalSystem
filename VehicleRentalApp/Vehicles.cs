@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    internal class Vehicles
+    internal class Vehicle
     {
         public string Make;
         public string Model;
