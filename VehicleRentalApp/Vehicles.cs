@@ -12,14 +12,16 @@ namespace VehicleRentalApp
         public string Model;
         public int Year;
         public decimal DailyRate;
+        public string Transmission;
         public bool IsAvailable;
 
-        public Vehicle(string make, string model, int year, decimal dailyRate)
+        public Vehicle(string make, string model, int year, decimal dailyRate, string transmission)
         {
             Make = make;
             Model = model;
             Year = year;
             DailyRate = dailyRate;
+            Transmission = transmission;
             IsAvailable = true;
         }
     }
