@@ -10,8 +10,16 @@ namespace VehicleRentalApp
     {
         public string Make;
         public string Model;
-        public string Year;
+        public int Year;
         public decimal DailyRate;
         public bool IsAvailable = true;
+
+        public Vehicle(string Make, string Model, int Year, decimal DailyRate)
+        {
+            this.Make = Make;
+            this.Model = Model;
+            this.Year = Year;
+            this.DailyRate = DailyRate;
+        }
     }
 }
