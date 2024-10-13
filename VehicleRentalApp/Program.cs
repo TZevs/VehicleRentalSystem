@@ -31,10 +31,11 @@
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
-                        case "1": ViewVehicles(); return;
-                        case "2": SearchVehicles(); return;
-                        case "3": AddVehicles(); return;
-                        case "4": DeleteVehicles(); return;
+                        case "1": ViewVehicles(); break;
+                        case "2": SearchVehicles(); break;
+                        case "3": AddVehicles(); break;
+                        case "4": DeleteVehicles(); break;
+                        case "5": return;
                         default: break;
                     }
                 }
@@ -89,6 +90,7 @@
                 Console.Write("Transmission Type: ");
                 string transmission = Console.ReadLine();
 
+                // Find last key num and add 1. If vehicle deleted then another added the count will equal the same as the last key. 
                 vehicles.Add(vehicles.Count() + 1, new Vehicle(make, model, year, dailyRate, transmission));
                 
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [3] Add Another Vehicle");
@@ -109,6 +111,53 @@
             void DeleteVehicles()
             {
                 Console.Clear();
+                Console.WriteLine("DELETE VEHICLE");
+                Console.Write("Vehicle ID: ");
+                int id = Convert.ToInt32(Console.ReadLine().Trim());
+
+                if (vehicles.ContainsKey(id))
+                {
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].IsAvailable}");
+                    Console.Write("Is this the vehicle you want to delete [y/n]: ");
+
+                    while (true)
+                    {
+                        string confirm = Console.ReadLine().Trim().ToLower();
+                        if (confirm == "y")
+                        {
+                            vehicles.Remove(id);
+                            Console.WriteLine($"Vehicle with ID {id} has been deleted");
+                            break;
+                        }
+                        else if (confirm == "n")
+                        {
+                            Console.WriteLine($"Vehicle with ID {id} will not be deleted");
+                            break;
+                        }
+                        else
+                        {
+                            Console.Write("[y/n]?: ");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Vehicle with ID {id} not found.");
+                }
+
+                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [4] Delete Another Vehicle");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": ViewVehicles(); return;
+                        case "4": DeleteVehicles(); return;
+                        default: break;
+                    }
+                }
             }
 
             MainMenu();
