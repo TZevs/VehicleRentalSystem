@@ -17,6 +17,7 @@
 
             void MainMenu()
             {
+                Console.Clear();
                 Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
                 Console.WriteLine("[1] View Vehicles");
                 Console.WriteLine("[2] Search Vehicles");
@@ -34,7 +35,7 @@
                         case "2": SearchVehicles(); return;
                         case "3": AddVehicles(); return;
                         case "4": DeleteVehicles(); return;
-                        default: Console.WriteLine("Please Enter a Menu Option"); break;
+                        default: break;
                     }
                 }
             }
@@ -43,6 +44,26 @@
             {
                 Console.Clear();
                 Console.WriteLine("ALL VEHICLES");
+                
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
+                foreach (KeyValuePair<int, Vehicle> v in vehicles)
+                {
+                    string status = v.Value.IsAvailable == true ? "Available" : "Rented";
+                    Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                }
+                
+                Console.WriteLine("[1] Back to Main || [2] Search Vehicles");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "1": MainMenu(); return;
+                        case "2": SearchVehicles(); return;
+                        default: break;
+                    }
+                }
             }
             void SearchVehicles()
             {
