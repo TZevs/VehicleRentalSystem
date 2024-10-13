@@ -26,7 +26,8 @@ namespace VehicleRentalApp
                 Console.WriteLine("[2] Search Vehicles");
                 Console.WriteLine("[3] Add Vehicle");
                 Console.WriteLine("[4] Delete Vehicle");
-                Console.WriteLine("[5] Exit");
+                Console.WriteLine("[5] Rent Vehicle");
+                Console.WriteLine("[6] Exit");
 
                 while (true)
                 {
@@ -38,7 +39,8 @@ namespace VehicleRentalApp
                         case "2": SearchVehicles(); return;
                         case "3": AddVehicles(); return;
                         case "4": DeleteVehicles(); return;
-                        case "5": return;
+                        case "5": RentVehicles(); return;
+                        case "6": return;
                         default: break;
                     }
                 }
@@ -136,7 +138,7 @@ namespace VehicleRentalApp
             void AddVehicles()
             {
                 Console.Clear();
-                Console.WriteLine("ADD VEHICLE");
+                Console.WriteLine("ADD VEHICLES");
 
                 // Need to add validation to inputs - Year and DailyRate will cause errors if wrong.
                 // Transmission type: Auto and Man - validate different inputs. Different for vehicle types. 
@@ -172,7 +174,7 @@ namespace VehicleRentalApp
             void DeleteVehicles()
             {
                 Console.Clear();
-                Console.WriteLine("DELETE VEHICLE");
+                Console.WriteLine("DELETE VEHICLES");
                 Console.Write("Vehicle ID: ");
                 int id = Convert.ToInt32(Console.ReadLine().Trim());
 
@@ -220,6 +222,57 @@ namespace VehicleRentalApp
                     }
                 }
             }
+
+            void RentVehicles()
+            {
+                Console.Clear();
+                Console.WriteLine("RENT VEHICLES");
+                Console.Write("Vehicle ID: ");
+                int id = Convert.ToInt32(Console.ReadLine().Trim());
+
+                if (vehicles.ContainsKey(id))
+                {
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].IsAvailable}");
+                    Console.Write("Is this the vehicle you want to delete [y/n]: ");
+
+                    while (true)
+                    {
+                        string confirm = Console.ReadLine().Trim().ToLower();
+                        if (confirm == "y")
+                        {
+                            vehicles[id].IsAvailable = false;
+                            Console.WriteLine($"You have rented vehicle {id}");
+                            break;
+                        }
+                        else if (confirm == "n")
+                        {
+                            Console.WriteLine($"You have not rented vehicle {id}");
+                            break;
+                        }
+                        else
+                        {
+                            Console.Write("[y/n]?: ");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Vehicle with ID {id} not found.");
+                }
+
+                Console.WriteLine("[0] Back to Main || [1] View Vehicles");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": ViewVehicles(); return;
+                        default: break;
+                    }
+                }
+            } 
 
             MainMenu();
         }
