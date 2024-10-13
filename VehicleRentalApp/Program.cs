@@ -1,4 +1,6 @@
-﻿namespace VehicleRentalApp
+﻿using System.Globalization;
+
+namespace VehicleRentalApp
 {
     internal class Program
     {
@@ -8,6 +10,7 @@
             vehicles.Add(1, new Vehicle("FIAT", "500", 2014, 50, "Manual"));
             vehicles.Add(2, new Vehicle("Mercedes", "A-Class", 2020, 60, "Automatic"));
             vehicles.Add(3, new Vehicle("BMW", "1 Series", 2018, 69, "Automatic"));
+            vehicles.Add(4, new Vehicle("BMW", "6 Series", 2010, 56, "Automatic"));
 
             //foreach (KeyValuePair<int, Vehicle> v in vehicles)
             //{
@@ -31,10 +34,10 @@
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
-                        case "1": ViewVehicles(); break;
-                        case "2": SearchVehicles(); break;
-                        case "3": AddVehicles(); break;
-                        case "4": DeleteVehicles(); break;
+                        case "1": ViewVehicles(); return;
+                        case "2": SearchVehicles(); return;
+                        case "3": AddVehicles(); return;
+                        case "4": DeleteVehicles(); return;
                         case "5": return;
                         default: break;
                     }
@@ -53,7 +56,7 @@
                     Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
                 }
                 
-                Console.WriteLine("[0] Back to Main || [2] Search Vehicles");
+                Console.WriteLine("[0] Back to Main || [1] Search Vehicles");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -61,7 +64,7 @@
                     switch (select)
                     {
                         case "0": MainMenu(); return;
-                        case "2": SearchVehicles(); return;
+                        case "1": SearchVehicles(); return;
                         default: break;
                     }
                 }
@@ -70,6 +73,64 @@
             void SearchVehicles()
             {
                 Console.Clear();
+                Console.WriteLine("SEARCH VEHICLES");
+
+                // Look into substrings for user to search any field or many fields at once. 
+                // Add while loops to each if statement for if incorrect input entered.
+                // Add different ways a user can enter the same search e.g. Automatic, Auto 
+                Console.WriteLine("[1] Make || [2] Model || [3] Transmission");
+                Console.Write("Enter Option: ");
+                string category = Console.ReadLine().Trim();
+                if (category == "1")
+                {
+                    Console.Write("Search Make: ");
+                    string input = Console.ReadLine().ToUpper();
+                    var searchMake = vehicles.Where(m => m.Value.Make == input);
+                    foreach (var v in searchMake)
+                    {
+                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                    }
+                }
+                else if (category == "2")
+                {
+                    Console.Write("Search Model: ");
+                    string input = Console.ReadLine();
+                    var searchMake = vehicles.Where(m => m.Value.Model == input);
+                    foreach (var v in searchMake)
+                    {
+                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                    }
+                }
+                else if (category == "3")
+                {
+                    Console.Write("Search Transmission: ");
+                    string input = Console.ReadLine();
+                    var searchMake = vehicles.Where(m => m.Value.Transmission == input);
+                    foreach (var v in searchMake)
+                    {
+                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                    }
+                }
+                else
+                {
+                    SearchVehicles();
+                }
+
+                Console.WriteLine("[0] Back to Main || [1] Rent Vehicle");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": return;
+                        default: break;
+                    }
+                }
             }
 
             void AddVehicles()
@@ -93,7 +154,7 @@
                 // Find last key num and add 1. If vehicle deleted then another added the count will equal the same as the last key. 
                 vehicles.Add(vehicles.Count() + 1, new Vehicle(make, model, year, dailyRate, transmission));
                 
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [3] Add Another Vehicle");
+                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -102,7 +163,7 @@
                     {
                         case "0": MainMenu(); return;
                         case "1": ViewVehicles(); return;
-                        case "3": AddVehicles(); return;
+                        case "2": AddVehicles(); return;
                         default: break;
                     }
                 }
@@ -145,7 +206,7 @@
                     Console.WriteLine($"Vehicle with ID {id} not found.");
                 }
 
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [4] Delete Another Vehicle");
+                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -154,7 +215,7 @@
                     {
                         case "0": MainMenu(); return;
                         case "1": ViewVehicles(); return;
-                        case "4": DeleteVehicles(); return;
+                        case "2": DeleteVehicles(); return;
                         default: break;
                     }
                 }
