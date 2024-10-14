@@ -181,7 +181,8 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].IsAvailable}");
+                    string status = vehicles[id].IsAvailable == true ? "Available" : "Rented";
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     while (true)
@@ -227,27 +228,54 @@ namespace VehicleRentalApp
             void RentAndReturn()
             {
                 Console.Clear();
-                Console.WriteLine("RENT VEHICLES");
-                Console.Write("Vehicle ID: ");
-                int id = Convert.ToInt32(Console.ReadLine().Trim());
+                Console.WriteLine("RENT & RETURN VEHICLES");
+
+                int id = 0;
+                while (true)
+                {
+                    Console.Write("Enter Vehicle ID: ");
+                    string input = Console.ReadLine().ToLower();
+                    // Validates the user input.
+                    // If inout is not a number: Outputs error msg to user for incorrect format
+                    try
+                    {
+                        id = Convert.ToInt32(input);
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].IsAvailable}");
-                    Console.Write("Is this the vehicle you want to delete [y/n]: ");
+                    string status = vehicles[id].IsAvailable == true ? "Available" : "Rented";
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {status}");
+                    
+                    string update = vehicles[id].IsAvailable == true ? "Rent" : "Return";
+                    Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
 
                     while (true)
                     {
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            vehicles[id].IsAvailable = false;
-                            Console.WriteLine($"You have rented vehicle {id}");
+                            if (vehicles[id].IsAvailable == false)
+                            {
+                                vehicles[id].IsAvailable = true;
+                                Console.WriteLine($"You have returned vehicle {id}");
+                            }
+                            else if (vehicles[id].IsAvailable == true)
+                            {
+                                vehicles[id].IsAvailable = false;
+                                Console.WriteLine($"You have rented vehicle {id}");
+                            }
                             break;
                         }
                         else if (confirm == "n")
                         {
-                            Console.WriteLine($"You have not rented vehicle {id}");
+                            Console.WriteLine($"Rent & Return Cancelled.");
                             break;
                         }
                         else
@@ -258,10 +286,10 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine($"Vehicle with ID {id} not found.");
+                    Console.WriteLine($"Vehicle ID: {id} not found.");
                 }
 
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles");
+                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Rent & Return");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -270,6 +298,7 @@ namespace VehicleRentalApp
                     {
                         case "0": MainMenu(); return;
                         case "1": ViewVehicles(); return;
+                        case "2": RentAndReturn(); return;
                         default: break;
                     }
                 }
