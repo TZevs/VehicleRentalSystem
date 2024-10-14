@@ -57,6 +57,7 @@ namespace VehicleRentalApp
                     string status = v.Value.IsAvailable == true ? "Available" : "Rented";
                     Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
                 }
+                Console.WriteLine("Order");
                 
                 Console.WriteLine("[0] Back to Main || [1] Search Vehicles");
                 while (true)
@@ -108,6 +109,7 @@ namespace VehicleRentalApp
                 }
                 else if (category == "3")
                 {
+                    // Move to view function.
                     Console.Write("Search Transmission: ");
                     string input = Console.ReadLine();
                     IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
