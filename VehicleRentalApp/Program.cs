@@ -22,11 +22,11 @@ namespace VehicleRentalApp
             {
                 Console.Clear();
                 Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
-                Console.WriteLine("[1] View Vehicles");
-                Console.WriteLine("[2] Search Vehicles");
+                Console.WriteLine("[1] View All");
+                Console.WriteLine("[2] Search");
                 Console.WriteLine("[3] Add Vehicle");
                 Console.WriteLine("[4] Delete Vehicle");
-                Console.WriteLine("[5] Rent Vehicle");
+                Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
                 while (true)
@@ -39,7 +39,7 @@ namespace VehicleRentalApp
                         case "2": SearchVehicles(); return;
                         case "3": AddVehicles(); return;
                         case "4": DeleteVehicles(); return;
-                        case "5": RentVehicles(); return;
+                        case "5": RentAndReturn(); return;
                         case "6": return;
                         default: break;
                     }
@@ -79,7 +79,8 @@ namespace VehicleRentalApp
 
                 // Look into substrings for user to search any field or many fields at once. 
                 // Add while loops to each if statement for if incorrect input entered.
-                // Add different ways a user can enter the same search e.g. Automatic, Auto 
+                // Add different ways a user can enter the same search e.g. Automatic, Auto.
+                // Find away around the different cases. 
                 Console.WriteLine("[1] Make || [2] Model || [3] Transmission");
                 Console.Write("Enter Option: ");
                 string category = Console.ReadLine().Trim();
@@ -223,7 +224,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            void RentVehicles()
+            void RentAndReturn()
             {
                 Console.Clear();
                 Console.WriteLine("RENT VEHICLES");
