@@ -87,8 +87,8 @@ namespace VehicleRentalApp
                 {
                     Console.Write("Search Make: ");
                     string input = Console.ReadLine().ToUpper();
-                    var searchMake = vehicles.Where(m => m.Value.Make == input);
-                    foreach (var v in searchMake)
+                    IEnumerable<KeyValuePair<int, Vehicle>> searchMakes = vehicles.Where(m => m.Value.Make == input);
+                    foreach (var v in searchMakes)
                     {
                         string status = v.Value.IsAvailable == true ? "Available" : "Rented";
                         Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
@@ -98,8 +98,8 @@ namespace VehicleRentalApp
                 {
                     Console.Write("Search Model: ");
                     string input = Console.ReadLine();
-                    var searchMake = vehicles.Where(m => m.Value.Model == input);
-                    foreach (var v in searchMake)
+                    IEnumerable<KeyValuePair<int, Vehicle>> searchModels = vehicles.Where(m => m.Value.Model == input);
+                    foreach (var v in searchModels)
                     {
                         string status = v.Value.IsAvailable == true ? "Available" : "Rented";
                         Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
@@ -109,8 +109,8 @@ namespace VehicleRentalApp
                 {
                     Console.Write("Search Transmission: ");
                     string input = Console.ReadLine();
-                    var searchMake = vehicles.Where(m => m.Value.Transmission == input);
-                    foreach (var v in searchMake)
+                    IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
+                    foreach (var v in searchTr)
                     {
                         string status = v.Value.IsAvailable == true ? "Available" : "Rented";
                         Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
