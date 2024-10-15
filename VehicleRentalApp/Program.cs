@@ -20,6 +20,7 @@ namespace VehicleRentalApp
 
             void MainMenu()
             {
+                // Outputs main menu options. Called at run.
                 Console.Clear();
                 Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
                 Console.WriteLine("[1] View All");
@@ -29,6 +30,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
+                // Waits for correct input.
                 while (true)
                 {
                     Console.Write("Enter Menu Option: ");
@@ -51,6 +53,7 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("ALL VEHICLES");
                 
+                // Outputs all vehicles in order of the IDs
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 foreach (KeyValuePair<int, Vehicle> v in vehicles)
                 {
@@ -59,6 +62,7 @@ namespace VehicleRentalApp
                 }
                 Console.WriteLine("Order");
                 
+                // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] Search Vehicles");
                 while (true)
                 {
@@ -124,6 +128,7 @@ namespace VehicleRentalApp
                     SearchVehicles();
                 }
 
+                // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] Rent Vehicle");
                 while (true)
                 {
@@ -158,7 +163,8 @@ namespace VehicleRentalApp
 
                 // Find last key num and add 1. If vehicle deleted then another added the count will equal the same as the last key. 
                 vehicles.Add(vehicles.Count() + 1, new Vehicle(make, model, year, dailyRate, transmission));
-                
+
+                // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
                 {
@@ -212,6 +218,7 @@ namespace VehicleRentalApp
                     Console.WriteLine($"Vehicle with ID {id} not found.");
                 }
 
+                // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
                 while (true)
                 {
@@ -291,6 +298,7 @@ namespace VehicleRentalApp
                     Console.WriteLine($"Vehicle ID: {id} not found.");
                 }
 
+                // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Rent & Return");
                 while (true)
                 {
