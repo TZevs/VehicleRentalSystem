@@ -57,8 +57,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 foreach (KeyValuePair<int, Vehicle> v in vehicles)
                 {
-                    string status = v.Value.IsAvailable == true ? "Available" : "Rented";
-                    Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                    Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
                 }
                 Console.WriteLine("Order");
                 
@@ -96,8 +95,7 @@ namespace VehicleRentalApp
                     IEnumerable<KeyValuePair<int, Vehicle>> searchMakes = vehicles.Where(m => m.Value.Make == input);
                     foreach (var v in searchMakes)
                     {
-                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
                     }
                 }
                 else if (category == "2")
@@ -107,8 +105,7 @@ namespace VehicleRentalApp
                     IEnumerable<KeyValuePair<int, Vehicle>> searchModels = vehicles.Where(m => m.Value.Model == input);
                     foreach (var v in searchModels)
                     {
-                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
                     }
                 }
                 else if (category == "3")
@@ -119,8 +116,7 @@ namespace VehicleRentalApp
                     IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
                     foreach (var v in searchTr)
                     {
-                        string status = v.Value.IsAvailable == true ? "Available" : "Rented";
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {status}");
+                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
                     }
                 }
                 else
@@ -189,8 +185,7 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    string status = vehicles[id].IsAvailable == true ? "Available" : "Rented";
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {status}");
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     while (true)
@@ -259,10 +254,9 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    string status = vehicles[id].IsAvailable == true ? "Available" : "Rented";
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {status}");
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     
-                    string update = vehicles[id].IsAvailable == true ? "Rent" : "Return";
+                    string update = vehicles[id].Status == "Available" ? "Rent" : "Return";
                     Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
 
                     while (true)
@@ -270,21 +264,21 @@ namespace VehicleRentalApp
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].IsAvailable == false)
+                            if (vehicles[id].Status == "Available")
                             {
-                                vehicles[id].IsAvailable = true;
+                                vehicles[id].Status = "Rented";
                                 Console.WriteLine($"You have returned vehicle {id}");
                             }
-                            else if (vehicles[id].IsAvailable == true)
+                            else if (vehicles[id].Status == "Rented")
                             {
-                                vehicles[id].IsAvailable = false;
+                                vehicles[id].Status = "Available";
                                 Console.WriteLine($"You have rented vehicle {id}");
                             }
                             break;
                         }
                         else if (confirm == "n")
                         {
-                            Console.WriteLine($"Rent & Return Cancelled.");
+                            Console.WriteLine("Rent & Return Cancelled.");
                             break;
                         }
                         else

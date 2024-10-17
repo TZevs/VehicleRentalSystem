@@ -13,7 +13,7 @@ namespace VehicleRentalApp
         public int Year;
         public decimal DailyRate;
         public string Transmission;
-        public bool IsAvailable;
+        public string Status;
 
         public Vehicle(string make, string model, int year, decimal dailyRate, string transmission)
         {
@@ -22,7 +22,7 @@ namespace VehicleRentalApp
             Year = year;
             DailyRate = dailyRate;
             Transmission = transmission;
-            IsAvailable = true;
+            Status = "Available";
         }
     }
 }
