@@ -7,7 +7,7 @@ namespace VehicleRentalApp
         static void Main(string[] args)
         {
             Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-            vehicles.Add(1, new Vehicle("FIAT", "500", 2014, 50, "Manual"));
+            vehicles.Add(1, new Vehicle("Fiat", "500", 2014, 50, "Manual"));
             vehicles.Add(2, new Vehicle("Mercedes", "A-Class", 2020, 60, "Automatic"));
             vehicles.Add(3, new Vehicle("BMW", "1 Series", 2018, 69, "Automatic"));
             vehicles.Add(4, new Vehicle("BMW", "6 Series", 2010, 56, "Automatic"));
@@ -53,7 +53,7 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("ALL VEHICLES");
                 
-                // Outputs all vehicles in order of the IDs
+                // Displays all vehicles in the Dictionary.
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 foreach (KeyValuePair<int, Vehicle> v in vehicles)
                 {
@@ -156,6 +156,7 @@ namespace VehicleRentalApp
                 Console.Write("Transmission Type: ");
                 string transmission = Console.ReadLine();
 
+                // Creates new object. Adds it to the Dictionary
                 int keys = vehicles.Keys.Max() + 1;
                 vehicles.Add(keys, new Vehicle(make, model, year, dailyRate, transmission));
 
@@ -184,6 +185,8 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
+                    // Displays selected vehicles information.
+                    // Asks for confirmation to delete the vehicle. 
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
@@ -233,28 +236,33 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("RENT & RETURN VEHICLES");
 
-                int id = 0;
+                int id; 
+                // Asks user for vehicle ID. Will loop if ID is invalid. 
                 while (true)
                 {
                     Console.Write("Enter Vehicle ID: ");
-                    string input = Console.ReadLine().ToLower();
+                    string input = Console.ReadLine().Trim();
+                    
                     // Validates the user input.
-                    // If inout is not a number: Outputs error msg to user for incorrect format
                     try
                     {
+                        // Converts the input to an int. 
                         id = Convert.ToInt32(input);
                         break;
                     }
                     catch (Exception e)
                     {
+                        // If input cannot be converted to an int. An exception is thrown and this msg is displayed.
                         Console.WriteLine(e.Message);
                     }
                 }
 
                 if (vehicles.ContainsKey(id))
                 {
+                    // Displays selected vehicles information.
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     
+                    // Asks for confirmation of the vehicle's status update. 
                     string update = vehicles[id].Status == "Available" ? "Rent" : "Return";
                     Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
 
