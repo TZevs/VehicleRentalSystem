@@ -59,8 +59,7 @@ namespace VehicleRentalApp
                 {
                     Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
                 }
-                Console.WriteLine("Order");
-                
+
                 // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] Search Vehicles");
                 while (true)
@@ -157,8 +156,8 @@ namespace VehicleRentalApp
                 Console.Write("Transmission Type: ");
                 string transmission = Console.ReadLine();
 
-                // Find last key num and add 1. If vehicle deleted then another added the count will equal the same as the last key. 
-                vehicles.Add(vehicles.Count() + 1, new Vehicle(make, model, year, dailyRate, transmission));
+                int keys = vehicles.Keys.Max() + 1;
+                vehicles.Add(keys, new Vehicle(make, model, year, dailyRate, transmission));
 
                 // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
