@@ -146,21 +146,82 @@ namespace VehicleRentalApp
                 // Need to add validation to inputs - Year and DailyRate will cause errors if wrong.
                 // Transmission type: Auto and Man - validate different inputs. Different for vehicle types. 
                 Console.Write("Make: ");
-                string make = Console.ReadLine();
+                string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
-                string model = Console.ReadLine();
-                Console.Write("Year: ");
-                int year = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Daily Rate: ");
-                decimal dailyRate = Convert.ToDecimal(Console.ReadLine());
-                Console.Write("Transmission Type: ");
-                string transmission = Console.ReadLine();
+                string model = Console.ReadLine().Trim();
+                int year;
+                while (true)
+                {
+                    Console.Write("Year: ");
+                    string yearInput = Console.ReadLine().Trim();
+                    try
+                    {
+                        year = Convert.ToInt32(yearInput);
+                        if (year >= DateTime.Now.Year - 25 && year <= DateTime.Now.Year)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                decimal dailyRate;
+                while (true)
+                {
+                    Console.Write("Daily Rate: ");
+                    string rateInput = Console.ReadLine().Trim();
+                    try
+                    {
+                        dailyRate = Convert.ToDecimal(rateInput);
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+                Console.WriteLine("Transmission Type");
+                string[] types = { "Manual", "Automatic", "Hybrid" };
+                int typesIndex;
+                string transmission = "";
+                while (true)
+                {
+                    Console.Write("[0] Manual || [1] Automatic || [2] Hybrid: ");
+                    string transmissionInput = Console.ReadLine().Trim();
 
+                    try
+                    {
+                        typesIndex = Convert.ToInt32(transmissionInput);
+                        if (typesIndex >= 0 && typesIndex < types.Length)
+                        {
+                            transmission = types[typesIndex];
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Select a Transmission type [0, 1, 2].");
+                        }
+                    }
+                    catch (Exception e )
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                }
+
+                Console.WriteLine();
+                Console.WriteLine($"Vehicle Added - Make: {make} | Model: {model} | Year: {year} | Daily Rate: {dailyRate} | Transmission: {transmission}");
                 // Creates new object. Adds it to the Dictionary
-                int keys = vehicles.Keys.Max() + 1;
-                vehicles.Add(keys, new Vehicle(make, model, year, dailyRate, transmission));
+                int newKey = vehicles.Keys.Max() + 1;
+                vehicles.Add(newKey, new Vehicle(make, model, year, dailyRate, transmission));
 
-                // Outputs options waits for correct input.  
+                // Outputs options waits for correct input.
+                Console.WriteLine();
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
                 {
@@ -236,7 +297,7 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("RENT & RETURN VEHICLES");
 
-                int id; 
+                int id;
                 // Asks user for vehicle ID. Will loop if ID is invalid. 
                 while (true)
                 {
