@@ -149,18 +149,20 @@ namespace VehicleRentalApp
                 string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
                 string model = Console.ReadLine().Trim();
+                
                 int year;
+                // Loops until a valid input is entered. 
                 while (true)
                 {
                     Console.Write("Year: ");
                     string yearInput = Console.ReadLine().Trim();
+                    // Validates the user input.
                     try
                     {
+                        // Converts input to int.
                         year = Convert.ToInt32(yearInput);
-                        if (year >= DateTime.Now.Year - 25 && year <= DateTime.Now.Year)
-                        {
-                            break;
-                        }
+                        // Checks vehicle is at max 25 yrs old.
+                        if (year >= DateTime.Now.Year - 25 && year <= DateTime.Now.Year) break;
                         else
                         {
                             Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
@@ -168,9 +170,11 @@ namespace VehicleRentalApp
                     }
                     catch (Exception e)
                     {
+                        // Catched the exception and displays this message. 
                         Console.WriteLine(e.Message);
                     }
                 }
+                
                 decimal dailyRate;
                 while (true)
                 {
@@ -178,6 +182,7 @@ namespace VehicleRentalApp
                     string rateInput = Console.ReadLine().Trim();
                     try
                     {
+                        // Converts input to a decimal.
                         dailyRate = Convert.ToDecimal(rateInput);
                         break;
                     }
@@ -186,7 +191,9 @@ namespace VehicleRentalApp
                         Console.WriteLine(e.Message);
                     }
                 }
+                
                 Console.WriteLine("Transmission Type");
+                // Array to store the transmission types
                 string[] types = { "Manual", "Automatic", "Hybrid" };
                 int typesIndex;
                 string transmission = "";
@@ -194,12 +201,13 @@ namespace VehicleRentalApp
                 {
                     Console.Write("[0] Manual || [1] Automatic || [2] Hybrid: ");
                     string transmissionInput = Console.ReadLine().Trim();
-
                     try
                     {
                         typesIndex = Convert.ToInt32(transmissionInput);
+                        // Checks input is within range.
                         if (typesIndex >= 0 && typesIndex < types.Length)
                         {
+                            // Uses input to index the array. 
                             transmission = types[typesIndex];
                             break;
                         }
@@ -214,13 +222,15 @@ namespace VehicleRentalApp
                     }
                 }
 
+                // Displays the new vehicle's information. 
                 Console.WriteLine();
                 Console.WriteLine($"Vehicle Added - Make: {make} | Model: {model} | Year: {year} | Daily Rate: {dailyRate} | Transmission: {transmission}");
-                // Creates new object. Adds it to the Dictionary
+               
+                // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
                 vehicles.Add(newKey, new Vehicle(make, model, year, dailyRate, transmission));
 
-                // Outputs options waits for correct input.
+                // Outputs options, waits for correct input.
                 Console.WriteLine();
                 Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
@@ -298,7 +308,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("RENT & RETURN VEHICLES");
 
                 int id;
-                // Asks user for vehicle ID. Will loop if ID is invalid. 
+                // Loops until a valid vehicle ID is entered.
                 while (true)
                 {
                     Console.Write("Enter Vehicle ID: ");
