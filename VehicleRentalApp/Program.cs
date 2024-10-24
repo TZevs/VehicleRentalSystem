@@ -429,7 +429,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            if (args.Length >= 1)
+            if (args.Length == 1)
             {
                 switch (args[0].ToLower())
                 {
@@ -439,8 +439,27 @@ namespace VehicleRentalApp
                     case "view":
                         ViewVehicles();
                         break;
+                    default:
+                        Console.WriteLine($"Unknown Command: {args[0]}");
+                        break;
+                }
+            }
+            else if (args.Length > 1)
+            {
+                switch (args[0].ToLower())
+                {
                     case "rent":
-                        ViewVehicles();
+                        int id = 0;
+                        // Check for second argument. Ensure there are no more arguments. If Statement. 
+                        try
+                        {
+                            id = Convert.ToInt32(args[1]);
+                        }
+                        catch 
+                        {
+                            Console.WriteLine($"Second argument should be a number.");
+                        }
+                        CmdRentAndReturn(id);
                         break;
                     case "return":
                         ViewVehicles();
@@ -455,6 +474,10 @@ namespace VehicleRentalApp
                         Console.WriteLine($"Unknown Command: {args[0]}");
                         break;
                 }
+            }
+            else
+            {
+                Console.WriteLine("Enter a valid");
             }
 
             MainMenu();
