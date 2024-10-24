@@ -345,12 +345,12 @@ namespace VehicleRentalApp
                             if (vehicles[id].Status == "Available")
                             {
                                 vehicles[id].Status = "Rented";
-                                Console.WriteLine($"You have returned vehicle {id}");
+                                Console.WriteLine($"Vehicle {id} Rented");
                             }
                             else if (vehicles[id].Status == "Rented")
                             {
                                 vehicles[id].Status = "Available";
-                                Console.WriteLine($"You have rented vehicle {id}");
+                                Console.WriteLine($"Vehicle {id} Returned");
                             }
                             break;
                         }
@@ -367,7 +367,7 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine($"Vehicle ID: {id} not found.");
+                    Console.WriteLine($"Vehicle ID: '{id}' not found.");
                 }
 
                 // Outputs options waits for correct input.  
@@ -384,7 +384,78 @@ namespace VehicleRentalApp
                         default: break;
                     }
                 }
-            } 
+            }
+
+            void CmdRentAndReturn(int id)
+            {
+                if (vehicles.ContainsKey(id))
+                {
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+
+                    string update = vehicles[id].Status == "Available" ? "Rent" : "Return";
+                    Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
+
+                    while (true)
+                    {
+                        string confirm = Console.ReadLine().Trim().ToLower();
+                        if (confirm == "y")
+                        {
+                            if (vehicles[id].Status == "Available")
+                            {
+                                vehicles[id].Status = "Rented";
+                                Console.WriteLine($"Vehicle {id} Rented");
+                            }
+                            else if (vehicles[id].Status == "Rented")
+                            {
+                                vehicles[id].Status = "Available";
+                                Console.WriteLine($"Vehicle {id} Returned");
+                            }
+                            break;
+                        }
+                        else if (confirm == "n")
+                        {
+                            Console.WriteLine("Rent & Return Cancelled.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.Write("[y/n]?: ");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Vehicle ID: '{id}' not found.");
+                }
+            }
+
+            if (args.Length >= 1)
+            {
+                switch (args[0].ToLower())
+                {
+                    case "menu":
+                        MainMenu();
+                        break;
+                    case "view":
+                        ViewVehicles();
+                        break;
+                    case "rent":
+                        ViewVehicles();
+                        break;
+                    case "return":
+                        ViewVehicles();
+                        break;
+                    case "del":
+                        ViewVehicles();
+                        break;
+                    case "delete":
+                        ViewVehicles();
+                        break;
+                    default:
+                        Console.WriteLine($"Unknown Command: {args[0]}");
+                        break;
+                }
+            }
 
             MainMenu();
         }
