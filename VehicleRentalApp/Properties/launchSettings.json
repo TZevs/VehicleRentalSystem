@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VehicleRentalApp": {
+      "commandName": "Project",
+      "commandLineArgs": "return 1\r\n"
+    }
+  }
+}

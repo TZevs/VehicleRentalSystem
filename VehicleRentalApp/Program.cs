@@ -387,7 +387,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            void CmdRentAndReturn(string inputId)
+            void CmdRentAndReturn(string action, string inputId)
             {
                 int id = 0;
                 try
@@ -403,29 +403,39 @@ namespace VehicleRentalApp
                 {
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
 
-                    string update = vehicles[id].Status == "Available" ? "Rent" : "Return";
-                    Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
+                    Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
                     while (true)
                     {
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].Status == "Available")
+                            if (vehicles[id].Status == "Available" && action == "Rent")
                             {
                                 vehicles[id].Status = "Rented";
-                                Console.WriteLine($"Vehicle {id} Rented");
+                                Console.WriteLine($"Vehicle {id} Rented.");
                             }
-                            else if (vehicles[id].Status == "Rented")
+                            else if (vehicles[id].Status == "Rented" && action == "Return")
                             {
                                 vehicles[id].Status = "Available";
                                 Console.WriteLine($"Vehicle {id} Returned");
+                            }
+                            else
+                            {
+                                if (action == "Rent")
+                                {
+                                    Console.WriteLine($"Vehicle {id} is not available.");
+                                }
+                                else if (action == "Return")
+                                {
+                                    Console.WriteLine($"Vehicle {id} has already been returned.");
+                                }
                             }
                             break;
                         }
                         else if (confirm == "n")
                         {
-                            Console.WriteLine("Rent & Return Cancelled.");
+                            Console.WriteLine($"{action} Cancelled");
                             break;
                         }
                         else
@@ -483,7 +493,11 @@ namespace VehicleRentalApp
                 }
             }
 
-            if (args.Length == 1)
+            if (args.Length <= 0)
+            {
+                MainMenu();
+            }
+            else if (args.Length == 1)
             {
                 switch (args[0].ToLower())
                 {
@@ -498,15 +512,15 @@ namespace VehicleRentalApp
                         break;
                 }
             }
-            else if (args.Length == 2)
+            else if (args.Length >= 2)
             {
                 switch (args[0].ToLower())
                 {
                     case "rent":
-                        CmdRentAndReturn(args[1]);
+                        CmdRentAndReturn("Rent", args[1]);
                         break;
                     case "return":
-                        CmdRentAndReturn(args[1]);
+                        CmdRentAndReturn("Return", args[1]);
                         break;
                     case "del":
                         CmdDelVehicle(args[1]);
@@ -523,8 +537,6 @@ namespace VehicleRentalApp
             {
                 Console.WriteLine("Invalid input.");
             }
-
-            MainMenu();
         }
     }
 }
