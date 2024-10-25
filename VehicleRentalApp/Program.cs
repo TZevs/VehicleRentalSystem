@@ -252,6 +252,7 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("DELETE VEHICLES");
                 Console.Write("Vehicle ID: ");
+                // Add try and catch in a while loop to ensure no errors. 
                 int id = Convert.ToInt32(Console.ReadLine().Trim());
 
                 if (vehicles.ContainsKey(id))
@@ -386,8 +387,18 @@ namespace VehicleRentalApp
                 }
             }
 
-            void CmdRentAndReturn(int id)
+            void CmdRentAndReturn(string inputId)
             {
+                int id = 0;
+                try
+                {
+                    id = Convert.ToInt32(inputId);
+                }
+                catch
+                {
+                    Console.WriteLine($"Second argument should be a number.");
+                }
+
                 if (vehicles.ContainsKey(id))
                 {
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
@@ -429,6 +440,49 @@ namespace VehicleRentalApp
                 }
             }
 
+            void CmdDelVehicle(string inputDel)
+            {
+                int id = 0;
+                try
+                {
+                    id = Convert.ToInt32(inputDel);
+                }
+                catch
+                {
+                    Console.WriteLine($"Second argument should be a number.");
+                }
+
+                if (vehicles.ContainsKey(id))
+                {
+                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+                    Console.Write("Is this the vehicle you want to delete [y/n]: ");
+
+                    while (true)
+                    {
+                        string confirm = Console.ReadLine().Trim().ToLower();
+                        if (confirm == "y")
+                        {
+                            vehicles.Remove(id);
+                            Console.WriteLine($"Vehicle with ID {id} has been deleted");
+                            break;
+                        }
+                        else if (confirm == "n")
+                        {
+                            Console.WriteLine($"Vehicle with ID {id} will not be deleted");
+                            break;
+                        }
+                        else
+                        {
+                            Console.Write("[y/n]?: ");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Vehicle with ID {id} not found.");
+                }
+            }
+
             if (args.Length == 1)
             {
                 switch (args[0].ToLower())
@@ -444,31 +498,21 @@ namespace VehicleRentalApp
                         break;
                 }
             }
-            else if (args.Length > 1)
+            else if (args.Length == 2)
             {
                 switch (args[0].ToLower())
                 {
                     case "rent":
-                        int id = 0;
-                        // Check for second argument. Ensure there are no more arguments. If Statement. 
-                        try
-                        {
-                            id = Convert.ToInt32(args[1]);
-                        }
-                        catch 
-                        {
-                            Console.WriteLine($"Second argument should be a number.");
-                        }
-                        CmdRentAndReturn(id);
+                        CmdRentAndReturn(args[1]);
                         break;
                     case "return":
-                        ViewVehicles();
+                        CmdRentAndReturn(args[1]);
                         break;
                     case "del":
-                        ViewVehicles();
+                        CmdDelVehicle(args[1]);
                         break;
                     case "delete":
-                        ViewVehicles();
+                        CmdDelVehicle(args[1]);
                         break;
                     default:
                         Console.WriteLine($"Unknown Command: {args[0]}");
@@ -477,7 +521,7 @@ namespace VehicleRentalApp
             }
             else
             {
-                Console.WriteLine("Enter a valid");
+                Console.WriteLine("Invalid input.");
             }
 
             MainMenu();
