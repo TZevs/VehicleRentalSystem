@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Reflection;
 
 namespace VehicleRentalApp
 {
@@ -11,12 +12,6 @@ namespace VehicleRentalApp
             vehicles.Add(2, new Vehicle("Mercedes", "A-Class", 2020, 60, "Automatic"));
             vehicles.Add(3, new Vehicle("BMW", "1 Series", 2018, 69, "Automatic"));
             vehicles.Add(4, new Vehicle("BMW", "6 Series", 2010, 56, "Automatic"));
-
-            //foreach (KeyValuePair<int, Vehicle> v in vehicles)
-            //{
-            //    string status = v.Value.IsAvailable == true ? "Available" : "Rented";
-            //    Console.WriteLine($"{v.Key}, {v.Value.Make}, {v.Value.Model}, {v.Value.Year}, {v.Value.DailyRate}, {v.Value.Transmission}, {status}");
-            //}
 
             void MainMenu()
             {
@@ -144,13 +139,12 @@ namespace VehicleRentalApp
                 Console.WriteLine("ADD VEHICLES");
 
                 // Need to add validation to inputs - Year and DailyRate will cause errors if wrong.
-                // Transmission type: Auto and Man - validate different inputs. Different for vehicle types. 
                 Console.Write("Make: ");
                 string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
                 string model = Console.ReadLine().Trim();
                 
-                int year;
+                int year = 0;
                 // Loops until a valid input is entered. 
                 while (true)
                 {
@@ -168,14 +162,14 @@ namespace VehicleRentalApp
                             Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
                         // Catched the exception and displays this message. 
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Invalid Input: {yearInput}: '0000' Required format.");
                     }
                 }
                 
-                decimal dailyRate;
+                decimal dailyRate = 0;
                 while (true)
                 {
                     Console.Write("Daily Rate: ");
@@ -186,14 +180,15 @@ namespace VehicleRentalApp
                         dailyRate = Convert.ToDecimal(rateInput);
                         break;
                     }
-                    catch (Exception e)
+                    catch 
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Invalid Input: {rateInput}: '00.00' Required format.");
                     }
                 }
                 
                 Console.WriteLine("Transmission Type");
                 // Array to store the transmission types
+                // Use Where and indexOf instead of the multiple variables.
                 string[] types = { "Manual", "Automatic", "Hybrid" };
                 int typesIndex;
                 string transmission = "";
@@ -213,18 +208,18 @@ namespace VehicleRentalApp
                         }
                         else
                         {
-                            Console.WriteLine("Select a Transmission type [0, 1, 2].");
+                            Console.WriteLine("Select Transmission Type: [0, 1, 2]");
                         }
                     }
-                    catch (Exception e )
+                    catch 
                     {
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Invalid Input: '{transmissionInput}': Number required.");
                     }
                 }
 
                 // Displays the new vehicle's information. 
                 Console.WriteLine();
-                Console.WriteLine($"Vehicle Added - Make: {make} | Model: {model} | Year: {year} | Daily Rate: {dailyRate} | Transmission: {transmission}");
+                Console.WriteLine($"Vehicle Added - {make} | {model} | {year} | £{dailyRate} | {transmission}");
                
                 // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
@@ -252,16 +247,26 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("DELETE VEHICLES");
                 Console.Write("Vehicle ID: ");
-                // Add try and catch in a while loop to ensure no errors. 
-                int id = Convert.ToInt32(Console.ReadLine().Trim());
+                
+                string inputId = Console.ReadLine().Trim();
+                int id = 0;
+                try
+                {
+                    id = Convert.ToInt32(inputId);
+                }
+                catch
+                {
+                    Console.WriteLine($"Invalid Input: {inputId}: Number ID Required.");
+                }
+                //int id = InvalidIntInput(Console.ReadLine().Trim());
 
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    // Asks for confirmation to delete the vehicle. 
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
+                    // Asks for confirmation to delete the vehicle. 
                     while (true)
                     {
                         string confirm = Console.ReadLine().Trim().ToLower();
@@ -284,7 +289,7 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine($"Vehicle with ID {id} not found.");
+                    Console.WriteLine($"Vehicle ID: '{id}' not found.");
                 }
 
                 // Outputs options waits for correct input.  
@@ -322,10 +327,10 @@ namespace VehicleRentalApp
                         id = Convert.ToInt32(input);
                         break;
                     }
-                    catch (Exception e)
+                    catch
                     {
                         // If input cannot be converted to an int. An exception is thrown and this msg is displayed.
-                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"Invalid Input: {input}: Number ID Required.");
                     }
                 }
 
@@ -459,7 +464,7 @@ namespace VehicleRentalApp
                 }
                 catch
                 {
-                    Console.WriteLine($"Second argument should be a number.");
+                    Console.WriteLine($"Invalid Input: {inputDel}: Number ID required.");
                 }
 
                 if (vehicles.ContainsKey(id))
@@ -491,6 +496,54 @@ namespace VehicleRentalApp
                 {
                     Console.WriteLine($"Vehicle with ID {id} not found.");
                 }
+            }
+
+            void CmdAddVehicle(string[] newV)
+            {
+                // If an array item has a / it is replaced with a space. New items are now in a List collection. 
+                List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
+                
+                int yr = 0;
+                try
+                {
+                    yr = Convert.ToInt32(newVehicle[2]);
+                    if (yr >= DateTime.Now.Year - 25 && yr <= DateTime.Now.Year);
+                    else
+                    {
+                        Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine($"Invalid Input: {newVehicle[2]}: '0000' Required format.");
+                }
+
+                decimal rate = 0;
+                try
+                {
+                    rate = Convert.ToDecimal(newVehicle[3]);
+                }
+                catch
+                {
+                    Console.WriteLine($"Invalid Input: {newVehicle[3]}: '00.00' Required format.");
+                }
+
+                string[] types = { "Manual", "Automatic", "Hybrid", "Man", "Auto", "manual", "automatic", "hybrid", "man", "auto" };
+                string typesSelected = "";
+                if (types.Contains(newVehicle[4]))
+                {
+                    typesSelected = newVehicle[4];
+                }
+                else
+                {
+                    Console.WriteLine($"Incorrect Input: Unknown Type: '{newVehicle[4]}'");
+                }
+
+                Console.WriteLine();
+                Console.WriteLine($"Vehicle Added: {newVehicle[0]} | {newVehicle[1]} | {yr} | £{rate} | {typesSelected}");
+
+                int newKey = vehicles.Keys.Max() + 1;
+                vehicles.Add(newKey, new Vehicle(newVehicle[0], newVehicle[1], yr, rate, typesSelected));
             }
 
             if (args.Length <= 0)
@@ -528,6 +581,17 @@ namespace VehicleRentalApp
                     case "delete":
                         CmdDelVehicle(args[1]);
                         break;
+                    case "add":
+                        if (args.Length == 6)
+                        {
+                            string[] newVehicles = args.Skip(1).ToArray();
+                            CmdAddVehicle(newVehicles);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect Input: Replace any spaces in names with a /.");
+                        }
+                        break;
                     default:
                         Console.WriteLine($"Unknown Command: {args[0]}");
                         break;
@@ -535,7 +599,7 @@ namespace VehicleRentalApp
             }
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input");
             }
         }
     }
