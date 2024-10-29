@@ -440,7 +440,7 @@ namespace VehicleRentalApp
                         }
                         else if (confirm == "n")
                         {
-                            Console.WriteLine($"{action} Cancelled");
+                            Console.WriteLine($"{action}ing Cancelled");
                             break;
                         }
                         else
@@ -554,11 +554,21 @@ namespace VehicleRentalApp
             {
                 switch (args[0].ToLower())
                 {
-                    case "menu":
+                    case "--menu":
                         MainMenu();
                         break;
-                    case "view":
+                    case "--view":
                         ViewVehicles();
+                        break;
+                    case "--help":
+                        Console.WriteLine("--help:");
+                        Console.WriteLine("--menu : Opens the main menu");
+                        Console.WriteLine("--view : Displays all vehicles");
+                        Console.WriteLine("--rent : Requires Vehicle ID (Format: --rent 2)");
+                        Console.WriteLine("--return : Requires Vehicle ID (Format: --return 2)");
+                        Console.WriteLine("--del or --delete: Requires Vehicle ID (Format: --del 2 or --delete 2)");
+                        Console.WriteLine("--add: Requires (Make Model Year DailyRate Transmission)");
+                        Console.WriteLine("       Format: (--add Land/Rover Defender 2019 230.23 Hybrid)");
                         break;
                     default:
                         Console.WriteLine($"Unknown Command: {args[0]}");
@@ -569,19 +579,19 @@ namespace VehicleRentalApp
             {
                 switch (args[0].ToLower())
                 {
-                    case "rent":
+                    case "--rent":
                         CmdRentAndReturn("Rent", args[1]);
                         break;
-                    case "return":
+                    case "--return":
                         CmdRentAndReturn("Return", args[1]);
                         break;
-                    case "del":
+                    case "--del":
                         CmdDelVehicle(args[1]);
                         break;
-                    case "delete":
+                    case "--delete":
                         CmdDelVehicle(args[1]);
                         break;
-                    case "add":
+                    case "--add":
                         if (args.Length == 6)
                         {
                             string[] newVehicles = args.Skip(1).ToArray();
