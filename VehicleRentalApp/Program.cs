@@ -79,44 +79,49 @@ namespace VehicleRentalApp
                 // Add while loops to each if statement for if incorrect input entered.
                 // Add different ways a user can enter the same search e.g. Automatic, Auto.
                 // Find away around the different cases. 
-                Console.WriteLine("[1] Make || [2] Model || [3] Transmission");
-                Console.Write("Enter Option: ");
-                string category = Console.ReadLine().Trim();
-                if (category == "1")
-                {
-                    Console.Write("Search Make: ");
-                    string input = Console.ReadLine().ToUpper();
-                    IEnumerable<KeyValuePair<int, Vehicle>> searchMakes = vehicles.Where(m => m.Value.Make == input);
-                    foreach (var v in searchMakes)
-                    {
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                    }
-                }
-                else if (category == "2")
-                {
-                    Console.Write("Search Model: ");
-                    string input = Console.ReadLine();
-                    IEnumerable<KeyValuePair<int, Vehicle>> searchModels = vehicles.Where(m => m.Value.Model == input);
-                    foreach (var v in searchModels)
-                    {
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                    }
-                }
-                else if (category == "3")
-                {
-                    // Move to view function.
-                    Console.Write("Search Transmission: ");
-                    string input = Console.ReadLine();
-                    IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
-                    foreach (var v in searchTr)
-                    {
-                        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                    }
-                }
-                else
-                {
-                    SearchVehicles();
-                }
+                //Console.WriteLine("[1] Make || [2] Model || [3] Transmission");
+                //Console.Write("Enter Option: ");
+                //string category = Console.ReadLine().Trim();
+                //if (category == "1")
+                //{
+                //    Console.Write("Search Make: ");
+                //    string input = Console.ReadLine().ToUpper();
+                //    IEnumerable<KeyValuePair<int, Vehicle>> searchMakes = vehicles.Where(m => m.Value.Make == input);
+                //    foreach (var v in searchMakes)
+                //    {
+                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
+                //    }
+                //}
+                //else if (category == "2")
+                //{
+                //    Console.Write("Search Model: ");
+                //    string input = Console.ReadLine();
+                //    IEnumerable<KeyValuePair<int, Vehicle>> searchModels = vehicles.Where(m => m.Value.Model == input);
+                //    foreach (var v in searchModels)
+                //    {
+                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
+                //    }
+                //}
+                //else if (category == "3")
+                //{
+                //    // Move to view function.
+                //    Console.Write("Search Transmission: ");
+                //    string input = Console.ReadLine();
+                //    IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
+                //    foreach (var v in searchTr)
+                //    {
+                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
+                //    }
+                //}
+                //else
+                //{
+                //    SearchVehicles();
+                //}
+                Console.WriteLine();
+                Console.Write("Search: ");
+                List<string> searchInput = Console.ReadLine().Split(',').ToList();
+
+                //IEnumerable<KeyValuePair<int, string>> searchOutput = vehicles.Where(s => s.Value.Make == searchInput.ToString());
 
                 // Outputs options waits for correct input.  
                 Console.WriteLine("[0] Back to Main || [1] Rent Vehicle");
@@ -127,7 +132,7 @@ namespace VehicleRentalApp
                     switch (select)
                     {
                         case "0": MainMenu(); return;
-                        case "1": return;
+                        case "1": RentAndReturn(); return;
                         default: break;
                     }
                 }
@@ -340,29 +345,40 @@ namespace VehicleRentalApp
                     Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
                     
                     // Asks for confirmation of the vehicle's status update. 
-                    string update = vehicles[id].Status == "Available" ? "Rent" : "Return";
-                    Console.Write($"Is this the vehicle you want to {update} [y/n]: ");
+                    string action = vehicles[id].Status == "Available" ? "Rent" : "Return";
+                    Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
                     while (true)
                     {
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].Status == "Available")
+                            if (vehicles[id].Status == "Available" && action == "Rent")
                             {
                                 vehicles[id].Status = "Rented";
                                 Console.WriteLine($"Vehicle {id} Rented");
                             }
-                            else if (vehicles[id].Status == "Rented")
+                            else if (vehicles[id].Status == "Rented" && action == "Return")
                             {
                                 vehicles[id].Status = "Available";
                                 Console.WriteLine($"Vehicle {id} Returned");
+                            }
+                            else
+                            {
+                                if (action == "Rent")
+                                {
+                                    Console.WriteLine($"Vehicle {id} is not available.");
+                                }
+                                else if (action == "Return")
+                                {
+                                    Console.WriteLine($"Vehicle {id} has already been returned.");
+                                }
                             }
                             break;
                         }
                         else if (confirm == "n")
                         {
-                            Console.WriteLine("Rent & Return Cancelled.");
+                            Console.WriteLine($"{action}ing Cancelled.");
                             break;
                         }
                         else
