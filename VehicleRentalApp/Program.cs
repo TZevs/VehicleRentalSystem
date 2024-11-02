@@ -9,8 +9,6 @@ namespace VehicleRentalApp
         {
             string filePath = "vehicles.txt";
             Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-
-            
             vehicles.Add(1, new Vehicle("Fiat", "500", 2014, 50, "Manual"));
             vehicles.Add(2, new Vehicle("Mercedes", "A-Class", 2020, 60, "Automatic"));
             vehicles.Add(3, new Vehicle("BMW", "1 Series", 2018, 69, "Automatic"));
@@ -28,34 +26,6 @@ namespace VehicleRentalApp
                 Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
-                //List<string> strings = new List<string>() { "1, Fiat, 500, 2014, 50, Manual, Available" };
-                //if (strings.Count() == 1)
-                //{
-                //    foreach (string line in File.ReadAllLines(filePath))
-                //    {
-                //        string[] parts = line.Split();
-                //        Console.WriteLine();
-                //    }
-                //    List<string> parts = new List<string>();
-                //    foreach (string line in strings)
-                //    {
-                //        parts.Add(line);
-                //    }
-                //    foreach (string l in parts)
-                //    {
-                //        string part = l;
-                //        string[] partsAgain = part.Split(',');
-
-                //        foreach (string pa in partsAgain)
-                //        {
-                //            Console.WriteLine(pa.Trim());
-                //        }
-                //    }
-
-                //    vehicles.Add(parts[0], SetVehicle(parts[1], parts[2], parts[3], parts[4], parts[5], parts[6]));
-                //}
-
-                // Waits for correct input.
                 while (true)
                 {
                     Console.Write("Enter Menu Option: ");
