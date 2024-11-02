@@ -2,7 +2,7 @@
   "profiles": {
     "VehicleRentalApp": {
       "commandName": "Project",
-      "commandLineArgs": "--add Land Rover, Defender, 2019, 230.23, Hybrid\r\n"
+      "commandLineArgs": "\r\n"
     }
   }
 }
