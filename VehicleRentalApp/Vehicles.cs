@@ -8,13 +8,13 @@ namespace VehicleRentalApp
 {
     internal class Vehicle
     {
-        public int id;
-        public string Make;
-        public string Model;
-        public int Year;
-        public decimal DailyRate;
-        public string Transmission;
-        public string Status;
+        private int Id;
+        private string Make;
+        private string Model;
+        private int Year;
+        private decimal DailyRate;
+        private string Transmission;
+        private string Status {  get; set; }
 
         public Vehicle(string make, string model, int year, decimal dailyRate, string transmission)
         {
@@ -26,20 +26,15 @@ namespace VehicleRentalApp
             Status = "Available";
         }
 
-        public void SetVehicle(string make, string model, int year, decimal dailyRate, string transmission, string status)
-        {
-            this.Make = make;
-            this.Model = model;
-            this.Year = year;
-            this.DailyRate = dailyRate;
-            this.Transmission = transmission;
-            this.Status = status;
-        }
         public string GetMake() { return Make; }
         public string GetModel() { return Model; }
         public int GetYear() { return Year; }
         public decimal GetRate() { return DailyRate; }
         public string GetTransmission() { return Transmission; }
         public string GetStatus() { return Status; }
+        public void SetStatus(string status)
+        {
+            this.Status = status;
+        }
     }
 }

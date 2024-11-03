@@ -52,11 +52,11 @@ namespace VehicleRentalApp
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 foreach (KeyValuePair<int, Vehicle> v in vehicles)
                 {
-                    Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
+                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetMake()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetStatus()}");
                 }
 
                 // Outputs options waits for correct input.  
-                Console.WriteLine("[0] Back to Main || [1] Search Vehicles");
+                Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -124,7 +124,7 @@ namespace VehicleRentalApp
                 //IEnumerable<KeyValuePair<int, string>> searchOutput = vehicles.Where(s => s.Value.Make == searchInput.ToString());
 
                 // Outputs options waits for correct input.  
-                Console.WriteLine("[0] Back to Main || [1] Rent Vehicle");
+                Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -228,11 +228,11 @@ namespace VehicleRentalApp
                
                 // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
-                vehicles.Add(newKey, new Vehicle(make, model, year, dailyRate, transmission));
+                Vehicle newVehicle = new Vehicle(make, model, year, dailyRate, transmission);
+                vehicles.Add(newKey, newVehicle);
 
                 // Outputs options, waits for correct input.
-                Console.WriteLine();
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -268,7 +268,7 @@ namespace VehicleRentalApp
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].GetStatus()}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     // Asks for confirmation to delete the vehicle. 
@@ -298,7 +298,7 @@ namespace VehicleRentalApp
                 }
 
                 // Outputs options waits for correct input.  
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -342,10 +342,10 @@ namespace VehicleRentalApp
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].GetStatus()}");
                     
                     // Asks for confirmation of the vehicle's status update. 
-                    string action = vehicles[id].Status == "Available" ? "Rent" : "Return";
+                    string action = vehicles[id].GetStatus() == "Available" ? "Rent" : "Return";
                     Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
                     while (true)
@@ -353,14 +353,14 @@ namespace VehicleRentalApp
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].Status == "Available" && action == "Rent")
+                            if (vehicles[id].GetStatus() == "Available" && action == "Rent")
                             {
-                                vehicles[id].Status = "Rented";
+                                vehicles[id].SetStatus("Rented");
                                 Console.WriteLine($"Vehicle {id} Rented");
                             }
-                            else if (vehicles[id].Status == "Rented" && action == "Return")
+                            else if (vehicles[id].GetStatus() == "Rented" && action == "Return")
                             {
-                                vehicles[id].Status = "Available";
+                                vehicles[id].SetStatus("Available");
                                 Console.WriteLine($"Vehicle {id} Returned");
                             }
                             else
@@ -393,7 +393,7 @@ namespace VehicleRentalApp
                 }
 
                 // Outputs options waits for correct input.  
-                Console.WriteLine("[0] Back to Main || [1] View Vehicles || [2] Rent & Return");
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Rent & Return");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -422,7 +422,7 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].GetStatus()}");
 
                     Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
@@ -431,14 +431,14 @@ namespace VehicleRentalApp
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].Status == "Available" && action == "Rent")
+                            if (vehicles[id].GetStatus() == "Available" && action == "Rent")
                             {
-                                vehicles[id].Status = "Rented";
+                                vehicles[id].SetStatus("Rented");
                                 Console.WriteLine($"Vehicle {id} Rented.");
                             }
-                            else if (vehicles[id].Status == "Rented" && action == "Return")
+                            else if (vehicles[id].GetStatus() == "Rented" && action == "Return")
                             {
-                                vehicles[id].Status = "Available";
+                                vehicles[id].SetStatus("Available");
                                 Console.WriteLine($"Vehicle {id} Returned");
                             }
                             else
@@ -485,7 +485,7 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].Make} || {vehicles[id].Model} || {vehicles[id].Year} || £{vehicles[id].DailyRate} || {vehicles[id].Transmission} || {vehicles[id].Status}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].GetStatus()}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     while (true)
