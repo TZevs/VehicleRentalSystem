@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace VehicleRentalApp
 {
@@ -11,10 +12,27 @@ namespace VehicleRentalApp
         {
             string filePath = "vehicles.txt";
             Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-            vehicles.Add(1, new Vehicle("Fiat", "500", 2014, 50, "Manual"));
-            vehicles.Add(2, new Vehicle("Mercedes", "A-Class", 2020, 60, "Automatic"));
-            vehicles.Add(3, new Vehicle("BMW", "1 Series", 2018, 69, "Automatic"));
-            vehicles.Add(4, new Vehicle("BMW", "6 Series", 2010, 56, "Automatic"));
+
+            if (File.Exists(filePath))
+            {
+                List<string> output = new List<string>();
+                foreach (string line in File.ReadLines(filePath))
+                {
+                    output.Clear();
+                    foreach (string parts in line.Split(", "))
+                    {
+                        output.Add(parts);
+                    }
+
+                    Vehicle fromFile = new Vehicle(output[1], output[2], Convert.ToInt32(output[3]), Convert.ToDecimal(output[4]), output[5]);
+                    fromFile.SetStatus(output[6]);
+                    vehicles.Add(Convert.ToInt32(output[0]), fromFile);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Vehicles available.");
+            }
 
             void MainMenu()
             {
@@ -97,6 +115,7 @@ namespace VehicleRentalApp
                     {
                         case "0": MainMenu(); return;
                         case "1": RentAndReturn(); return;
+                        case "2": SearchVehicles(); return;
                         default: break;
                     }
                 }
@@ -195,13 +214,13 @@ namespace VehicleRentalApp
                 }
 
                 // Displays the new vehicle's information. 
-                Console.WriteLine();
-                Console.WriteLine($"Vehicle Added - {make} | {model} | {year} | £{dailyRate} | {transmission}");
+                Console.WriteLine($"\nVehicle Added - {make} | {model} | {year} | £{dailyRate} | {transmission}");
                
                 // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
                 Vehicle newVehicle = new Vehicle(make, model, year, dailyRate, transmission);
                 vehicles.Add(newKey, newVehicle);
+                UpdateFile();
 
                 // Outputs options, waits for correct input.
                 Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
@@ -250,6 +269,7 @@ namespace VehicleRentalApp
                         if (confirm == "y")
                         {
                             vehicles.Remove(id);
+                            UpdateFile();
                             Console.WriteLine($"Vehicle with ID {id} has been deleted");
                             break;
                         }
@@ -329,11 +349,13 @@ namespace VehicleRentalApp
                             {
                                 vehicles[id].SetStatus("Rented");
                                 Console.WriteLine($"Vehicle {id} Rented");
+                                UpdateFile();
                             }
                             else if (vehicles[id].GetStatus() == "Rented" && action == "Return")
                             {
                                 vehicles[id].SetStatus("Available");
                                 Console.WriteLine($"Vehicle {id} Returned");
+                                UpdateFile();
                             }
                             else
                             {
@@ -407,11 +429,13 @@ namespace VehicleRentalApp
                             {
                                 vehicles[id].SetStatus("Rented");
                                 Console.WriteLine($"Vehicle {id} Rented.");
+                                UpdateFile();
                             }
                             else if (vehicles[id].GetStatus() == "Rented" && action == "Return")
                             {
                                 vehicles[id].SetStatus("Available");
                                 Console.WriteLine($"Vehicle {id} Returned");
+                                UpdateFile();
                             }
                             else
                             {
@@ -467,6 +491,7 @@ namespace VehicleRentalApp
                         {
                             vehicles.Remove(id);
                             Console.WriteLine($"Vehicle with ID {id} has been deleted");
+                            UpdateFile();
                             break;
                         }
                         else if (confirm == "n")
@@ -527,17 +552,17 @@ namespace VehicleRentalApp
                     Console.WriteLine($"Incorrect Input: Unknown Type: '{newVehicle[4]}'");
                 }
 
-                Console.WriteLine();
-                Console.WriteLine($"Vehicle Added: {newVehicle[0]} | {newVehicle[1]} | {yr} | £{rate} | {typesSelected}");
+                Console.WriteLine($"\nVehicle Added: {newVehicle[0]} | {newVehicle[1]} | {yr} | £{rate} | {typesSelected}");
 
                 int newKey = vehicles.Keys.Max() + 1;
                 vehicles.Add(newKey, new Vehicle(newVehicle[0], newVehicle[1], yr, rate, typesSelected));
+                UpdateFile();
             }
 
             void UpdateFile()
             {
                 File.WriteAllLines(filePath, 
-                    vehicles.Select(x => $"{x.Key}, {x.Value.ToFile()}\n"));
+                    vehicles.Select(x => $"{x.Key}, {x.Value.ToFile()}"));
             }
 
             if (args.Length <= 0)
