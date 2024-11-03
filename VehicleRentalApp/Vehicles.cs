@@ -34,7 +34,7 @@ namespace VehicleRentalApp
         public string GetStatus() { return Status; }
         public void SetStatus(string status)
         {
-            this.Status = status;
+            Status = status;
         }
 
         public string ToFile()
