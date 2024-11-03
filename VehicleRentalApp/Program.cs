@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 
 namespace VehicleRentalApp
@@ -136,6 +137,11 @@ namespace VehicleRentalApp
                         default: break;
                     }
                 }
+            }
+            
+            void DisplayVehicles()
+            {
+
             }
 
             void AddVehicles()
@@ -560,6 +566,12 @@ namespace VehicleRentalApp
 
                 int newKey = vehicles.Keys.Max() + 1;
                 vehicles.Add(newKey, new Vehicle(newVehicle[0], newVehicle[1], yr, rate, typesSelected));
+            }
+
+            void UpdateFile()
+            {
+                File.WriteAllLines(filePath, 
+                    vehicles.Select(x => $"{x.Key}, {x.Value.ToFile()}\n"));
             }
 
             if (args.Length <= 0)
