@@ -14,7 +14,7 @@ namespace VehicleRentalApp
         private int Year;
         private decimal DailyRate;
         private string Transmission;
-        private string Status {  get; set; }
+        private string Status;
 
         public Vehicle(string make, string model, int year, decimal dailyRate, string transmission)
         {
@@ -35,6 +35,11 @@ namespace VehicleRentalApp
         public void SetStatus(string status)
         {
             this.Status = status;
+        }
+
+        public string ToFile()
+        {
+            return $"{Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {Status}";
         }
     }
 }
