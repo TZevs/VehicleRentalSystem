@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
@@ -53,7 +54,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 foreach (KeyValuePair<int, Vehicle> v in vehicles)
                 {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetMake()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetStatus()}");
+                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetStatus()}");
                 }
 
                 // Outputs options waits for correct input.  
@@ -74,55 +75,17 @@ namespace VehicleRentalApp
             void SearchVehicles()
             {
                 Console.Clear();
-                Console.WriteLine("SEARCH VEHICLES");
-
-                // Look into substrings for user to search any field or many fields at once. 
-                // Add while loops to each if statement for if incorrect input entered.
-                // Add different ways a user can enter the same search e.g. Automatic, Auto.
-                // Find away around the different cases. 
-                //Console.WriteLine("[1] Make || [2] Model || [3] Transmission");
-                //Console.Write("Enter Option: ");
-                //string category = Console.ReadLine().Trim();
-                //if (category == "1")
-                //{
-                //    Console.Write("Search Make: ");
-                //    string input = Console.ReadLine().ToUpper();
-                //    IEnumerable<KeyValuePair<int, Vehicle>> searchMakes = vehicles.Where(m => m.Value.Make == input);
-                //    foreach (var v in searchMakes)
-                //    {
-                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                //    }
-                //}
-                //else if (category == "2")
-                //{
-                //    Console.Write("Search Model: ");
-                //    string input = Console.ReadLine();
-                //    IEnumerable<KeyValuePair<int, Vehicle>> searchModels = vehicles.Where(m => m.Value.Model == input);
-                //    foreach (var v in searchModels)
-                //    {
-                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                //    }
-                //}
-                //else if (category == "3")
-                //{
-                //    // Move to view function.
-                //    Console.Write("Search Transmission: ");
-                //    string input = Console.ReadLine();
-                //    IEnumerable<KeyValuePair<int, Vehicle>> searchTr = vehicles.Where(m => m.Value.Transmission == input);
-                //    foreach (var v in searchTr)
-                //    {
-                //        Console.WriteLine($"{v.Key} || {v.Value.Make} || {v.Value.Model} || {v.Value.Year} || £{v.Value.DailyRate} || {v.Value.Transmission} || {v.Value.Status}");
-                //    }
-                //}
-                //else
-                //{
-                //    SearchVehicles();
-                //}
-                Console.WriteLine();
+                Console.WriteLine("SEARCH VEHICLES (Use commas to seperate)");
                 Console.Write("Search: ");
-                List<string> searchInput = Console.ReadLine().Split(',').ToList();
-
-                //IEnumerable<KeyValuePair<int, string>> searchOutput = vehicles.Where(s => s.Value.Make == searchInput.ToString());
+                List<string> searching = Console.ReadLine().Split(", ").ToList();
+                IEnumerable<KeyValuePair<int, Vehicle>> query = new List<KeyValuePair<int, Vehicle>>();
+                foreach (string s in searching)
+                { 
+                    query = vehicles.Where(q => q.Value.GetModel() == s || q.Value.GetMake() == s || q.Value.GetTransmission() == s);
+                }
+                DisplayVehicles(query);
+                // Use any or all to check if result is true or not. 
+                // If true use select or where 
 
                 // Outputs options waits for correct input.  
                 Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle");
@@ -139,9 +102,12 @@ namespace VehicleRentalApp
                 }
             }
             
-            void DisplayVehicles()
+            void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> search)
             {
-
+                foreach (KeyValuePair<int, Vehicle> v in search)
+                {
+                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetStatus()}");
+                }
             }
 
             void AddVehicles()
