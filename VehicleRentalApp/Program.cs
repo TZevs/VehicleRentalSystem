@@ -46,11 +46,6 @@ namespace VehicleRentalApp
                 Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
-                Vehicle test = new Vehicle("dsbr", "dberb", "45", "-1", "rjvner");
-                Console.WriteLine(test.ToFile());
-                vehicles.Add(7, test);
-                Console.WriteLine(vehicles[7].ToFile());
-
                 while (true)
                 {
                     Console.Write("Enter Menu Option: ");
@@ -139,90 +134,30 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("ADD VEHICLES");
 
-                // Need to add validation to inputs - Year and DailyRate will cause errors if wrong.
                 Console.Write("Make: ");
                 string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
                 string model = Console.ReadLine().Trim();
                 
-                int year = 0;
-                // Loops until a valid input is entered. 
                 Console.Write("Year: ");
-                string yearInput = Console.ReadLine().Trim();
-                //while (true)
-                //{
-                //    Console.Write("Year: ");
-                //    string yearInput = Console.ReadLine().Trim();
-                //    // Validates the user input.
-                //    try
-                //    {
-                //        // Converts input to int.
-                //        year = Convert.ToInt32(yearInput);
-                //        // Checks vehicle is at max 25 yrs old.
-                //        if (year >= DateTime.Now.Year - 25 && year <= DateTime.Now.Year) break;
-                //        else
-                //        {
-                //            Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
-                //        }
-                //    }
-                //    catch
-                //    {
-                //        // Catched the exception and displays this message. 
-                //        Console.WriteLine($"Invalid Input: {yearInput}: '0000' Required format.");
-                //    }
-                //}
+                string year = Console.ReadLine().Trim();
 
                 Console.Write("Daily Rate: ");
-                string rateInput = Console.ReadLine().Trim();
-                //decimal dailyRate = 0;
-                //while (true)
-                //{
-                //    Console.Write("Daily Rate: ");
-                //    string rateInput = Console.ReadLine().Trim();
-                //    try
-                //    {
-                //        // Converts input to a decimal.
-                //        dailyRate = Convert.ToDecimal(rateInput);
-                //        break;
-                //    }
-                //    catch 
-                //    {
-                //        Console.WriteLine($"Invalid Input: {rateInput}: '00.00' Required format.");
-                //    }
-                //}
-
+                string rate = Console.ReadLine().Trim();
+              
                 Console.WriteLine("Transmission Type");
-                // Array to store the transmission types
-                // Use Where and indexOf instead of the multiple variables.
-                string transmission = "";
-                while (true)
-                {
-                    Console.Write("Automatic or Manual (A/M): ");
-                    string transmissionInput = Console.ReadLine().Trim().ToUpper();
-                    if (transmission == "M")
-                    {
-                        transmission = "Manual";
-                        break;
-                    }
-                    else if (transmission == "A")
-                    {
-                        transmission = "Automatic";
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Incorrect Input: '{transmissionInput}'");
-                    }
-                }
+                string transmission = Console.ReadLine().Trim().ToUpper();
 
-                // Displays the new vehicle's information. 
-                Console.WriteLine($"\nVehicle Added - {make} | {model} | {year} | £{rateInput} | {transmission}");
-               
+
                 // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle newVehicle = new Vehicle(make, model, yearInput, rateInput, transmission);
-                vehicles.Add(newKey, newVehicle);
-                UpdateFile();
+                Vehicle newVehicle = new Vehicle(make, model, year, rate, transmission);
+                if (newVehicle.IsValid)
+                {
+                    vehicles.Add(newKey, newVehicle);
+                    UpdateFile();
+                    Console.WriteLine($"\nVehicle Added - {make} | {model} | {year} | £{rate} | {transmission}");
+                }
 
                 // Outputs options, waits for correct input.
                 Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
@@ -517,60 +452,15 @@ namespace VehicleRentalApp
             {
                 // If an array item has a / it is replaced with a space. New items are now in a List collection. 
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
-                
-                //int yr = 0;
-                //try
-                //{
-                //    yr = Convert.ToInt32(newVehicle[2]);
-                //    if (yr >= DateTime.Now.Year - 25 && yr <= DateTime.Now.Year);
-                //    else
-                //    {
-                //        Console.WriteLine($"Max Age: 25 yrs old. Between: {DateTime.Now.Year - 25} - {DateTime.Now.Year}");
-                //    }
-                //}
-                //catch
-                //{
-                //    Console.WriteLine($"Invalid Input: {newVehicle[2]}: '0000' Required format.");
-                //}
-
-                //decimal rate = 0;
-                //try
-                //{
-                //    rate = Convert.ToDecimal(newVehicle[3]);
-                //}
-                //catch
-                //{
-                //    Console.WriteLine($"Invalid Input: {newVehicle[3]}: '00.00' Required format.");
-                //}
-
-                string[] types = { "manual", "automatic", "man", "auto" };
-                string typesSelected = "";
-                if (types.Contains(newVehicle[4].ToLower()))
-                {
-                    if (newVehicle[4] == "man")
-                    {
-                        typesSelected = "Manual";
-                    }
-                    else if (newVehicle[4] == "auto")
-                    {
-                        typesSelected = "Automatic";
-                    }
-                    else
-                    {
-                        typesSelected = newVehicle[4];
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Incorrect Input: Unknown Type: '{newVehicle[4]}'");
-                }
-
-                Console.WriteLine($"\nVehicle Added: {newVehicle[0]} | {newVehicle[1]} | {newVehicle[2]} | £{newVehicle[3]} | {typesSelected}");
 
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle cmdNewVehicle = new Vehicle(newVehicle[0], newVehicle[1], newVehicle[2], newVehicle[3], typesSelected);
-                vehicles.Add(newKey, cmdNewVehicle);
-                UpdateFile();
+                Vehicle cmdNewVehicle = new Vehicle(newVehicle[0], newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4]);
+                if (cmdNewVehicle.IsValid)
+                {
+                    vehicles.Add(newKey, cmdNewVehicle);
+                    UpdateFile();
+                    Console.WriteLine($"\nVehicle Added: {newVehicle[0]} | {newVehicle[1]} | {newVehicle[2]} | £{newVehicle[3]} | {newVehicle[4]}");
+                }
             }
 
             void UpdateFile()
