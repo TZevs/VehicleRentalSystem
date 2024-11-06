@@ -14,15 +14,15 @@ namespace VehicleRentalApp
         private decimal DailyRate;
         private string Transmission;
         private string Status;
-        private bool IsValid;
+        public bool IsValid { get; private set; }
 
         public Vehicle(string make, string model, string year, string dailyRate, string transmission)
         {
             Make = make;
             Model = model;
-            SetYear(year);
-            SetRate(dailyRate);
-            SetTransmission(transmission);
+            IsValid = SetYear(year);
+            IsValid = SetRate(dailyRate); 
+            IsValid = SetTransmission(transmission);
             Status = "Available";
         }
         public string GetMake() { return Make; }
@@ -118,7 +118,6 @@ namespace VehicleRentalApp
             get { return Status; }
             set { Status = value; }
         }
-
         public string ToFile()
         {
             return $"{Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {Status}";
