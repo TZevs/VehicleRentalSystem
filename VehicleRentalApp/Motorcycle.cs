@@ -68,7 +68,7 @@ namespace VehicleRentalApp
             }
             else { WithProtection = false; }
         }
-        public void SetType() { TypeOfVehicle = "Motorcycle"; }
+        public override void SetType() { TypeOfVehicle = "Motorcycle"; }
         public override string ToFile()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";

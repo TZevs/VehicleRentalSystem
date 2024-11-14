@@ -51,7 +51,7 @@ namespace VehicleRentalApp
             }
             else
             {
-                Console.WriteLine("No Vehicles available.");
+                Console.WriteLine("No Vehicles Available.");
             }
 
             void MainMenu()
@@ -542,18 +542,52 @@ namespace VehicleRentalApp
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
 
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle cmdNewV = new Vehicle(newVehicle[0], newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4]);
-                if (cmdNewV.IsValid)
+                if (newVehicle[0].ToUpper() == "C")
                 {
-                    vehicles.Add(newKey, cmdNewV);
-                    UpdateFile();
-                    Console.WriteLine($"\nVehicle Added: {cmdNewV.GetMake()} | {cmdNewV.GetModel()} | {cmdNewV.GetYear()} | £{cmdNewV.GetRate()} | {cmdNewV.GetType()} | {cmdNewV.UpdateStatus}");
+                    Car cmdCar = new Car(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8]);
+
+                    if (cmdCar.IsValid)
+                    {
+                        vehicles.Add(newKey, cmdCar);
+                        Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please check your Car's details");
+                        Console.WriteLine($"Car - {cmdCar.ToFile()}");
+                    }
                 }
-                else
+                else if (newVehicle[0].ToUpper() == "V") 
                 {
-                    Console.WriteLine("\nPlease check your vehicle details (Year, Daily Rate, Transmission Type)");
-                    Console.WriteLine($"{cmdNewV.GetMake()} | {cmdNewV.GetModel()} | {cmdNewV.GetYear()} | £{cmdNewV.GetRate()} | {cmdNewV.GetType()} | {cmdNewV.UpdateStatus}");
+                    Van cmdVan = new Van(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8], newVehicle[9], newVehicle[10], newVehicle[11]);
+
+                    if (cmdVan.IsValid)
+                    {
+                        vehicles.Add(newKey, cmdVan);
+                        Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please check your Van's details");
+                        Console.WriteLine($"Van - {cmdVan.ToFile()}");
+                    }
                 }
+                else if (newVehicle[0].ToUpper() == "M")
+                {
+                    Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8], newVehicle[9], newVehicle[10]);
+
+                    if (cmdMotor.IsValid)
+                    {
+                        vehicles.Add(newKey, cmdMotor);
+                        Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please check your Motorcycle's details");
+                        Console.WriteLine($"Motorcycle - {cmdMotor.ToFile()}");
+                    }
+                }
+                else { return; }
             }
 
             void UpdateFile()

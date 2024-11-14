@@ -40,7 +40,7 @@ namespace VehicleRentalApp
             }
             catch { return false; }
         }
-        public void SetType() { TypeOfVehicle = "Car"; }
+        public override void SetType() { TypeOfVehicle = "Car"; }
         public override string ToFile()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
