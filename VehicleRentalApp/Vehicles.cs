@@ -20,9 +20,14 @@ namespace VehicleRentalApp
         {
             Make = make;
             Model = model;
-            IsValid = SetYear(year);
-            IsValid = SetRate(dailyRate); 
-            IsValid = SetTransmission(transmission);
+            if (SetYear(year) && SetRate(dailyRate) && SetTransmission(transmission))
+            {
+                IsValid = true;
+            }
+            else
+            {
+                IsValid = false;
+            }
             Status = "Available";
         }
         public string GetMake() { return Make; }
@@ -40,15 +45,7 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    if (yr < DateTime.Now.Year - 30) 
-                    { 
-                        Console.WriteLine("This Vehicle is too old"); 
-                    }
-                    else if (yr > DateTime.Now.Year) 
-                    { 
-                        Console.WriteLine($"Invalid year: '{yr}'");
-                    }
-                    return false;
+                    return false; 
                 }
             }
             catch (FormatException e)
@@ -76,7 +73,7 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine("Daily Rate should be more that £0.00");
+                    Console.WriteLine("Daily Rate should be more than £0.00");
                     return false;
                 }
             }
@@ -94,8 +91,8 @@ namespace VehicleRentalApp
         public decimal GetRate() { return DailyRate; }
         public bool SetTransmission(string tr)
         {
-            string[] a = { "Automatic", "Auto", "A", "automatic", "auto"};
-            string[] m = { "Manual", "Man", "M", "manual", "man" };
+            string[] a = { "a", "automatic", "auto"};
+            string[] m = { "m", "manual", "man" };
             if (a.Contains(tr))
             {
                 Transmission = "Automatic";

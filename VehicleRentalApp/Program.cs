@@ -145,18 +145,23 @@ namespace VehicleRentalApp
                 Console.Write("Daily Rate: ");
                 string rate = Console.ReadLine().Trim();
               
-                Console.WriteLine("Transmission Type");
-                string transmission = Console.ReadLine().Trim().ToUpper();
+                Console.Write("Transmission Type [Manual / Automatic]: ");
+                string transmission = Console.ReadLine().Trim().ToLower();
 
 
                 // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle newVehicle = new Vehicle(make, model, year, rate, transmission);
-                if (newVehicle.IsValid)
+                Vehicle newV = new Vehicle(make, model, year, rate, transmission);
+                if (newV.IsValid)
                 {
-                    vehicles.Add(newKey, newVehicle);
+                    vehicles.Add(newKey, newV);
                     UpdateFile();
-                    Console.WriteLine($"\nVehicle Added - {make} | {model} | {year} | £{rate} | {transmission}");
+                    Console.WriteLine($"\nVehicle Added - {newV.GetMake()} | {newV.GetModel()} | {newV.GetYear()} | £{newV.GetRate()} | {newV.GetType()} | {newV.UpdateStatus}");
+                }
+                else
+                {
+                    Console.WriteLine("\nPlease check your vehicle details (Year, Daily Rate, Transmission Type)");
+                    Console.WriteLine($"{newV.GetMake()} | {newV.GetModel()} | {newV.GetYear()} | £{newV.GetRate()} | {newV.GetType()} | {newV.UpdateStatus}");
                 }
 
                 // Outputs options, waits for correct input.
@@ -454,12 +459,17 @@ namespace VehicleRentalApp
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
 
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle cmdNewVehicle = new Vehicle(newVehicle[0], newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4]);
-                if (cmdNewVehicle.IsValid)
+                Vehicle cmdNewV = new Vehicle(newVehicle[0], newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4]);
+                if (cmdNewV.IsValid)
                 {
-                    vehicles.Add(newKey, cmdNewVehicle);
+                    vehicles.Add(newKey, cmdNewV);
                     UpdateFile();
-                    Console.WriteLine($"\nVehicle Added: {newVehicle[0]} | {newVehicle[1]} | {newVehicle[2]} | £{newVehicle[3]} | {newVehicle[4]}");
+                    Console.WriteLine($"\nVehicle Added: {cmdNewV.GetMake()} | {cmdNewV.GetModel()} | {cmdNewV.GetYear()} | £{cmdNewV.GetRate()} | {cmdNewV.GetType()} | {cmdNewV.UpdateStatus}");
+                }
+                else
+                {
+                    Console.WriteLine("\nPlease check your vehicle details (Year, Daily Rate, Transmission Type)");
+                    Console.WriteLine($"{cmdNewV.GetMake()} | {cmdNewV.GetModel()} | {cmdNewV.GetYear()} | £{cmdNewV.GetRate()} | {cmdNewV.GetType()} | {cmdNewV.UpdateStatus}");
                 }
             }
 
