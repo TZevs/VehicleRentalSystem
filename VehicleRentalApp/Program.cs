@@ -133,35 +133,98 @@ namespace VehicleRentalApp
             {
                 Console.Clear();
                 Console.WriteLine("ADD VEHICLES");
+                Console.WriteLine("[C] = Car | [V] = Van | [M] = Motorcycle");
+                Console.Write("Vehicle Type: ");
+                string typeInput = "";
+                switch(Console.ReadLine().ToUpper())
+                {
+                    case "C": typeInput = "Car"; break;
+                    case "V": typeInput = "Van"; break;
+                    case "M": typeInput = "MotorCycle"; break;
+                    default: AddVehicles(); break;
+                }
 
-                Console.Write("Make: ");
+                Console.Write("\nMake: ");
                 string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
                 string model = Console.ReadLine().Trim();
-                
                 Console.Write("Year: ");
-                string year = Console.ReadLine().Trim();
-
+                string year = Console.ReadLine();
                 Console.Write("Daily Rate: ");
-                string rate = Console.ReadLine().Trim();
-              
+                string rate = Console.ReadLine();
                 Console.Write("Transmission Type [Manual / Automatic]: ");
-                string transmission = Console.ReadLine().Trim().ToLower();
+                string transm = Console.ReadLine().Trim().ToLower();
+                Console.Write("Number of Seats: ");
+                string numOfSeats = Console.ReadLine();
+                Console.Write("Fuel Type [Diesel / Petrol / Electric / Hybrid]: ");
+                string fuelType = Console.ReadLine().ToLower();
 
-
-                // Creates object. Adds it to the Dictionary collection.
                 int newKey = vehicles.Keys.Max() + 1;
-                Vehicle newV = new Vehicle(make, model, year, rate, transmission);
-                if (newV.IsValid)
+                if (typeInput == "Car") 
                 {
-                    vehicles.Add(newKey, newV);
-                    UpdateFile();
-                    Console.WriteLine($"\nVehicle Added - {newV.GetMake()} | {newV.GetModel()} | {newV.GetYear()} | £{newV.GetRate()} | {newV.GetType()} | {newV.UpdateStatus}");
+                    Console.Write("\nBoot Capacity (In Litres): ");
+                    string bootCap = Console.ReadLine();
+
+                    Car newCar = new Car(make, model, year, rate, transm, numOfSeats, fuelType, bootCap);
+                    if (newCar.IsValid)
+                    {
+                        vehicles.Add(newKey, newCar);
+                        Console.WriteLine($"\nCar Added - {newCar.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nPlease check your Car's details");
+                        Console.WriteLine($"{newCar.ToFile()}");
+                    }
+                }
+                else if (typeInput == "Van")
+                {
+                    Console.Write("\nLoad Capacity (Max in kg): ");
+                    string loadCap = Console.ReadLine();
+                    Console.WriteLine("Internal Measurements");
+                    Console.Write("Lenth (In metres): ");
+                    string len = Console.ReadLine();
+                    Console.Write("Width (In metres): ");
+                    string wid = Console.ReadLine();
+                    Console.Write("Height (In metres): ");
+                    string hei = Console.ReadLine();
+
+                    Van newVan = new Van(make, model, year, rate, transm, numOfSeats, fuelType, loadCap, len, wid, hei);
+                    if (newVan.IsValid)
+                    {
+                        vehicles.Add(newKey, newVan);
+                        Console.WriteLine($"\nVan Added - {newVan.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nPlease check your Van's details");
+                        Console.WriteLine($"Van - {newVan.ToFile()}");
+                    }
+                }
+                else if (typeInput == "Motorcycle")
+                {
+                    Console.Write("CC: ");
+                    string cc = Console.ReadLine();
+                    Console.Write("Storage [y / n]: ");
+                    string stor = Console.ReadLine();
+                    Console.Write("With Protection (Helmet, Jacket, etc)[y / n]: ");
+                    string pro = Console.ReadLine();
+
+                    Motorcycle newMot = new Motorcycle(make, model, year, rate, transm, numOfSeats, fuelType, cc, stor, pro);
+                    if (newMot.IsValid)
+                    {
+                        vehicles.Add(newKey, newMot);
+                        Console.WriteLine($"\nVan Added - {newMot.ToFile()}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nPlease check your Motorcycle's details");
+                        Console.WriteLine($"Motorcycle Added - {newMot.ToFile()}");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("\nPlease check your vehicle details (Year, Daily Rate, Transmission Type)");
-                    Console.WriteLine($"{newV.GetMake()} | {newV.GetModel()} | {newV.GetYear()} | £{newV.GetRate()} | {newV.GetType()} | {newV.UpdateStatus}");
+
                 }
 
                 // Outputs options, waits for correct input.
