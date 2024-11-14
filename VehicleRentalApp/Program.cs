@@ -24,9 +24,29 @@ namespace VehicleRentalApp
                         output.Add(parts);
                     }
 
-                    Vehicle fromFile = new Vehicle(output[1], output[2], output[3], output[4], output[5]);
-                    fromFile.UpdateStatus = output[6];
-                    vehicles.Add(Convert.ToInt32(output[0]), fromFile);
+                    if (output[1] == "Car")
+                    {
+                        Car fileCar = new Car(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10]);
+                        fileCar.UpdateStatus = output[9];
+                        vehicles.Add(Convert.ToInt32(output[0]), fileCar);
+                    }
+                    else if (output[1] == "Motorcycle")
+                    {
+                        Motorcycle fileMotor = new Motorcycle(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10], output[11], output[12]);
+                        fileMotor.UpdateStatus = output[9];
+                        vehicles.Add(Convert.ToInt32(output[0]), fileMotor);
+                    }
+                    else if (output[1] == "Van")
+                    {
+                        Van fileVan = new Van(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10], output[11], output[12], output[13]);
+                        fileVan.UpdateStatus = output[9];
+                        vehicles.Add(Convert.ToInt32(output[0]), fileVan);
+                    }
+                    else { return; }
+
+                    //Vehicle fromFile = new Vehicle(output[1], output[2], output[3], output[4], output[5]);
+                    //fromFile.UpdateStatus = output[6];
+                    //vehicles.Add(Convert.ToInt32(output[0]), fromFile);
                 }
             }
             else
