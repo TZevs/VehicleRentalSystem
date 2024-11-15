@@ -19,40 +19,14 @@ namespace VehicleRentalApp
         protected string FuelType;
         public bool IsValid { get; protected set; } // Only set within the classes.
 
-        //public Vehicle(string make, string model, string yr, string rate, string trans)
-        //{
-        //    Make = make;
-        //    Model = model;
-        //    if (SetYear(yr) && SetRate(rate) && SetTransmission(trans))
-        //    {
-        //        IsValid = true;
-        //    }
-        //    else
-        //    {
-        //        // Vehicle will not be added to the collection or file.
-        //        IsValid = false;
-        //    }
-        //    Status = "Available";
-        //}
-        //public Vehicle()
-        //{
-        //    TypeOfVehicle = string.Empty;
-        //    Make = string.Empty;
-        //    Model = string.Empty;
-        //    Year = 0;
-        //    DailyRate = 0;
-        //    Transmission = string.Empty;
-        //    Status = string.Empty;
-        //    IsValid = false;
-        //    SeatCapacity = 0;
-        //    FuelType = string.Empty;    
-        //} // Default Constructor.
         public string GetType() { return TypeOfVehicle; }
         public string GetMake() { return Make; }
         public string GetModel () { return Model; }
         public int GetYear() { return Year; }
         public decimal GetRate() { return DailyRate; }
         public string GetTransmission() { return Transmission; }
+        public int GetSeatCap() { return SeatCapacity; }
+        public string GetFuel() { return FuelType; }
 
         public abstract void SetType(); 
         public bool SetYear(string y)
