@@ -147,6 +147,7 @@ namespace VehicleRentalApp
                 {
                     Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
                 }
+                
             }
 
             void AddVehicles()
@@ -179,7 +180,15 @@ namespace VehicleRentalApp
                 Console.Write("Fuel Type [Diesel / Petrol / Electric / Hybrid]: ");
                 string fuelType = Console.ReadLine().ToLower();
 
-                int newKey = vehicles.Keys.Max() + 1;
+                int newKey = 0;
+                if (vehicles.Count == 0)
+                {
+                    newKey = 1;
+                }
+                else 
+                {
+                    newKey = vehicles.Keys.Max() + 1;
+                }
                 if (typeInput == "Car") 
                 {
                     Console.Write("\nBoot Capacity (In Litres): ");
@@ -540,8 +549,16 @@ namespace VehicleRentalApp
             {
                 // If an array item has a / it is replaced with a space. New items are now in a List collection. 
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
-
-                int newKey = vehicles.Keys.Max() + 1;
+                
+                int newKey = 0;
+                if (vehicles.Count == 0)
+                {
+                    newKey = 1;
+                }
+                else
+                {
+                    newKey = vehicles.Keys.Max() + 1;
+                }
                 if (newVehicle[0].ToUpper() == "C")
                 {
                     Car cmdCar = new Car(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8]);
