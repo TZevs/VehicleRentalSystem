@@ -143,9 +143,21 @@ namespace VehicleRentalApp
             
             void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> search)
             {
+                
                 foreach (KeyValuePair<int, Vehicle> v in search)
                 {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
+                    if (v.Value.GetType() == "Car")
+                    {
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
+                    }
+                    else if (v.Value.GetType() == "Van")
+                    {
+                         
+                    }
+                    else if (v.Value.GetType() == "Motorcycle")
+                    {
+
+                    }
                 }
                 
             }

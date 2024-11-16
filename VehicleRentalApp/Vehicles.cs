@@ -121,13 +121,27 @@ namespace VehicleRentalApp
         } // Converts and validates the Seat Capacity input.
         public bool SetFuelType(string fuelType)
         {
-            string[] types = { "diesel", "petrol", "electric", "hybrid" };
-            if (types.Contains(fuelType))
+            if (fuelType == "d" || fuelType == "disesl")
             {
-                FuelType = fuelType;
+                FuelType = "Diesel";
                 return true;
             }
-            else { return false; }
+            else if (fuelType == "p" || fuelType == "petrol")
+            {
+                FuelType = "Petrol";
+                return true;
+            }
+            else if (fuelType == "e" || fuelType == "electric")
+            {
+                FuelType = "Electric";
+                return true;
+            }
+            else if (fuelType == "h" ||  fuelType == "hybrid")
+            {
+                FuelType = "Hybrid";
+                return true;
+            }
+            else return false;
         } // Validates the Fuel type input.
         public string UpdateStatus
         {
