@@ -199,6 +199,7 @@ namespace VehicleRentalApp
                     {
                         vehicles.Add(newKey, newCar);
                         Console.WriteLine($"\nCar Added - {newCar.ToFile()}");
+                        UpdateFile();
                     }
                     else
                     {
@@ -223,6 +224,7 @@ namespace VehicleRentalApp
                     {
                         vehicles.Add(newKey, newVan);
                         Console.WriteLine($"\nVan Added - {newVan.ToFile()}");
+                        UpdateFile();
                     }
                     else
                     {
@@ -244,6 +246,7 @@ namespace VehicleRentalApp
                     {
                         vehicles.Add(newKey, newMot);
                         Console.WriteLine($"\nVan Added - {newMot.ToFile()}");
+                        UpdateFile();
                     }
                     else
                     {
