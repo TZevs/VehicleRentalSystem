@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Microsoft.VisualBasic.FileIO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -89,14 +90,24 @@ namespace VehicleRentalApp
                 Console.WriteLine("ALL VEHICLES");
                 
                 // Displays all vehicles in the Dictionary.
+                Console.WriteLine("\nCARS:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                foreach (KeyValuePair<int, Vehicle> v in vehicles)
-                {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
-                }
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetType() == "Car");
+                DisplayVehicles(allCars);
+
+                Console.WriteLine("\nVANS:");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetType() == "Van");
+                DisplayVehicles(allVans);
+
+                Console.WriteLine("\nVANS:");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetType() == "MotorCycles");
+                DisplayVehicles(allMotors);
 
                 // Outputs options waits for correct input.  
                 Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles");
+                Console.WriteLine("[2] View Cars || [3] View Vans || [4] View Motorcycles");
                 while (true)
                 {
                     Console.Write("Enter Option: ");
@@ -105,6 +116,126 @@ namespace VehicleRentalApp
                     {
                         case "0": MainMenu(); return;
                         case "1": SearchVehicles(); return;
+                        case "2": ViewCars(); return;
+                        case "3": ViewVans(); return;
+                        case "4": ViewMotors(); return;
+                        default: break;
+                    }
+                }
+            }
+            
+            void ViewCars()
+            {
+                Console.Clear();
+                Console.WriteLine("ALL CARS");
+
+                // Displays all Cars in the Dictionary and all their stored data.
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Boot Capacity || Status");
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetType() == "Car");
+                if (allCars.Count() == 0)
+                {
+                    Console.WriteLine("No Cars Available");
+                }
+                else
+                {
+                    foreach (KeyValuePair<int, Vehicle> v in allCars)
+                    {
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetBootCap()} || {v.Value.UpdateStatus}");
+                    }
+                }
+
+                Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
+                Console.WriteLine("[3] View Vans || [4] View Motorcycles");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": SearchVehicles(); return;
+                        case "2": ViewVehicles(); return;
+                        case "3": ViewVans(); return;
+                        case "4": ViewMotors(); return;
+                        default: break;
+                    }
+                }
+            }
+            void ViewVans()
+            {
+                Console.Clear();
+                Console.WriteLine("ALL VANS");
+
+                // Displays all Vans in the Dictionary and all their stored data.
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Max Load || Internal || Volume(Cubed) || Status");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetType() == "Van");
+                if (allVans.Count() == 0)
+                {
+                    Console.WriteLine("No Vans Available");
+                }
+                else
+                {
+                    foreach (KeyValuePair<int, Vehicle> v in allVans)
+                    {
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetLoadCap()}kg || {v.Value.GetLWH()} " +
+                            $"|| {v.Value.GetVolume()}m ||{v.Value.UpdateStatus}");
+                    }
+                }
+
+                Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
+                Console.WriteLine("[3] View Cars || [4] View Motorcycles");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": SearchVehicles(); return;
+                        case "2": ViewVehicles(); return;
+                        case "3": ViewCars(); return;
+                        case "4": ViewMotors(); return;
+                        default: break;
+                    }
+                }
+            }
+            void ViewMotors()
+            {
+                Console.Clear();
+                Console.WriteLine("ALL MOTORCYCLES");
+
+                // Displays all Motorcycles in the Dictionary and all their stored data.
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || CC || With Storage || With Protection || Status");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetType() == "Motorcycle");
+                if (allMotors.Count() == 0)
+                {
+                    Console.WriteLine("No Motorcycles Available");
+                }
+                else
+                {
+                    foreach (KeyValuePair<int, Vehicle> v in allMotors)
+                    {
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetCC()} || {v.Value.GetStorage()} " +
+                            $"|| {v.Value.GetWProtect()} ||{v.Value.UpdateStatus}");
+                    }
+                }
+
+                Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
+                Console.WriteLine("[3] View Vans || [4] View Cars");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": MainMenu(); return;
+                        case "1": SearchVehicles(); return;
+                        case "2": ViewVehicles(); return;
+                        case "3": ViewVans(); return;
+                        case "4": ViewCars(); return;
                         default: break;
                     }
                 }
@@ -141,23 +272,11 @@ namespace VehicleRentalApp
                 }
             }
             
-            void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> search)
+            void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> display)
             {
-                
-                foreach (KeyValuePair<int, Vehicle> v in search)
-                {
-                    if (v.Value.GetType() == "Car")
-                    {
-                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
-                    }
-                    else if (v.Value.GetType() == "Van")
-                    {
-                         
-                    }
-                    else if (v.Value.GetType() == "Motorcycle")
-                    {
-
-                    }
+                foreach (KeyValuePair<int, Vehicle> v in display)
+                {  
+                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");   
                 }
                 
             }
