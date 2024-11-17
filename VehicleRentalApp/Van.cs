@@ -42,9 +42,25 @@ namespace VehicleRentalApp
                     LoadCapacity = lc;
                     return true;
                 }
-                else { return false; }
+                else 
+                {
+                    Errors err = new Errors();
+                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{lC}' is Invalid Input");
+                    return false; 
+                }
             }
-            catch { return false; }
+            catch (FormatException e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                return false; 
+            }
+            catch (Exception e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
+                return false;
+            }
         }
         public bool SetLWH(string len, string wid, string hei)
         {
@@ -61,9 +77,25 @@ namespace VehicleRentalApp
                     IntLength = l; IntWidth = w; IntHeight = h;
                     return true;
                 }
-                else { return false; }
+                else
+                {
+                    Errors err = new Errors();
+                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{l} or {w} or {h}' is Invalid Input");
+                    return false;
+                }
             }
-            catch { return false; }
+            catch (FormatException e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
+                return false;
+            }
         }
         public float SetVolume() { return IntLength * IntWidth * IntHeight; }
 

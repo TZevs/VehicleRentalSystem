@@ -18,6 +18,7 @@ namespace VehicleRentalApp
         protected int SeatCapacity;
         protected string FuelType;
         public bool IsValid { get; protected set; } // Only set within the classes.
+        protected List<string> errorList;
 
         // Base Getters
         public string GetType() { return TypeOfVehicle; }
@@ -28,6 +29,15 @@ namespace VehicleRentalApp
         public string GetTransmission() { return Transmission; }
         public int GetSeatCap() { return SeatCapacity; }
         public string GetFuel() { return FuelType; }
+        public string? GetErrorList()
+        { 
+            string errors = string.Empty;
+            foreach (string error in errorList)
+            {
+                errors += error + "\n";
+            }
+            return errors;
+        }
 
         // Car member Getters
         public virtual float? GetBootCap() { return null; }
@@ -60,12 +70,14 @@ namespace VehicleRentalApp
             }
             catch (FormatException e)
             {
-                Console.WriteLine(e.Message);
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
                 return false;
             }
             catch (Exception e) 
             {
-                Console.WriteLine(e.Message);
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
                 return false;
             }
         } // Converts and validates the Year input.
@@ -82,18 +94,22 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine("Daily Rate should be more than £0.00");
+                    Errors err = new Errors();
+                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{r}' is Invalid Input");
                     return false;
                 }
             }
             catch (FormatException ex) 
             {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{ex.Message}");
                 Console.WriteLine(ex.Message);
                 return false;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
                 return false;
             }
         } // Converts and validates the Daily Rate input.
@@ -113,7 +129,8 @@ namespace VehicleRentalApp
             }
             else
             {
-                Console.WriteLine($"Invalid Input: '{tr}'");
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Info)}'{tr}' is Invalid Input");
                 return false;
             }
         } // Validates the Transmission type input.
@@ -128,9 +145,25 @@ namespace VehicleRentalApp
                     SeatCapacity = seats;
                     return true;
                 }
-                else { return false; }
+                else 
+                {
+                    Errors err = new Errors();
+                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{seatNum}' is Invalid Input");
+                    return false; 
+                }
             }
-            catch { return false; }
+            catch (FormatException e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                return false; 
+            }
+            catch (Exception e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
+                return false;
+            }
         } // Converts and validates the Seat Capacity input.
         public bool SetFuelType(string fuelType)
         {
@@ -149,12 +182,17 @@ namespace VehicleRentalApp
                 FuelType = "Electric";
                 return true;
             }
-            else if (fuelType == "h" ||  fuelType == "hybrid")
+            else if (fuelType == "h" || fuelType == "hybrid")
             {
                 FuelType = "Hybrid";
                 return true;
             }
-            else return false;
+            else
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Info)}'{fuelType}' is Invalid Input");
+                return false;
+            }
         } // Validates the Fuel type input.
         
         public string UpdateStatus

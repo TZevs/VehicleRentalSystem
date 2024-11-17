@@ -38,9 +38,25 @@ namespace VehicleRentalApp
                     BootCapacity = bc;
                     return true;
                 }
-                else { return false; }
+                else
+                {
+                    Errors err = new Errors();
+                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{bC}' is Invalid Input");
+                    return false;
+                }
             }
-            catch { return false; }
+            catch (FormatException e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Errors err = new Errors();
+                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
+                return false;
+            }
         }
         public override void SetType() { TypeOfVehicle = "Car"; }
         
