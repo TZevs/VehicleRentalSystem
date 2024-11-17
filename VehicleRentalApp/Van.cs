@@ -27,9 +27,10 @@ namespace VehicleRentalApp
                 IsValid = false;
             }
             Status = "Available";
-            Volume = GSVolume;
+            Volume = SetVolume();
             SetType();
         }
+        public override void SetType() { TypeOfVehicle = "Van"; }
         public bool SetLoadCap(string lC)
         {
             float lc = 0;
@@ -64,19 +65,12 @@ namespace VehicleRentalApp
             }
             catch { return false; }
         }
-        public string GetLWH()
-        {
-            return $"{IntLength}m x {IntWidth}m x {IntHeight}m";
-        }
-        public float GSVolume
-        {
-            get { return Volume; }
-            set
-            {
-                Volume = IntLength * IntWidth * IntHeight;
-            }
-        }
-        public override void SetType() { TypeOfVehicle = "Van"; }
+        public float SetVolume() { return IntLength * IntWidth * IntHeight; }
+
+        public virtual float? GetLoadCap() { return LoadCapacity; }
+        public override string? GetLWH() { return $"{IntLength}m x {IntWidth}m x {IntHeight}m"; }
+        public override float? GetVolume() { return Volume; }
+
         public override string ToFile()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {LoadCapacity}, {IntLength}, {IntWidth}, {IntHeight}, {Volume}";

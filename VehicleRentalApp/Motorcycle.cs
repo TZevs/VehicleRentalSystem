@@ -29,6 +29,7 @@ namespace VehicleRentalApp
             SetProtection(wPro);
             SetType();
         }
+        public override void SetType() { TypeOfVehicle = "Motorcycle"; }
         public bool SetCC(string cc)
         {
             int c = 0;
@@ -68,7 +69,11 @@ namespace VehicleRentalApp
             }
             else { WithProtection = false; }
         }
-        public override void SetType() { TypeOfVehicle = "Motorcycle"; }
+
+        public override int? GetCC() { return CC; }
+        public override bool? GetStorage() { return Storage; }
+        public override bool? GetWProtect() { return WithProtection; }
+
         public override string ToFile()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";

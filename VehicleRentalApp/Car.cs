@@ -8,6 +8,8 @@ namespace VehicleRentalApp
 {
     internal class Car : Vehicle
     {
+        // Shall I change to int ? 
+        // Use kg - not something that allways appears on rental apps.
         private float BootCapacity;
 
         public Car(string make, string model, string yr, string rate, string trans, string numSeats, string fuel, string bC)
@@ -41,6 +43,9 @@ namespace VehicleRentalApp
             catch { return false; }
         }
         public override void SetType() { TypeOfVehicle = "Car"; }
+        
+        public override float? GetBootCap() { return BootCapacity; }
+
         public override string ToFile()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";

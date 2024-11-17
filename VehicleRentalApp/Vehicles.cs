@@ -19,6 +19,7 @@ namespace VehicleRentalApp
         protected string FuelType;
         public bool IsValid { get; protected set; } // Only set within the classes.
 
+        // Base Getters
         public string GetType() { return TypeOfVehicle; }
         public string GetMake() { return Make; }
         public string GetModel () { return Model; }
@@ -28,6 +29,18 @@ namespace VehicleRentalApp
         public int GetSeatCap() { return SeatCapacity; }
         public string GetFuel() { return FuelType; }
 
+        // Car member Getters
+        public virtual float? GetBootCap() { return null; }
+        // Van member Getters
+        public virtual float? GetLoadCap() { return null; }
+        public virtual string? GetLWH() { return null; }
+        public virtual float? GetVolume() { return null; }
+        // Motorcycle member Getters
+        public virtual int? GetCC() { return null; }
+        public virtual bool? GetStorage() { return null; }
+        public virtual bool? GetWProtect() { return null; }
+
+        // Base Setters
         public abstract void SetType(); 
         public bool SetYear(string y)
         {
@@ -143,6 +156,7 @@ namespace VehicleRentalApp
             }
             else return false;
         } // Validates the Fuel type input.
+        
         public string UpdateStatus
         {
             get { return Status; }
