@@ -274,11 +274,17 @@ namespace VehicleRentalApp
             
             void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> display)
             {
-                foreach (KeyValuePair<int, Vehicle> v in display)
-                {  
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");   
+                if (display.Count() == 0)
+                {
+                    Console.WriteLine("No Vehicles Available");
                 }
-                
+                else
+                {
+                    foreach (KeyValuePair<int, Vehicle> v in display)
+                    {
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
+                    }
+                }
             }
 
             void AddVehicles()
@@ -334,7 +340,8 @@ namespace VehicleRentalApp
                     }
                     else
                     {
-                        Console.WriteLine("\nPlease check your Car's details");
+                        Console.WriteLine();
+                        Console.WriteLine(newCar.GetErrorList());
                         Console.WriteLine($"{newCar.ToFile()}");
                     }
                 }
@@ -359,7 +366,8 @@ namespace VehicleRentalApp
                     }
                     else
                     {
-                        Console.WriteLine("\nPlease check your Van's details");
+                        Console.WriteLine();
+                        Console.WriteLine(newVan.GetErrorList());
                         Console.WriteLine($"Van - {newVan.ToFile()}");
                     }
                 }
@@ -376,18 +384,15 @@ namespace VehicleRentalApp
                     if (newMot.IsValid)
                     {
                         vehicles.Add(newKey, newMot);
-                        Console.WriteLine($"\nVan Added - {newMot.ToFile()}");
+                        Console.WriteLine($"\nMotorcycle Added - {newMot.ToFile()}");
                         UpdateFile();
                     }
                     else
                     {
-                        Console.WriteLine("\nPlease check your Motorcycle's details");
-                        Console.WriteLine($"Motorcycle Added - {newMot.ToFile()}");
+                        Console.WriteLine();
+                        Console.WriteLine(newMot.GetErrorList());
+                        Console.WriteLine($"Motorcycle - {newMot.ToFile()}");
                     }
-                }
-                else
-                {
-
                 }
 
                 // Outputs options, waits for correct input.
@@ -704,7 +709,7 @@ namespace VehicleRentalApp
                     }
                     else
                     {
-                        Console.WriteLine("Please check your Car's details");
+                        Console.WriteLine(cmdCar.GetErrorList());
                         Console.WriteLine($"Car - {cmdCar.ToFile()}");
                     }
                 }
@@ -719,7 +724,7 @@ namespace VehicleRentalApp
                     }
                     else
                     {
-                        Console.WriteLine("Please check your Van's details");
+                        Console.WriteLine(cmdVan.GetErrorList());
                         Console.WriteLine($"Van - {cmdVan.ToFile()}");
                     }
                 }
@@ -734,7 +739,7 @@ namespace VehicleRentalApp
                     }
                     else
                     {
-                        Console.WriteLine("Please check your Motorcycle's details");
+                        Console.WriteLine(cmdMotor.GetErrorList());
                         Console.WriteLine($"Motorcycle - {cmdMotor.ToFile()}");
                     }
                 }
