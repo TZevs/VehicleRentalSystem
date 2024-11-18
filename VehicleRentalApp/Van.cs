@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
     internal class Van : Vehicle
     {
-        private float LoadCapacity;
-        private float IntLength; 
-        private float IntWidth; 
-        private float IntHeight; 
-        private float Volume;
+        [JsonInclude] private float LoadCapacity;
+        [JsonInclude] private float IntLength;
+        [JsonInclude] private float IntWidth;
+        [JsonInclude] private float IntHeight;
+        [JsonInclude] private float Volume;
 
         public Van(string make, string model, string yr, string rate, string trans, string numSeats, string fuel, string lC, string len, string wid, string hei)
         {

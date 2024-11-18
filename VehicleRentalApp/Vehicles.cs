@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
     internal abstract class Vehicle
     {
-        protected string TypeOfVehicle;
-        protected string Make;
-        protected string Model;
-        protected int Year;
-        protected decimal DailyRate;
-        protected string Transmission;
-        protected string Status;
-        protected int SeatCapacity;
-        protected string FuelType;
-        public bool IsValid { get; protected set; } // Only set within the classes.
-        protected List<string> errorList;
+        [JsonInclude] protected string TypeOfVehicle;
+        [JsonInclude] protected string Make;
+        [JsonInclude] protected string Model;
+        [JsonInclude] protected int Year;
+        [JsonInclude] protected decimal DailyRate;
+        [JsonInclude] protected string Transmission;
+        [JsonInclude] protected string Status;
+        [JsonInclude] protected int SeatCapacity;
+        [JsonInclude] protected string FuelType;
+        [JsonInclude] public bool IsValid { get; protected set; } // Only set within the classes.
+        [JsonIgnore] protected List<string>? errorList = new List<string>();
 
         // Base Getters
         public string GetType() { return TypeOfVehicle; }
@@ -30,17 +31,12 @@ namespace VehicleRentalApp
         public int GetSeatCap() { return SeatCapacity; }
         public string GetFuel() { return FuelType; }
         public string? GetErrorList()
-        { 
-            string errors = string.Empty;
-            foreach (string error in errorList)
-            {
-                errors += error + "\n";
-            }
-            return errors;
+        {
+            return string.Join("\n" + errorList);
         }
 
         // Car member Getters
-        public virtual float? GetBootCap() { return null; }
+        public virtual float? BootCap { get; set; }
         // Van member Getters
         public virtual float? GetLoadCap() { return null; }
         public virtual string? GetLWH() { return null; }
