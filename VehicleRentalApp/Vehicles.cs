@@ -15,7 +15,7 @@ namespace VehicleRentalApp
         [JsonInclude] protected int Year;
         [JsonInclude] protected decimal DailyRate;
         [JsonInclude] protected string Transmission;
-        [JsonInclude] protected string Status;
+        protected string Status;
         [JsonInclude] protected int SeatCapacity;
         [JsonInclude] protected string FuelType;
         [JsonInclude] public bool IsValid { get; protected set; } // Only set within the classes.
@@ -113,12 +113,12 @@ namespace VehicleRentalApp
         {
             string[] a = { "a", "automatic", "auto"};
             string[] m = { "m", "manual", "man" };
-            if (a.Contains(tr))
+            if (a.Contains(tr.ToLower()))
             {
                 Transmission = "Automatic";
                 return true;
             }
-            else if (m.Contains(tr))
+            else if (m.Contains(tr.ToLower()))
             {
                 Transmission = "Manual";
                 return true;
