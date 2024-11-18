@@ -17,14 +17,14 @@ namespace VehicleRentalApp
         {
             Make = make;
             Model = model;
-            //if (SetYear(yr) && SetRate(rate) && SetTransmission(trans) && SetBootCap(bC) && SetSeatCap(numSeats) && SetFuelType(fuel))
-            //{
-            //    IsValid = true;
-            //}
-            //else
-            //{
-            //    IsValid = false;
-            //}
+            if (SetYear(yr) && SetRate(rate) && SetTransmission(trans) && SetBootCap(bC) && SetSeatCap(numSeats) && SetFuelType(fuel))
+            {
+                IsValid = true;
+            }
+            else
+            {
+                IsValid = false;
+            }
             Status = "Available";
             SetType();
         }
@@ -34,7 +34,7 @@ namespace VehicleRentalApp
             get { return BootCapacity; }
             set { BootCapacity = value ?? 0; }
         }
-        public void SetBootCap(string bC)
+        public bool SetBootCap(string bC)
         {
             float bc = 0;
             try
@@ -43,22 +43,26 @@ namespace VehicleRentalApp
                 if (bc >= 0)
                 {
                     BootCapacity = bc;
+                    return true;
                 }
                 else
                 {
                     Errors err = new Errors();
                     errorList.Add($"{err.GetColor(ErrorType.Info)}'{bC}' is Invalid Input");
+                    return false;
                 }
             }
             catch (FormatException e)
             {
                 Errors err = new Errors();
                 errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                return false;
             }
             catch (Exception e)
             {
                 Errors err = new Errors();
                 errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
+                return false;   
             }
         }
         public override void SetType() { TypeOfVehicle = "Car"; }
