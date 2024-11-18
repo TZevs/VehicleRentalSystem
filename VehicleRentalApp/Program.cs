@@ -73,10 +73,33 @@ namespace VehicleRentalApp
             //    bw.Write(veh.Value.GetMake());
             //    bw.Write(veh.Value.GetYear());
             //    bw.Write(veh.Value.GetRate());
-            //    bw.Write(veh.Value.GetTransmission());
+            //    var trans = veh.Value.GetTransmission();
+            //    if (trans != null)
+            //    {
+            //        bw.Write(veh.Value.GetTransmission());
+            //    }
             //    bw.Write(veh.Value.GetSeatCap());
-            //    bw.Write(veh.Value.GetFuel());
+            //    var fuel = veh.Value.GetFuel();
+            //    if (fuel != null)
+            //    {
+            //        bw.Write(veh.Value.GetFuel());
+            //    }
+            //    bw.Write(veh.Value.BootCap.Value);
+            //    var cc = veh.Value.GetCC();
+            //    if (cc != null)
+            //    {
+            //        bw.Write(veh.Value.GetCC().Value);
+            //    }
+            //    var stor = veh.Value.GetStorage();
+            //    if (stor != null) { bw.Write(veh.Value.GetStorage().Value);
+            //    var pro = veh.Value.GetWProtect();
+            //    if (pro != null) { bw.Write(veh.Value.GetWProtect().Value);
+            //    bw.Write(veh.Value.GetLWH());
+            //    bw.Write(veh.Value.GetVolume().Value);
             //}
+
+            //bw.Close();
+            //fs.Close();
 
             void MainMenu()
             {
