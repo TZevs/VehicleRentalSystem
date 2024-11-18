@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace VehicleRentalApp
 {
@@ -29,6 +30,7 @@ namespace VehicleRentalApp
                     {
                         Car fileCar = new Car(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10]);
                         fileCar.UpdateStatus = output[9];
+                        fileCar.BootCap = Convert.ToSingle(output[10]);
                         vehicles.Add(Convert.ToInt32(output[0]), fileCar);
                     }
                     else if (output[1] == "Motorcycle")
@@ -46,6 +48,35 @@ namespace VehicleRentalApp
                     else { return; }
                 }
             }
+
+            SerializeDictionary();
+
+            void SerializeDictionary()
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    IncludeFields = true,
+                };
+                string jsonStr = JsonSerializer.Serialize(vehicles, options);
+                File.WriteAllText("vehicles.json", jsonStr);
+            }
+            //string jsonString = File.ReadAllText("vehicles.json");
+            //var toVehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(jsonString);
+
+            //FileStream fs = new FileStream("vehicles.bin", FileMode.Create);
+            //BinaryWriter bw = new BinaryWriter(fs);
+
+            //foreach (var veh in vehicles)
+            //{
+            //    bw.Write(veh.Value.GetType());
+            //    bw.Write(veh.Value.GetMake());
+            //    bw.Write(veh.Value.GetYear());
+            //    bw.Write(veh.Value.GetRate());
+            //    bw.Write(veh.Value.GetTransmission());
+            //    bw.Write(veh.Value.GetSeatCap());
+            //    bw.Write(veh.Value.GetFuel());
+            //}
 
             void MainMenu()
             {
@@ -133,7 +164,7 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allCars)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetBootCap()} || {v.Value.UpdateStatus}");
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCap} || {v.Value.UpdateStatus}");
                     }
                 }
 
