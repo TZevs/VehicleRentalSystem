@@ -44,15 +44,7 @@ namespace VehicleRentalApp
                         vehicles.Add(Convert.ToInt32(output[0]), fileVan);
                     }
                     else { return; }
-
-                    //Vehicle fromFile = new Vehicle(output[1], output[2], output[3], output[4], output[5]);
-                    //fromFile.UpdateStatus = output[6];
-                    //vehicles.Add(Convert.ToInt32(output[0]), fromFile);
                 }
-            }
-            else
-            {
-                Console.WriteLine("No Vehicles Available.");
             }
 
             void MainMenu()
@@ -100,7 +92,7 @@ namespace VehicleRentalApp
                 IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetType() == "Van");
                 DisplayVehicles(allVans);
 
-                Console.WriteLine("\nVANS:");
+                Console.WriteLine("\nMotorcycles:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
                 IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetType() == "MotorCycles");
                 DisplayVehicles(allMotors);
@@ -298,7 +290,7 @@ namespace VehicleRentalApp
                 {
                     case "C": typeInput = "Car"; break;
                     case "V": typeInput = "Van"; break;
-                    case "M": typeInput = "MotorCycle"; break;
+                    case "M": typeInput = "Motorcycle"; break;
                     default: AddVehicles(); break;
                 }
 
