@@ -17,16 +17,16 @@ namespace VehicleRentalApp
         public Car() { }
         public Car(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
         {
-            _Make = make;
-            _Model = model;
-            _Year = yr;
-            _DailyRate = rate;
-            _Transmission = trans;
-            _SeatCapacity = numSeats;
-            _FuelType = fuel;
+            Make = make;
+            Model = model;
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
             _BootCapacity = bC;
             Status = "Available";
-            SetType();
+            SetVType();
         }
         [JsonInclude]
         public override int? BootCapacity
@@ -34,10 +34,10 @@ namespace VehicleRentalApp
             get { return _BootCapacity; }
             set { _BootCapacity = value ?? 0; }
         }
-        public override void SetType() { _TypeOfVehicle = "Car"; }
+        public override void SetVType() { TypeOfVehicle = "Car"; }
         public override string ToFile()
         {
-            return $"{_TypeOfVehicle}, {_Make}, {_Model}, {_Year}, {_DailyRate}, {_Transmission}, {_SeatCapacity}, {_FuelType}, {Status}, {BootCapacity}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
         }
     }
 }

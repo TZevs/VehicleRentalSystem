@@ -9,25 +9,25 @@ namespace VehicleRentalApp
 {
     public abstract class Vehicle
     {
-        [JsonInclude] protected string _TypeOfVehicle;
-        [JsonInclude] protected string _Make;
-        [JsonInclude] protected string _Model;
-        [JsonInclude] protected int _Year;
-        [JsonInclude] protected decimal _DailyRate;
-        [JsonInclude] protected string _Transmission;
+        [JsonInclude] protected string TypeOfVehicle;
+        [JsonInclude] protected string Make;
+        [JsonInclude] protected string Model;
+        [JsonInclude] protected int Year;
+        [JsonInclude] protected decimal DailyRate;
+        [JsonInclude] protected string Transmission;
         protected string _Status;
-        [JsonInclude] protected int _SeatCapacity;
-        [JsonInclude] protected string _FuelType;
+        [JsonInclude] protected int SeatCapacity;
+        [JsonInclude] protected string FuelType;
         
         // Base Getters
-        public string GetVType() { return _TypeOfVehicle; }
-        public string GetMake() { return _Make; }
-        public string GetModel () { return _Model; }
-        public int GetYear() { return _Year; }
-        public decimal GetRate() { return _DailyRate; }
-        public string GetTransmission() { return _Transmission; }
-        public int GetSeatCap() { return _SeatCapacity; }
-        public string GetFuel() { return _FuelType; }
+        public string GetVType() { return TypeOfVehicle; }
+        public string GetMake() { return Make; }
+        public string GetModel () { return Model; }
+        public int GetYear() { return Year; }
+        public decimal GetRate() { return DailyRate; }
+        public string GetTransmission() { return Transmission; }
+        public int GetSeatCap() { return SeatCapacity; }
+        public string GetFuel() { return FuelType; }
 
         // Car member Getters / Setters
         public virtual int? BootCapacity { get; set; }
@@ -45,7 +45,7 @@ namespace VehicleRentalApp
         public virtual bool? WithProtection { get; set; }
 
         // Base Setters
-        public abstract void SetType(); 
+        public abstract void SetVType(); 
         public string Status
         {
             get { return _Status; }

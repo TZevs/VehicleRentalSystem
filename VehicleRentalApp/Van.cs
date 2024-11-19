@@ -24,22 +24,22 @@ namespace VehicleRentalApp
         public Van() { }
         public Van(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, float lC, float len, float wid, float hei)
         {
-            _Make = make;
-            _Model = model;
-            _Year = yr;
-            _DailyRate = rate;
-            _Transmission = trans;
-            _SeatCapacity = numSeats;
-            _FuelType = fuel;
+            Make = make;
+            Model = model;
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
             _LoadCapacity = lC;
             _IntLength = len;
             _IntWidth = wid;
             _IntHeight = hei;
             _Volume = _IntLength * _IntWidth * _IntHeight;
             Status = "Available";
-            SetType();
+            SetVType();
         }
-        public override void SetType() { _TypeOfVehicle = "Van"; }
+        public override void SetVType() { TypeOfVehicle = "Van"; }
         [JsonInclude]
         public override float? LoadCapacity
         {
@@ -70,10 +70,10 @@ namespace VehicleRentalApp
             get { return _Volume; }
             set { _Volume = value ?? 0; }
         }
-        public override string? GetLWH() { return $"{_IntLength}m x {_IntWidth}m x {_IntHeight}m"; }
+        public override string? GetLWH() { return $"{IntLength}m x {IntWidth}m x {IntHeight}m"; }
         public override string ToFile()
         {
-            return $"{_TypeOfVehicle}, {_Make}, {_Model}, {_Year}, {_DailyRate}, {_Transmission}, {_SeatCapacity}, {_FuelType}, {_Status}, {_LoadCapacity}, {_IntLength}, {_IntWidth}, {_IntHeight}, {_Volume}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {LoadCapacity}, {IntLength}, {IntWidth}, {IntHeight}, {Volume}";
         }
     }
 }

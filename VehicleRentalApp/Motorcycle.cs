@@ -17,20 +17,20 @@ namespace VehicleRentalApp
         public Motorcycle() { }
         public Motorcycle(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool Storage, bool WithProtection)
         {
-            _Make = make;
-            _Model = model;
-            _Year = yr;
-            _DailyRate = rate;
-            _Transmission = trans;
-            _SeatCapacity = numSeats;
-            _FuelType = fuel;
+            Make = make;
+            Model = model;
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
             _CC = cc;
             _Storage = Storage;
             _WithProtection = WithProtection;
             Status = "Available";
-            SetType();
+            SetVType();
         }
-        public override void SetType() { _TypeOfVehicle = "Motorcycle"; }
+        public override void SetVType() { TypeOfVehicle = "Motorcycle"; }
         [JsonInclude]
         public override int? CC
         {
@@ -51,7 +51,7 @@ namespace VehicleRentalApp
         }
         public override string ToFile()
         {
-            return $"{_TypeOfVehicle}, {_Make}, {_Model}, {_Year}, {_DailyRate}, {_Transmission}, {_SeatCapacity}, {_FuelType}, {_Status}, {_CC}, {_Storage}, {_WithProtection}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";
         }
     }
 }
