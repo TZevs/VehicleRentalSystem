@@ -17,9 +17,9 @@ namespace VehicleRentalApp
         {
             string binFilePath = "vehicles.bin";
             string jsonFilePath = "vehicles.json";
+            string filePath = "vehicles.txt";
             //Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-            //string jsonString = File.ReadAllText("vehicles.json");
-            //var vehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(jsonString);
+
             //if (File.Exists(filePath))
             //{
             //    List<string> output = new List<string>();
@@ -57,61 +57,23 @@ namespace VehicleRentalApp
             serializeOptions.Converters.Add(new VehicleConverter());
             string fromJsonString = File.ReadAllText(jsonFilePath);
             var vehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
+
             //string jsonStrn = JsonSerializer.Serialize(vehicles);
             //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(jsonStrn);
             //File.WriteAllBytes("vehicles.bin", byteArray);
 
-            SerializeDictionary();
             void SerializeDictionary()
             {
                 var options = new JsonSerializerOptions
                 {
                     WriteIndented = true,
-                    IncludeFields = true,  
+                    IncludeFields = true,
+                    // Ignores the variables not related to their object.
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 };
                 string jsonStr = JsonSerializer.Serialize(vehicles, options);
                 File.WriteAllText("vehicles.json", jsonStr);
             }
-
-            //string jsonString = File.ReadAllText("vehicles.json");
-            //var toVehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(jsonString);
-
-            //FileStream fs = new FileStream("vehicles.bin", FileMode.Create);
-            //BinaryWriter bw = new BinaryWriter(fs);
-
-            //foreach (var veh in vehicles)
-            //{
-            //    bw.Write(veh.Value.GetType());
-            //    bw.Write(veh.Value.GetMake());
-            //    bw.Write(veh.Value.GetYear());
-            //    bw.Write(veh.Value.GetRate());
-            //    var trans = veh.Value.GetTransmission();
-            //    if (trans != null)
-            //    {
-            //        bw.Write(veh.Value.GetTransmission());
-            //    }
-            //    bw.Write(veh.Value.GetSeatCap());
-            //    var fuel = veh.Value.GetFuel();
-            //    if (fuel != null)
-            //    {
-            //        bw.Write(veh.Value.GetFuel());
-            //    }
-            //    bw.Write(veh.Value.BootCap.Value);
-            //    var cc = veh.Value.GetCC();
-            //    if (cc != null)
-            //    {
-            //        bw.Write(veh.Value.GetCC().Value);
-            //    }
-            //    var stor = veh.Value.GetStorage();
-            //    if (stor != null) { bw.Write(veh.Value.GetStorage().Value);
-            //    var pro = veh.Value.GetWProtect();
-            //    if (pro != null) { bw.Write(veh.Value.GetWProtect().Value);
-            //    bw.Write(veh.Value.GetLWH());
-            //    bw.Write(veh.Value.GetVolume().Value);
-            //}
-
-            //bw.Close();
-            //fs.Close();
 
             void MainMenu()
             {
@@ -238,7 +200,7 @@ namespace VehicleRentalApp
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
                             $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.LoadCapacity}kg || {v.Value.GetLWH()} " +
-                            $"|| {v.Value.Volume}m ||{v.Value.Status}");
+                            $"|| {v.Value.Volume}m || {v.Value.Status}");
                     }
                 }
 
@@ -276,7 +238,7 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allMotors)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.CC} || {v.Value.Storage} " +
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.CC}cc || {v.Value.Storage} " +
                             $"|| {v.Value.WithProtection} ||{v.Value.Status}");
                     }
                 }
