@@ -36,7 +36,7 @@ namespace VehicleRentalApp
         }
 
         // Car member Getters
-        public virtual float? BootCap { get; set; }
+        public virtual int? BootCap { get; set; }
         // Van member Getters
         public virtual float? GetLoadCap() { return null; }
         public virtual string? GetLWH() { return null; }
@@ -163,22 +163,23 @@ namespace VehicleRentalApp
         } // Converts and validates the Seat Capacity input.
         public bool SetFuelType(string fuelType)
         {
-            if (fuelType == "d" || fuelType == "disesl")
+            string ft = fuelType.ToLower();
+            if (ft == "d" || ft == "diesel")
             {
                 FuelType = "Diesel";
                 return true;
             }
-            else if (fuelType == "p" || fuelType == "petrol")
+            else if (ft == "p" || ft == "petrol")
             {
                 FuelType = "Petrol";
                 return true;
             }
-            else if (fuelType == "e" || fuelType == "electric")
+            else if (ft == "e" || ft == "electric")
             {
                 FuelType = "Electric";
                 return true;
             }
-            else if (fuelType == "h" || fuelType == "hybrid")
+            else if (ft == "h" || ft == "hybrid")
             {
                 FuelType = "Hybrid";
                 return true;
