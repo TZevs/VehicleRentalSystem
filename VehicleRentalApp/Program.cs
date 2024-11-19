@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VehicleRentalApp
 {
@@ -12,55 +15,64 @@ namespace VehicleRentalApp
     {
         static void Main(string[] args)
         {
-            string filePath = "vehicles.txt";
-            Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
+            string binFilePath = "vehicles.bin";
+            string jsonFilePath = "vehicles.json";
+            //Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
+            //string jsonString = File.ReadAllText("vehicles.json");
+            //var vehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(jsonString);
+            //if (File.Exists(filePath))
+            //{
+            //    List<string> output = new List<string>();
+            //    foreach (string line in File.ReadLines(filePath))
+            //    {
+            //        output.Clear();
+            //        foreach (string parts in line.Split(", "))
+            //        {
+            //            output.Add(parts);
+            //        }
 
-            if (File.Exists(filePath))
-            {
-                List<string> output = new List<string>();
-                foreach (string line in File.ReadLines(filePath))
-                {
-                    output.Clear();
-                    foreach (string parts in line.Split(", "))
-                    {
-                        output.Add(parts);
-                    }
+            //        if (output[1] == "Car")
+            //        {
+            //            Car fileCar = new Car(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToInt32(output[10]));
+            //            fileCar.Status = output[9];
+            //            vehicles.Add(Convert.ToInt32(output[0]), fileCar);
+            //        }
+            //        else if (output[1] == "Motorcycle")
+            //        {
+            //            Motorcycle fileMotor = new Motorcycle(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToInt32(output[10]), Convert.ToBoolean(output[11]), Convert.ToBoolean(output[12]));
+            //            fileMotor.Status = output[9];
+            //            vehicles.Add(Convert.ToInt32(output[0]), fileMotor);
+            //        }
+            //        else if (output[1] == "Van")
+            //        {
+            //            Van fileVan = new Van(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToSingle(output[10]), Convert.ToSingle(output[11]), Convert.ToSingle(output[12]), Convert.ToSingle(output[13]));
+            //            fileVan.Status = output[9];
+            //            vehicles.Add(Convert.ToInt32(output[0]), fileVan);
+            //        }
+            //        else { return; }
+            //    }
+            //}
 
-                    if (output[1] == "Car")
-                    {
-                        Car fileCar = new Car(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10]);
-                        fileCar.UpdateStatus = output[9];
-                        fileCar.BootCap = Convert.ToSingle(output[10]);
-                        vehicles.Add(Convert.ToInt32(output[0]), fileCar);
-                    }
-                    else if (output[1] == "Motorcycle")
-                    {
-                        Motorcycle fileMotor = new Motorcycle(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10], output[11], output[12]);
-                        fileMotor.UpdateStatus = output[9];
-                        vehicles.Add(Convert.ToInt32(output[0]), fileMotor);
-                    }
-                    else if (output[1] == "Van")
-                    {
-                        Van fileVan = new Van(output[2], output[3], output[4], output[5], output[6], output[7], output[8], output[10], output[11], output[12], output[13]);
-                        fileVan.UpdateStatus = output[9];
-                        vehicles.Add(Convert.ToInt32(output[0]), fileVan);
-                    }
-                    else { return; }
-                }
-            }
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new VehicleConverter());
+            string fromJsonString = File.ReadAllText(jsonFilePath);
+            var vehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
+            //string jsonStrn = JsonSerializer.Serialize(vehicles);
+            //byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(jsonStrn);
+            //File.WriteAllBytes("vehicles.bin", byteArray);
 
             SerializeDictionary();
-
             void SerializeDictionary()
             {
                 var options = new JsonSerializerOptions
                 {
                     WriteIndented = true,
-                    IncludeFields = true,
+                    IncludeFields = true,  
                 };
                 string jsonStr = JsonSerializer.Serialize(vehicles, options);
                 File.WriteAllText("vehicles.json", jsonStr);
             }
+
             //string jsonString = File.ReadAllText("vehicles.json");
             //var toVehicles = JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(jsonString);
 
@@ -138,17 +150,17 @@ namespace VehicleRentalApp
                 // Displays all vehicles in the Dictionary.
                 Console.WriteLine("\nCARS:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetType() == "Car");
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car");
                 DisplayVehicles(allCars);
 
                 Console.WriteLine("\nVANS:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetType() == "Van");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van");
                 DisplayVehicles(allVans);
 
                 Console.WriteLine("\nMotorcycles:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetType() == "MotorCycles");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "MotorCycles");
                 DisplayVehicles(allMotors);
 
                 // Outputs options waits for correct input.  
@@ -177,7 +189,7 @@ namespace VehicleRentalApp
 
                 // Displays all Cars in the Dictionary and all their stored data.
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Boot Capacity || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetType() == "Car");
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car");
                 if (allCars.Count() == 0)
                 {
                     Console.WriteLine("No Cars Available");
@@ -187,7 +199,7 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allCars)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCap} || {v.Value.UpdateStatus}");
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCapacity} || {v.Value.Status}");
                     }
                 }
 
@@ -215,7 +227,7 @@ namespace VehicleRentalApp
 
                 // Displays all Vans in the Dictionary and all their stored data.
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Max Load || Internal || Volume(Cubed) || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetType() == "Van");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van");
                 if (allVans.Count() == 0)
                 {
                     Console.WriteLine("No Vans Available");
@@ -225,8 +237,8 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allVans)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetLoadCap()}kg || {v.Value.GetLWH()} " +
-                            $"|| {v.Value.GetVolume()}m ||{v.Value.UpdateStatus}");
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.LoadCapacity}kg || {v.Value.GetLWH()} " +
+                            $"|| {v.Value.Volume}m ||{v.Value.Status}");
                     }
                 }
 
@@ -254,7 +266,7 @@ namespace VehicleRentalApp
 
                 // Displays all Motorcycles in the Dictionary and all their stored data.
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || CC || With Storage || With Protection || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetType() == "Motorcycle");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle");
                 if (allMotors.Count() == 0)
                 {
                     Console.WriteLine("No Motorcycles Available");
@@ -264,8 +276,8 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allMotors)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.GetCC()} || {v.Value.GetStorage()} " +
-                            $"|| {v.Value.GetWProtect()} ||{v.Value.UpdateStatus}");
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.CC} || {v.Value.Storage} " +
+                            $"|| {v.Value.WithProtection} ||{v.Value.Status}");
                     }
                 }
 
@@ -328,7 +340,7 @@ namespace VehicleRentalApp
                 {
                     foreach (KeyValuePair<int, Vehicle> v in display)
                     {
-                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.UpdateStatus}");
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.Status}");
                     }
                 }
             }
@@ -352,17 +364,13 @@ namespace VehicleRentalApp
                 string make = Console.ReadLine().Trim();
                 Console.Write("Model: ");
                 string model = Console.ReadLine().Trim();
-                Console.Write("Year: ");
-                string year = Console.ReadLine();
-                Console.Write("Daily Rate: ");
-                string rate = Console.ReadLine();
-                Console.Write("Transmission Type [Manual / Automatic]: ");
-                string transm = Console.ReadLine().Trim().ToLower();
-                Console.Write("Number of Seats: ");
-                string numOfSeats = Console.ReadLine();
-                Console.Write("Fuel Type [Diesel / Petrol / Electric / Hybrid]: ");
-                string fuelType = Console.ReadLine().ToLower();
 
+                int yr = GetValidYear("Year: ");
+                decimal rate = GetValidDecimal("Daily Rate: ");
+                string transm = GetValidTransmission("Transmission Type [Manual / Automatic]: ");
+                int numOfSeats = GetValidInt("Number of Seats: ");
+                string fuelType = GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
+                
                 int newKey = 0;
                 if (vehicles.Count == 0)
                 {
@@ -374,70 +382,44 @@ namespace VehicleRentalApp
                 }
                 if (typeInput == "Car") 
                 {
-                    Console.Write("\nBoot Capacity (In Litres): ");
-                    string bootCap = Console.ReadLine();
+                    int boot = GetValidInt("Boot Capacity (In Litres): ");
 
-                    Car newCar = new Car(make, model, year, rate, transm, numOfSeats, fuelType, bootCap);
-                    if (newCar.IsValid)
+                    Car newCar = new Car(make, model, yr, rate, transm, numOfSeats, fuelType, boot);
+                    Console.WriteLine($"\nCar Added - {newCar.ToFile()}");
+                    if (GetValidBool("Add Car [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newCar);
-                        Console.WriteLine($"\nCar Added - {newCar.ToFile()}");
-                        UpdateFile();
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine(newCar.GetErrorList());
-                        Console.WriteLine($"{newCar.ToFile()}");
+                        SerializeDictionary();
                     }
                 }
                 else if (typeInput == "Van")
                 {
-                    Console.Write("\nLoad Capacity (Max in kg): ");
-                    string loadCap = Console.ReadLine();
+                    float loadCap = GetValidFloat("Load Capacity(Kg): ");
                     Console.WriteLine("Internal Measurements");
-                    Console.Write("Lenth (In metres): ");
-                    string len = Console.ReadLine();
-                    Console.Write("Width (In metres): ");
-                    string wid = Console.ReadLine();
-                    Console.Write("Height (In metres): ");
-                    string hei = Console.ReadLine();
+                    float length = GetValidFloat("Lenth (In metres): ");
+                    float width = GetValidFloat("Width (In metres): ");
+                    float height = GetValidFloat("Height (In metres): ");
 
-                    Van newVan = new Van(make, model, year, rate, transm, numOfSeats, fuelType, loadCap, len, wid, hei);
-                    if (newVan.IsValid)
+                    Van newVan = new Van(make, model, yr, rate, transm, numOfSeats, fuelType, loadCap, length, width, height);
+                    Console.WriteLine($"\nVan Added - {newVan.ToFile()}");
+                    if (GetValidBool("Add Van [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newVan);
-                        Console.WriteLine($"\nVan Added - {newVan.ToFile()}");
-                        UpdateFile();
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine(newVan.GetErrorList());
-                        Console.WriteLine($"Van - {newVan.ToFile()}");
+                        SerializeDictionary();
                     }
                 }
                 else if (typeInput == "Motorcycle")
                 {
-                    Console.Write("CC: ");
-                    string cc = Console.ReadLine();
-                    Console.Write("Storage [y / n]: ");
-                    string stor = Console.ReadLine();
-                    Console.Write("With Protection (Helmet, Jacket, etc)[y / n]: ");
-                    string pro = Console.ReadLine();
+                    int cc = GetValidInt("CC: ");
+                    bool storage = GetValidBool("Storage [y / n]: ");
+                    bool protection = GetValidBool("With Protection (Helmet, etc) [y / n]: ");
 
-                    Motorcycle newMot = new Motorcycle(make, model, year, rate, transm, numOfSeats, fuelType, cc, stor, pro);
-                    if (newMot.IsValid)
+                    Motorcycle newMot = new Motorcycle(make, model, yr, rate, transm, numOfSeats, fuelType, cc, storage, protection);
+                    Console.WriteLine($"\nMotorcycle Added - {newMot.ToFile()}");
+                    if (GetValidBool("Add Motorcycle [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newMot);
-                        Console.WriteLine($"\nMotorcycle Added - {newMot.ToFile()}");
-                        UpdateFile();
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine(newMot.GetErrorList());
-                        Console.WriteLine($"Motorcycle - {newMot.ToFile()}");
+                        SerializeDictionary();
                     }
                 }
 
@@ -455,6 +437,171 @@ namespace VehicleRentalApp
                         default: break;
                     }
                 }
+            }
+
+            float GetValidFloat(string prompt)
+            {
+                float input = 0f;
+                while (true)
+                {
+                    Console.Write(prompt);
+                    try
+                    {
+                        input = Convert.ToSingle(Console.ReadLine());
+                        if (input <= 0)
+                        {
+                            Errors err = new Errors();
+                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                        }
+                        else { break; }
+                    }
+                    catch (FormatException e)
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                    }
+                }
+                return input;
+            }
+            int GetValidInt(string prompt)
+            {
+                int input = 0;
+                while (true)
+                {
+                    Console.Write(prompt);
+                    try
+                    {
+                        input = Convert.ToInt32(Console.ReadLine());
+                        if (input <= 0)
+                        {
+                            Errors err = new Errors();
+                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                        }
+                        else { break; }
+                    }
+                    catch (FormatException e)
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                    }
+                }
+                return input;
+            }
+            bool GetValidBool(string prompt)
+            {
+                while (true)
+                {
+                    Console.Write(prompt);
+                    string input = Console.ReadLine().Trim().ToLower();
+                    if (input == "y" || input == "yes")
+                    {
+                        return true;
+                    }
+                    else if (input == "n" || input == "no")
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Input. Enter 'y' or 'n'");
+                    }
+                }
+            }
+            int GetValidYear(string prompt)
+            {
+                int input = 0;
+                while (true)
+                {
+                    Console.Write(prompt);
+                    try
+                    {
+                        input = Convert.ToInt32(Console.ReadLine());
+                        if (input >= DateTime.Now.Year - 30 && input <= DateTime.Now.Year) { break; }
+                        else
+                        {
+                            Errors err = new Errors();
+                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Year");
+                        }
+                    }
+                    catch (FormatException e)
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                    }
+                }
+                return input;
+            }
+            string GetValidTransmission(string prompt)
+            {
+                string[] a = { "a", "automatic", "auto" };
+                string[] m = { "m", "manual", "man" };
+                while (true)
+                {
+                    Console.Write(prompt);
+                    string input = Console.ReadLine().Trim().ToLower();
+                    if (a.Contains(input))
+                    {
+                        return "Automatic";
+                    }
+                    else if (m.Contains(input))
+                    {
+                        return "Manual";
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Transmission. Enter 'Automatic' or 'Manual'");
+                    }
+                }
+            }
+            string GetValidFuel(string prompt)
+            {
+                while (true)
+                {
+                    Console.Write(prompt);
+                    string input = Console.ReadLine().Trim().ToLower();
+                    if (input == "d" || input == "diesel")
+                    {
+                        return "Diesel";
+                    }
+                    else if (input == "p" || input == "petrol")
+                    {
+                        return "Petrol";
+                    }
+                    else if (input == "e" || input == "electric")
+                    {
+                        return "Electric";
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Fuel Input. Enter 'Diesel', 'Petrol' or 'Electric'");
+                    }
+                }
+            }
+            decimal GetValidDecimal(string prompt)
+            {
+                decimal input = 0m;
+                while (true)
+                {
+                    try
+                    {
+                        input = Convert.ToDecimal(Console.ReadLine());
+                        if (input <= 0)
+                        {
+                            Errors err = new Errors();
+                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                        }
+                        else { break; }
+                    }
+                    catch (FormatException e)
+                    {
+                        Errors err = new Errors();
+                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                    }
+                }
+                return input;
             }
 
             void DeleteVehicles()
@@ -478,7 +625,7 @@ namespace VehicleRentalApp
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].UpdateStatus}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     // Asks for confirmation to delete the vehicle. 
@@ -488,7 +635,7 @@ namespace VehicleRentalApp
                         if (confirm == "y")
                         {
                             vehicles.Remove(id);
-                            UpdateFile();
+                            SerializeDictionary();
                             Console.WriteLine($"Vehicle with ID {id} has been deleted");
                             break;
                         }
@@ -553,10 +700,10 @@ namespace VehicleRentalApp
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].UpdateStatus}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
                     
                     // Asks for confirmation of the vehicle's status update. 
-                    string action = vehicles[id].UpdateStatus == "Available" ? "Rent" : "Return";
+                    string action = vehicles[id].Status == "Available" ? "Rent" : "Return";
                     Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
                     while (true)
@@ -564,17 +711,17 @@ namespace VehicleRentalApp
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].UpdateStatus == "Available" && action == "Rent")
+                            if (vehicles[id].Status == "Available" && action == "Rent")
                             {
-                                vehicles[id].UpdateStatus = "Rented";
+                                vehicles[id].Status = "Rented";
                                 Console.WriteLine($"Vehicle {id} Rented");
-                                UpdateFile();
+                                SerializeDictionary();
                             }
-                            else if (vehicles[id].UpdateStatus == "Rented" && action == "Return")
+                            else if (vehicles[id].Status == "Rented" && action == "Return")
                             {
-                                vehicles[id].UpdateStatus = "Available";
+                                vehicles[id].Status = "Available";
                                 Console.WriteLine($"Vehicle {id} Returned");
-                                UpdateFile();
+                                SerializeDictionary();
                             }
                             else
                             {
@@ -635,7 +782,7 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].UpdateStatus}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
 
                     Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
 
@@ -644,17 +791,17 @@ namespace VehicleRentalApp
                         string confirm = Console.ReadLine().Trim().ToLower();
                         if (confirm == "y")
                         {
-                            if (vehicles[id].UpdateStatus == "Available" && action == "Rent")
+                            if (vehicles[id].Status == "Available" && action == "Rent")
                             {
-                                vehicles[id].UpdateStatus = "Rented";
+                                vehicles[id].Status = "Rented";
                                 Console.WriteLine($"Vehicle {id} Rented.");
-                                UpdateFile();
+                                SerializeDictionary();
                             }
-                            else if (vehicles[id].UpdateStatus == "Rented" && action == "Return")
+                            else if (vehicles[id].Status == "Rented" && action == "Return")
                             {
-                                vehicles[id].UpdateStatus = "Available";
+                                vehicles[id].Status = "Available";
                                 Console.WriteLine($"Vehicle {id} Returned");
-                                UpdateFile();
+                                SerializeDictionary();
                             }
                             else
                             {
@@ -700,7 +847,7 @@ namespace VehicleRentalApp
 
                 if (vehicles.ContainsKey(id))
                 {
-                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].UpdateStatus}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
                     Console.Write("Is this the vehicle you want to delete [y/n]: ");
 
                     while (true)
@@ -710,7 +857,7 @@ namespace VehicleRentalApp
                         {
                             vehicles.Remove(id);
                             Console.WriteLine($"Vehicle with ID {id} has been deleted");
-                            UpdateFile();
+                            SerializeDictionary();
                             break;
                         }
                         else if (confirm == "n")
@@ -734,7 +881,7 @@ namespace VehicleRentalApp
             {
                 // If an array item has a / it is replaced with a space. New items are now in a List collection. 
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
-                
+
                 int newKey = 0;
                 if (vehicles.Count == 0)
                 {
@@ -746,56 +893,23 @@ namespace VehicleRentalApp
                 }
                 if (newVehicle[0].ToUpper() == "C")
                 {
-                    Car cmdCar = new Car(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8]);
-
-                    if (cmdCar.IsValid)
-                    {
-                        vehicles.Add(newKey, cmdCar);
-                        Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
-                    }
-                    else
-                    {
-                        Console.WriteLine(cmdCar.GetErrorList());
-                        Console.WriteLine($"Car - {cmdCar.ToFile()}");
-                    }
+                    Car cmdCar = new Car(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToInt32(newVehicle[8]));
+                    vehicles.Add(newKey, cmdCar);
+                    Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
                 }
-                else if (newVehicle[0].ToUpper() == "V") 
+                else if (newVehicle[0].ToUpper() == "V")
                 {
-                    Van cmdVan = new Van(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8], newVehicle[9], newVehicle[10], newVehicle[11]);
-
-                    if (cmdVan.IsValid)
-                    {
-                        vehicles.Add(newKey, cmdVan);
-                        Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
-                    }
-                    else
-                    {
-                        Console.WriteLine(cmdVan.GetErrorList());
-                        Console.WriteLine($"Van - {cmdVan.ToFile()}");
-                    }
+                    Van cmdVan = new Van(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToSingle(newVehicle[8]), Convert.ToSingle(newVehicle[9]), Convert.ToSingle(newVehicle[10]), Convert.ToSingle(newVehicle[11]));
+                    vehicles.Add(newKey, cmdVan);
+                    Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
                 }
                 else if (newVehicle[0].ToUpper() == "M")
                 {
-                    Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], newVehicle[3], newVehicle[4], newVehicle[5], newVehicle[6], newVehicle[7], newVehicle[8], newVehicle[9], newVehicle[10]);
-
-                    if (cmdMotor.IsValid)
-                    {
-                        vehicles.Add(newKey, cmdMotor);
-                        Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
-                    }
-                    else
-                    {
-                        Console.WriteLine(cmdMotor.GetErrorList());
-                        Console.WriteLine($"Motorcycle - {cmdMotor.ToFile()}");
-                    }
+                    Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToInt32(newVehicle[8]), Convert.ToBoolean(newVehicle[9]), Convert.ToBoolean(newVehicle[10]));
+                    vehicles.Add(newKey, cmdMotor);
+                    Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
                 }
                 else { return; }
-            }
-
-            void UpdateFile()
-            {
-                File.WriteAllLines(filePath, 
-                    vehicles.Select(x => $"{x.Key}, {x.Value.ToFile()}"));
             }
 
             if (args.Length <= 0)

@@ -7,99 +7,51 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    internal class Motorcycle : Vehicle
+    public class Motorcycle : Vehicle
     {
-        private int CC;
-        private bool Storage;
-        private bool WithProtection;
+        private int _CC;
+        private bool _Storage;
+        private bool _WithProtection;
 
-        public Motorcycle(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool stor, bool wPro)
+        [JsonConstructor]
+        public Motorcycle() { }
+        public Motorcycle(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool Storage, bool WithProtection)
         {
-            Make = make;
-            Model = model;
-            Year = yr;
-            DailyRate = rate;
-            Transmission = trans;
-            SeatCapacity = numSeats;
-            FuelType = fuel;
-            CC = cc;
-            Storage = stor;
-            WithProtection = wPro;
+            _Make = make;
+            _Model = model;
+            _Year = yr;
+            _DailyRate = rate;
+            _Transmission = trans;
+            _SeatCapacity = numSeats;
+            _FuelType = fuel;
+            _CC = cc;
+            _Storage = Storage;
+            _WithProtection = WithProtection;
             Status = "Available";
             SetType();
         }
-        public override void SetType() { TypeOfVehicle = "Motorcycle"; }
-        public bool SetCC(string cc)
+        public override void SetType() { _TypeOfVehicle = "Motorcycle"; }
+        [JsonInclude]
+        public override int? CC
         {
-            int c = 0;
-            try
-            {
-                c = int.Parse(cc);
-                if (c >= 50)
-                {
-                    CC = c;
-                    return true;
-                }
-                else 
-                {
-                    Errors err = new Errors();
-                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{cc}' is Invalid Input");
-                    return false; 
-                }
-            }
-            catch (FormatException e)
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
-                return false;
-            }
-            catch (Exception e)
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
-                return false;
-            }
+            get { return _CC; }
+            set { _CC = value ?? 0; }
         }
-        public void SetStorage(string stor)
+        [JsonInclude]
+        public override bool? Storage
         {
-            if (stor == "yes" || stor == "y") 
-            {
-                Storage = true;
-            }
-            else if (stor == "no" || stor == "n") 
-            { 
-                Storage = false;
-            }
-            else 
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Info)}'{stor}' is Invalid Input");
-            }
+            get { return _Storage; }
+            set { _Storage = value ?? false; }
         }
-        public void SetProtection(string wPro)
+        [JsonInclude]
+        public override bool? WithProtection
         {
-            if (wPro == "yes" || wPro == "y")
-            {
-                WithProtection = true;
-            }
-            else if (wPro == "no" || wPro == "n")
-            {
-                WithProtection = false;
-            }
-            else 
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Info)}Invalid Input");
-            }
+            get { return _WithProtection; }
+            set { _WithProtection = value ?? false; }
         }
-
-        public override int? GetCC() { return CC; }
-        public override bool? GetStorage() { return Storage; }
-        public override bool? GetWProtect() { return WithProtection; }
-
         public override string ToFile()
         {
-            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";
+            return $"{_TypeOfVehicle}, {_Make}, {_Model}, {_Year}, {_DailyRate}, {_Transmission}, {_SeatCapacity}, {_FuelType}, {_Status}, {_CC}, {_Storage}, {_WithProtection}";
         }
     }
 }

@@ -7,66 +7,37 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    internal class Car : Vehicle
+    public class Car : Vehicle
     {
         // Shall I change to int ? 
         // Use kg - not something that allways appears on rental apps.
-        private int BootCapacity;
+        private int _BootCapacity;
 
+        [JsonConstructor]
+        public Car() { }
         public Car(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
         {
-            Make = make;
-            Model = model;
-            Year = yr;
-            DailyRate = rate;
-            Transmission = trans;
-            SeatCapacity = numSeats;
-            FuelType = fuel;
-            BootCapacity = bC;
+            _Make = make;
+            _Model = model;
+            _Year = yr;
+            _DailyRate = rate;
+            _Transmission = trans;
+            _SeatCapacity = numSeats;
+            _FuelType = fuel;
+            _BootCapacity = bC;
             Status = "Available";
             SetType();
         }
         [JsonInclude]
-        public override int? BootCap
+        public override int? BootCapacity
         {
-            get { return BootCapacity; }
-            set { BootCapacity = value ?? 0; }
+            get { return _BootCapacity; }
+            set { _BootCapacity = value ?? 0; }
         }
-        public bool SetBootCap(string bC)
-        {
-            float bc = 0;
-            try
-            {
-                bc = float.Parse(bC);
-                if (bc >= 0)
-                {
-                    BootCapacity = bc;
-                    return true;
-                }
-                else
-                {
-                    Errors err = new Errors();
-                    errorList.Add($"{err.GetColor(ErrorType.Info)}'{bC}' is Invalid Input");
-                    return false;
-                }
-            }
-            catch (FormatException e)
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Warning)}{e.Message}");
-                return false;
-            }
-            catch (Exception e)
-            {
-                Errors err = new Errors();
-                errorList.Add($"{err.GetColor(ErrorType.Error)}{e.Message}");
-                return false;   
-            }
-        }
-        public override void SetType() { TypeOfVehicle = "Car"; }
+        public override void SetType() { _TypeOfVehicle = "Car"; }
         public override string ToFile()
         {
-            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
+            return $"{_TypeOfVehicle}, {_Make}, {_Model}, {_Year}, {_DailyRate}, {_Transmission}, {_SeatCapacity}, {_FuelType}, {Status}, {BootCapacity}";
         }
     }
 }
