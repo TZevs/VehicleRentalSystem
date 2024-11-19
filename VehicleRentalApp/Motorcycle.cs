@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    public class Motorcycle : Vehicle
+    internal class Motorcycle : Vehicle
     {
         private int _CC;
         private bool _Storage;

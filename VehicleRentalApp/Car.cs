@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    public class Car : Vehicle
+    internal class Car : Vehicle
     {
         // Shall I change to int ? 
         // Use kg - not something that allways appears on rental apps.
