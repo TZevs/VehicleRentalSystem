@@ -11,25 +11,23 @@ namespace VehicleRentalApp
     {
         // Shall I change to int ? 
         // Use kg - not something that allways appears on rental apps.
-        private float BootCapacity;
+        private int BootCapacity;
 
-        public Car(string make, string model, string yr, string rate, string trans, string numSeats, string fuel, string bC)
+        public Car(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
         {
             Make = make;
             Model = model;
-            if (SetYear(yr) && SetRate(rate) && SetTransmission(trans) && SetBootCap(bC) && SetSeatCap(numSeats) && SetFuelType(fuel))
-            {
-                IsValid = true;
-            }
-            else
-            {
-                IsValid = false;
-            }
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
+            BootCapacity = bC;
             Status = "Available";
             SetType();
         }
         [JsonInclude]
-        public override float? BootCap
+        public override int? BootCap
         {
             get { return BootCapacity; }
             set { BootCapacity = value ?? 0; }

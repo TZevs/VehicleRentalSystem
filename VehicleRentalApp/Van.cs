@@ -15,20 +15,21 @@ namespace VehicleRentalApp
         [JsonInclude] private float IntHeight;
         [JsonInclude] private float Volume;
 
-        public Van(string make, string model, string yr, string rate, string trans, string numSeats, string fuel, string lC, string len, string wid, string hei)
+        public Van(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, float lC, float len, float wid, float hei)
         {
             Make = make;
             Model = model;
-            if (SetYear(yr) && SetRate(rate) && SetTransmission(trans) && SetLoadCap(lC) && SetLWH(len, wid, hei) && SetSeatCap(numSeats) && SetFuelType(fuel))
-            {
-                IsValid = true;
-            }
-            else
-            {
-                IsValid = false;
-            }
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
+            LoadCapacity = lC;
+            IntLength = len;
+            IntWidth = wid;
+            IntHeight = hei;
+            Volume = IntLength * IntWidth * IntHeight;
             Status = "Available";
-            Volume = SetVolume();
             SetType();
         }
         public override void SetType() { TypeOfVehicle = "Van"; }

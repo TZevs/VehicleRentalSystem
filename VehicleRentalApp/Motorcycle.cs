@@ -13,21 +13,19 @@ namespace VehicleRentalApp
         private bool Storage;
         private bool WithProtection;
 
-        public Motorcycle(string make, string model, string yr, string rate, string trans, string numSeats, string fuel, string cc, string stor, string wPro)
+        public Motorcycle(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool stor, bool wPro)
         {
             Make = make;
             Model = model;
-            if (SetYear(yr) && SetRate(rate) && SetTransmission(trans) && SetSeatCap(numSeats) && SetFuelType(fuel))
-            {
-                IsValid = true;
-            }
-            else
-            {
-                IsValid = false;
-            }
+            Year = yr;
+            DailyRate = rate;
+            Transmission = trans;
+            SeatCapacity = numSeats;
+            FuelType = fuel;
+            CC = cc;
+            Storage = stor;
+            WithProtection = wPro;
             Status = "Available";
-            SetStorage(stor);
-            SetProtection(wPro);
             SetType();
         }
         public override void SetType() { TypeOfVehicle = "Motorcycle"; }
