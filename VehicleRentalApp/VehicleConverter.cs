@@ -15,7 +15,7 @@ namespace VehicleRentalApp
             using (JsonDocument doc = JsonDocument.ParseValue(ref reader))
             {
                 JsonElement root = doc.RootElement;
-                string type = root.GetProperty("_TypeOfVehicle").GetString();
+                string type = root.GetProperty("TypeOfVehicle").GetString();
 
                 switch (type)
                 {
