@@ -87,6 +87,16 @@ namespace VehicleRentalApp
                 Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
+                Errors err = new Errors();
+                string info = err.PrintErrorString(ErrorType.Info) + "Hello";
+                Console.WriteLine(info);
+                string d = err.PrintErrorString(ErrorType.Warning) + "Hello";
+                Console.WriteLine(d);
+                string g = err.PrintErrorString(ErrorType.Error) + "Hello";
+                Console.WriteLine(g);
+                string u = err.PrintErrorString(ErrorType.Critical) + "Hello";
+                Console.WriteLine(u);
+
                 while (true)
                 {
                     Console.Write("Enter Menu Option: ");
@@ -403,6 +413,7 @@ namespace VehicleRentalApp
 
             float GetValidFloat(string prompt)
             {
+                Errors err = new Errors();
                 float input = 0f;
                 while (true)
                 {
@@ -412,21 +423,20 @@ namespace VehicleRentalApp
                         input = Convert.ToSingle(Console.ReadLine());
                         if (input <= 0)
                         {
-                            Errors err = new Errors();
-                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                            err.PrintError(ErrorType.Info, "Invalid Amount");
                         }
                         else { break; }
                     }
                     catch (FormatException e)
                     {
-                        Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                        err.PrintError(ErrorType.Warning, e.Message);
                     }
                 }
                 return input;
             }
             int GetValidInt(string prompt)
             {
+                Errors err = new Errors();
                 int input = 0;
                 while (true)
                 {
@@ -436,15 +446,13 @@ namespace VehicleRentalApp
                         input = Convert.ToInt32(Console.ReadLine());
                         if (input <= 0)
                         {
-                            Errors err = new Errors();
-                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                            err.PrintError(ErrorType.Info, "Invalid Amount");
                         }
                         else { break; }
                     }
                     catch (FormatException e)
                     {
-                        Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                        err.PrintError(ErrorType.Warning, e.Message);
                     }
                 }
                 return input;
@@ -466,12 +474,13 @@ namespace VehicleRentalApp
                     else
                     {
                         Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Input. Enter 'y' or 'n'");
+                        err.PrintError(ErrorType.Info, "Invalid Input.Enter 'y' or 'n'");
                     }
                 }
             }
             int GetValidYear(string prompt)
             {
+                Errors err = new Errors();
                 int input = 0;
                 while (true)
                 {
@@ -482,14 +491,12 @@ namespace VehicleRentalApp
                         if (input >= DateTime.Now.Year - 30 && input <= DateTime.Now.Year) { break; }
                         else
                         {
-                            Errors err = new Errors();
-                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Year");
+                            err.PrintError(ErrorType.Info, "Invalid Year");
                         }
                     }
                     catch (FormatException e)
                     {
-                        Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                        err.PrintError(ErrorType.Warning, e.Message);
                     }
                 }
                 return input;
@@ -513,7 +520,7 @@ namespace VehicleRentalApp
                     else
                     {
                         Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Transmission. Enter 'Automatic' or 'Manual'");
+                        err.PrintError(ErrorType.Info, "Invalid Transmission. Enter 'Automatic' or 'Manual'");
                     }
                 }
             }
@@ -538,12 +545,13 @@ namespace VehicleRentalApp
                     else
                     {
                         Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Fuel Input. Enter 'Diesel', 'Petrol' or 'Electric'");
+                        err.PrintError(ErrorType.Info, "Invalid Fuel Input. Enter 'Diesel', 'Petrol' or 'Electric'");
                     }
                 }
             }
             decimal GetValidDecimal(string prompt)
             {
+                Errors err = new Errors();
                 decimal input = 0m;
                 while (true)
                 {
@@ -552,15 +560,13 @@ namespace VehicleRentalApp
                         input = Convert.ToDecimal(Console.ReadLine());
                         if (input <= 0)
                         {
-                            Errors err = new Errors();
-                            Console.WriteLine($"{err.GetColor(ErrorType.Info)}Invalid Amount");
+                            err.PrintError(ErrorType.Info, "Invalid Amount");
                         }
                         else { break; }
                     }
                     catch (FormatException e)
                     {
-                        Errors err = new Errors();
-                        Console.WriteLine($"{err.GetColor(ErrorType.Warning)}{e.Message}");
+                        err.PrintError(ErrorType.Warning, e.Message);
                     }
                 }
                 return input;
@@ -844,14 +850,14 @@ namespace VehicleRentalApp
                 int input = 0;
                 errorMsg = null;
                 validNum = null;
-                
+                Errors err = new Errors();
+
                 try
                 {
                     input = Convert.ToInt32(cmdInput);
                     if (input <= 0)
                     {
-                        Errors err = new Errors();
-                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                        errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
                     }
                     else
                     {
@@ -860,8 +866,7 @@ namespace VehicleRentalApp
                 }
                 catch (FormatException e) 
                 {
-                    Errors err = new Errors();
-                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                    errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
                 }
             }
             void CmdValidDecimal(string cmdInput, out string? errorMsg, out decimal? validNum)
@@ -869,14 +874,14 @@ namespace VehicleRentalApp
                 decimal input = 0;
                 errorMsg = null;
                 validNum = null;
+                Errors err = new Errors();
 
                 try
                 {
                     input = Convert.ToDecimal(cmdInput);
                     if (input <= 0)
                     {
-                        Errors err = new Errors();
-                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                        errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
                     }
                     else
                     {
@@ -885,8 +890,7 @@ namespace VehicleRentalApp
                 }
                 catch (FormatException e)
                 {
-                    Errors err = new Errors();
-                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                    errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
                 }
             }
             void CmdCheckFloat(string cmdInput, out string? errorMsg, out float? validNum)
@@ -894,14 +898,14 @@ namespace VehicleRentalApp
                 float input = 0f;
                 errorMsg = null;
                 validNum = null;
+                Errors err = new Errors();
 
                 try
                 {
                     input = Convert.ToSingle(cmdInput);
                     if (input <= 0)
                     {
-                        Errors err = new Errors();
-                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                        errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
                     }
                     else
                     {
@@ -910,8 +914,7 @@ namespace VehicleRentalApp
                 }
                 catch (FormatException e)
                 {
-                    Errors err = new Errors();
-                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                    errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
                 }
             }
             void CmdCheckBool(string cmdInput, out string? errorMsg, out bool? validOutput)
@@ -930,7 +933,7 @@ namespace VehicleRentalApp
                 else
                 {
                     Errors err = new Errors();
-                    errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Input: Enter y / yes or n / no";
+                    errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Input: Enter y / yes or n / no";
                 }
             }
 
@@ -960,7 +963,7 @@ namespace VehicleRentalApp
                     else
                     {
                         Errors err = new Errors();
-                        errorOutput.Add($"{err.GetColor(ErrorType.Info)}Invalid Year");
+                        errorOutput.Add(err.PrintErrorString(ErrorType.Info) + "Invalid Year");
                     }
                 }
 

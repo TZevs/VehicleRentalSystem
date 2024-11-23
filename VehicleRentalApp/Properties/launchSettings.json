@@ -1,8 +1,7 @@
 {
   "profiles": {
     "VehicleRentalApp": {
-      "commandName": "Project",
-      "commandLineArgs": "--add C Land/Rover SUV 45 23 Manual ty af 78\r\n"
+      "commandName": "Project"
     }
   }
 }

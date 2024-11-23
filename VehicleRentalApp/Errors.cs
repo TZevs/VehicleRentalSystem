@@ -16,36 +16,71 @@ namespace VehicleRentalApp
 
     internal class Errors
     {
-        public string GetColor(ErrorType error)
+        public void PrintError(ErrorType error, string message)
         {
             switch (error)
             {
                 case ErrorType.Info:
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    string infoError = "INFO: ";
-                    Console.ResetColor();
-                    return infoError;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("INFO: ");
+                    break;
 
                 case ErrorType.Warning:
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    string warnError = "WARNING: ";
-                    Console.ResetColor();
-                    return warnError;
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write("WARNING: ");
+                    break;
 
                 case ErrorType.Error:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    string errError = "ERROR: ";
-                    Console.ResetColor();
-                    return errError;
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write("ERROR: ");
+                    break;
 
                 case ErrorType.Critical:
-                    Console.ForegroundColor = ConsoleColor.Magenta;
-                    string critError = "CRITICAL: ";
-                    Console.ResetColor();
-                    return critError;
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.Write("CRITICAL: ");
+                    break;
 
-                default: return "Unknown Error";
+                default: 
+                    message = "Unknown Error";
+                    break;    
             }
+
+            Console.ResetColor();
+            Console.WriteLine(message);
+        }
+
+        public string PrintErrorString(ErrorType error)
+        {
+            string message = string.Empty;
+            switch (error)
+            {
+                case ErrorType.Info:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    message = "INFO: ";
+                break;
+
+                case ErrorType.Warning:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    message = "WARNING: ";
+                break;
+
+                case ErrorType.Error:
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    message = "ERROR: ";
+                break;
+
+                case ErrorType.Critical:
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    message = "CRITICAL: ";
+                break;
+
+                default:
+                    message = "Unknown Error";
+                break;
+            }
+
+            Console.ResetColor();
+            return message;
         }
     }
 }
