@@ -111,18 +111,18 @@ namespace VehicleRentalApp
                 
                 // Displays all vehicles in the Dictionary.
                 Console.WriteLine("\nCARS:");
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
                 DisplayVehicles(allCars);
 
                 Console.WriteLine("\nVANS:");
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
                 DisplayVehicles(allVans);
 
                 Console.WriteLine("\nMotorcycles:");
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "MotorCycles");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "MotorCycles" && ac.Value.Status == "Available");
                 DisplayVehicles(allMotors);
 
                 // Outputs options waits for correct input.  
@@ -150,8 +150,8 @@ namespace VehicleRentalApp
                 Console.WriteLine("ALL CARS");
 
                 // Displays all Cars in the Dictionary and all their stored data.
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Boot Capacity || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Boot Capacity");
+                IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
                 if (allCars.Count() == 0)
                 {
                     Console.WriteLine("No Cars Available");
@@ -161,7 +161,7 @@ namespace VehicleRentalApp
                     foreach (KeyValuePair<int, Vehicle> v in allCars)
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCapacity} || {v.Value.Status}");
+                            $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCapacity}");
                     }
                 }
 
@@ -188,8 +188,8 @@ namespace VehicleRentalApp
                 Console.WriteLine("ALL VANS");
 
                 // Displays all Vans in the Dictionary and all their stored data.
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Max Load || Internal || Volume(Cubed) || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Max Load || Internal || Volume(Cubed)");
+                IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
                 if (allVans.Count() == 0)
                 {
                     Console.WriteLine("No Vans Available");
@@ -200,7 +200,7 @@ namespace VehicleRentalApp
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
                             $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.LoadCapacity}kg || {v.Value.GetLWH()} " +
-                            $"|| {v.Value.Volume}m || {v.Value.Status}");
+                            $"|| {v.Value.Volume}m");
                     }
                 }
 
@@ -227,8 +227,8 @@ namespace VehicleRentalApp
                 Console.WriteLine("ALL MOTORCYCLES");
 
                 // Displays all Motorcycles in the Dictionary and all their stored data.
-                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || CC || With Storage || With Protection || Status");
-                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle");
+                Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || CC || With Storage || With Protection");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
                 if (allMotors.Count() == 0)
                 {
                     Console.WriteLine("No Motorcycles Available");
@@ -239,7 +239,7 @@ namespace VehicleRentalApp
                     {
                         Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
                             $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.CC}cc || {v.Value.Storage} " +
-                            $"|| {v.Value.WithProtection} ||{v.Value.Status}");
+                            $"|| {v.Value.WithProtection}");
                     }
                 }
 
@@ -302,7 +302,7 @@ namespace VehicleRentalApp
                 {
                     foreach (KeyValuePair<int, Vehicle> v in display)
                     {
-                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.Status}");
+                        Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()}");
                     }
                 }
             }
@@ -839,39 +839,238 @@ namespace VehicleRentalApp
                 }
             }
 
+            void CmdValidInt(string cmdInput, out string? errorMsg, out int? validNum)
+            {
+                int input = 0;
+                errorMsg = null;
+                validNum = null;
+                
+                try
+                {
+                    input = Convert.ToInt32(cmdInput);
+                    if (input <= 0)
+                    {
+                        Errors err = new Errors();
+                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                    }
+                    else
+                    {
+                        validNum = input;
+                    }
+                }
+                catch (FormatException e) 
+                {
+                    Errors err = new Errors();
+                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                }
+            }
+            void CmdValidDecimal(string cmdInput, out string? errorMsg, out decimal? validNum)
+            {
+                decimal input = 0;
+                errorMsg = null;
+                validNum = null;
+
+                try
+                {
+                    input = Convert.ToDecimal(cmdInput);
+                    if (input <= 0)
+                    {
+                        Errors err = new Errors();
+                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                    }
+                    else
+                    {
+                        validNum = input;
+                    }
+                }
+                catch (FormatException e)
+                {
+                    Errors err = new Errors();
+                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                }
+            }
+            void CmdCheckFloat(string cmdInput, out string? errorMsg, out float? validNum)
+            {
+                float input = 0f;
+                errorMsg = null;
+                validNum = null;
+
+                try
+                {
+                    input = Convert.ToSingle(cmdInput);
+                    if (input <= 0)
+                    {
+                        Errors err = new Errors();
+                        errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Amount";
+                    }
+                    else
+                    {
+                        validNum = input;
+                    }
+                }
+                catch (FormatException e)
+                {
+                    Errors err = new Errors();
+                    errorMsg = $"{err.GetColor(ErrorType.Warning)}{e.Message}";
+                }
+            }
+            void CmdCheckBool(string cmdInput, out string? errorMsg, out bool? validOutput)
+            {
+                errorMsg = null;
+                validOutput = null;
+
+                if (cmdInput == "y" || cmdInput == "yes")
+                {
+                    validOutput = true;
+                }
+                else if (cmdInput == "n" || cmdInput == "no")
+                {
+                    validOutput = false;
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    errorMsg = $"{err.GetColor(ErrorType.Info)}Invalid Input: Enter y / yes or n / no";
+                }
+            }
+
             void CmdAddVehicle(string[] newV)
             {
                 // If an array item has a / it is replaced with a space. New items are now in a List collection. 
                 List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
+                List<string> errorOutput = new List<string>();
 
-                int newKey = 0;
-                if (vehicles.Count == 0)
+                int newKey = vehicles.Count() == 0 ? 1 : vehicles.Keys.Max() + 1;
+
+                string? errorMsg;
+                int? checkInt;
+                decimal? checkDecimal;
+                int validYear = 0;
+                int validSeatNum = 0;
+                decimal validRate = 0m;
+
+                CmdValidInt(newVehicle[3], out errorMsg, out checkInt);
+                if (errorMsg != null) errorOutput.Add(errorMsg);
+                else if (checkInt != null)
                 {
-                    newKey = 1;
+                    if (checkInt.Value >= DateTime.Now.Year - 30 && checkInt.Value <= DateTime.Now.Year)
+                    {
+                        validYear = checkInt.Value;
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        errorOutput.Add($"{err.GetColor(ErrorType.Info)}Invalid Year");
+                    }
+                }
+
+                CmdValidInt(newVehicle[6], out errorMsg, out checkInt);
+                if (errorMsg != null) errorOutput.Add(errorMsg);
+                else if (checkInt != null) validSeatNum = checkInt.Value;
+
+                CmdValidDecimal(newVehicle[4], out errorMsg, out checkDecimal);
+                if (errorMsg != null) errorOutput.Add(errorMsg);
+                else if (checkDecimal != null) validRate = checkDecimal.Value;
+
+                if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 9)
+                {
+                    int validBootCap = 0;
+                    CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkInt != null) validBootCap = checkInt.Value;
+
+                    if (errorOutput.Count == 0)
+                    {
+                        Car cmdCar = new Car(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validBootCap);
+                        vehicles.Add(newKey, cmdCar);
+                        Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
+                    } 
+                    else
+                    {
+                        Console.WriteLine($"New car fail");
+                        foreach (string error in errorOutput)
+                        {
+                            Console.WriteLine(error);
+                        }
+                    }
+                }
+                else if (newVehicle[0].ToUpper() == "V" && newVehicle.Count() == 12)
+                {
+                    float? checkFloat;
+                    float validLoadCap = 0f;
+                    CmdCheckFloat(newVehicle[8], out errorMsg, out checkFloat);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkFloat != null) validLoadCap = checkFloat.Value;
+
+                    float validLength = 0f;
+                    CmdCheckFloat(newVehicle[9], out errorMsg, out checkFloat);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkFloat != null) validLength = checkFloat.Value;
+                    
+                    float validWidth = 0f;
+                    CmdCheckFloat(newVehicle[10], out errorMsg, out checkFloat);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkFloat != null) validWidth = checkFloat.Value;
+
+                    float validHeight = 0f;
+                    CmdCheckFloat(newVehicle[11], out errorMsg, out checkFloat);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkFloat != null) validHeight = checkFloat.Value;
+
+                    if (errorOutput.Count == 0)
+                    {
+                        Van cmdVan = new Van(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validLoadCap, validLength, validWidth, validHeight);
+                        vehicles.Add(newKey, cmdVan);
+                        Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
+                    }
+                    else
+                    {
+
+                        foreach (string error in errorOutput)
+                        {
+                            Console.WriteLine(error);
+                        }
+                        return;
+                    }
+                }
+                else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 11)
+                {
+                    int validCC = 0;
+                    CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkInt != null) validCC = checkInt.Value;
+
+                    bool? checkBool;
+                    bool validStorage = false;
+                    CmdCheckBool(newVehicle[9].ToLower(), out errorMsg, out checkBool);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkBool != null) validStorage = checkBool.Value;
+
+                    bool validProtection = false;
+                    CmdCheckBool(newVehicle[10].ToLower(), out errorMsg, out checkBool);
+                    if (errorMsg != null) errorOutput.Add(errorMsg);
+                    else if (checkBool != null) validProtection = checkBool.Value;
+
+                    if (errorOutput.Count == 0)
+                    {
+                        Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validCC, validStorage, validProtection);
+                        vehicles.Add(newKey, cmdMotor);
+                        Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
+                    }
+                    else
+                    {
+                        foreach (string error in errorOutput)
+                        {
+                            Console.WriteLine(error);
+                        }
+                        return;
+                    }
                 }
                 else
                 {
-                    newKey = vehicles.Keys.Max() + 1;
+                    Console.WriteLine($"Unknown vehicle type: '{newVehicle[0]}' or Incorrect number of inputs");
+                    return;
                 }
-                if (newVehicle[0].ToUpper() == "C")
-                {
-                    Car cmdCar = new Car(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToInt32(newVehicle[8]));
-                    vehicles.Add(newKey, cmdCar);
-                    Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
-                }
-                else if (newVehicle[0].ToUpper() == "V")
-                {
-                    Van cmdVan = new Van(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToSingle(newVehicle[8]), Convert.ToSingle(newVehicle[9]), Convert.ToSingle(newVehicle[10]), Convert.ToSingle(newVehicle[11]));
-                    vehicles.Add(newKey, cmdVan);
-                    Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
-                }
-                else if (newVehicle[0].ToUpper() == "M")
-                {
-                    Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], Convert.ToInt32(newVehicle[3]), Convert.ToDecimal(newVehicle[4]), newVehicle[5], Convert.ToInt32(newVehicle[6]), newVehicle[7], Convert.ToInt32(newVehicle[8]), Convert.ToBoolean(newVehicle[9]), Convert.ToBoolean(newVehicle[10]));
-                    vehicles.Add(newKey, cmdMotor);
-                    Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
-                }
-                else { return; }
             }
 
             if (args.Length <= 0)
@@ -895,8 +1094,8 @@ namespace VehicleRentalApp
                         Console.WriteLine("--rent : Requires Vehicle ID (Format: --rent 2)");
                         Console.WriteLine("--return : Requires Vehicle ID (Format: --return 2)");
                         Console.WriteLine("--del or --delete: Requires Vehicle ID (Format: --del 2 or --delete 2)");
-                        Console.WriteLine("--add: Requires (Make Model Year DailyRate Transmission)");
-                        Console.WriteLine("       Format: (--add Land/Rover Defender 2019 230.23 Hybrid)");
+                        Console.WriteLine("--add: Requires (VehicleType Make Model Year DailyRate Transmission + Vehicle specific details)");
+                        Console.WriteLine("  Example Format: (--add Car Land/Rover Defender 2019 230.23 Hybrid 100)");
                         break;
                     default:
                         Console.WriteLine($"Unknown Command: {args[0]}");
@@ -920,7 +1119,7 @@ namespace VehicleRentalApp
                         CmdDelVehicle(args[1]);
                         break;
                     case "--add":
-                        if (args.Length == 6)
+                        if (args.Length >= 6)
                         {
                             string[] newVehicles = args.Skip(1).ToArray();
                             CmdAddVehicle(newVehicles);
@@ -932,12 +1131,13 @@ namespace VehicleRentalApp
                         break;
                     default:
                         Console.WriteLine($"Unknown Command: {args[0]}");
+                        Console.WriteLine("Enter --help for assistance");
                         break;
                 }
             }
             else
             {
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Invalid input: --help for assistance");
             }
         }
     }
