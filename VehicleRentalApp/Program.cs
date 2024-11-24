@@ -87,16 +87,6 @@ namespace VehicleRentalApp
                 Console.WriteLine("[5] Rent & Return");
                 Console.WriteLine("[6] Exit");
 
-                Errors err = new Errors();
-                string info = err.PrintErrorString(ErrorType.Info) + "Hello";
-                Console.WriteLine(info);
-                string d = err.PrintErrorString(ErrorType.Warning) + "Hello";
-                Console.WriteLine(d);
-                string g = err.PrintErrorString(ErrorType.Error) + "Hello";
-                Console.WriteLine(g);
-                string u = err.PrintErrorString(ErrorType.Critical) + "Hello";
-                Console.WriteLine(u);
-
                 while (true)
                 {
                     Console.Write("Enter Menu Option: ");
@@ -130,9 +120,9 @@ namespace VehicleRentalApp
                 IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
                 DisplayVehicles(allVans);
 
-                Console.WriteLine("\nMotorcycles:");
+                Console.WriteLine("\nMOTORCYCLES:");
                 Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
-                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "MotorCycles" && ac.Value.Status == "Available");
+                IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
                 DisplayVehicles(allMotors);
 
                 // Outputs options waits for correct input.  
@@ -277,16 +267,15 @@ namespace VehicleRentalApp
                 Console.WriteLine("SEARCH VEHICLES (Use commas to seperate)");
                 Console.Write("Search: ");
                 List<string> searching = Console.ReadLine().Split(", ").ToList();
-                IEnumerable<KeyValuePair<int, Vehicle>> query = new List<KeyValuePair<int, Vehicle>>();
-                foreach (string s in searching)
-                { 
-                    query = vehicles.Where(q => q.Value.GetModel() == s || q.Value.GetMake() == s || q.Value.GetTransmission() == s);
-                }
+                IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.Where(q => 
+                    searching.All(s => 
+                        q.Value.GetModel().Contains(s, StringComparison.OrdinalIgnoreCase) || 
+                        q.Value.GetMake().Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                        q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) 
+                    )
+                );
                 DisplayVehicles(query);
-                // Use any or all to check if result is true or not. 
-                // If true use select or where 
 
-                // Outputs options waits for correct input.  
                 Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle");
                 while (true)
                 {
@@ -357,7 +346,7 @@ namespace VehicleRentalApp
                     int boot = GetValidInt("Boot Capacity (In Litres): ");
 
                     Car newCar = new Car(make, model, yr, rate, transm, numOfSeats, fuelType, boot);
-                    Console.WriteLine($"\nCar Added - {newCar.ToFile()}");
+                    Console.WriteLine($"\nCar Added - {newCar.ConfirmDetails()}");
                     if (GetValidBool("Add Car [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newCar);
@@ -373,7 +362,7 @@ namespace VehicleRentalApp
                     float height = GetValidFloat("Height (In metres): ");
 
                     Van newVan = new Van(make, model, yr, rate, transm, numOfSeats, fuelType, loadCap, length, width, height);
-                    Console.WriteLine($"\nVan Added - {newVan.ToFile()}");
+                    Console.WriteLine($"\nVan Added - {newVan.ConfirmDetails()}");
                     if (GetValidBool("Add Van [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newVan);
@@ -387,7 +376,7 @@ namespace VehicleRentalApp
                     bool protection = GetValidBool("With Protection (Helmet, etc) [y / n]: ");
 
                     Motorcycle newMot = new Motorcycle(make, model, yr, rate, transm, numOfSeats, fuelType, cc, storage, protection);
-                    Console.WriteLine($"\nMotorcycle Added - {newMot.ToFile()}");
+                    Console.WriteLine($"\nMotorcycle Added - {newMot.ConfirmDetails()}");
                     if (GetValidBool("Add Motorcycle [ y / n ]: "))
                     {
                         vehicles.Add(newKey, newMot);
@@ -423,7 +412,7 @@ namespace VehicleRentalApp
                         input = Convert.ToSingle(Console.ReadLine());
                         if (input <= 0)
                         {
-                            err.PrintError(ErrorType.Info, "Invalid Amount");
+                            err.PrintError(ErrorType.Info, "Invalid Number");
                         }
                         else { break; }
                     }
@@ -446,7 +435,7 @@ namespace VehicleRentalApp
                         input = Convert.ToInt32(Console.ReadLine());
                         if (input <= 0)
                         {
-                            err.PrintError(ErrorType.Info, "Invalid Amount");
+                            err.PrintError(ErrorType.Info, "Invalid Input");
                         }
                         else { break; }
                     }
@@ -644,31 +633,14 @@ namespace VehicleRentalApp
                 Console.Clear();
                 Console.WriteLine("RENT & RETURN VEHICLES");
 
-                int id;
-                // Loops until a valid vehicle ID is entered.
-                while (true)
-                {
-                    Console.Write("Enter Vehicle ID: ");
-                    string input = Console.ReadLine().Trim();
-                    
-                    // Validates the user input.
-                    try
-                    {
-                        // Converts the input to an int. 
-                        id = Convert.ToInt32(input);
-                        break;
-                    }
-                    catch
-                    {
-                        // If input cannot be converted to an int. An exception is thrown and this msg is displayed.
-                        Console.WriteLine($"Invalid Input: {input}: Number ID Required.");
-                    }
-                }
+                // Validates input 
+                int id = GetValidInt("Enter Vehicle ID: ");
 
+                // Checks collection for vehicle ID.
                 if (vehicles.ContainsKey(id))
                 {
                     // Displays selected vehicles information.
-                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
+                    Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()}");
                     
                     // Asks for confirmation of the vehicle's status update. 
                     string action = vehicles[id].Status == "Available" ? "Rent" : "Return";
@@ -986,8 +958,9 @@ namespace VehicleRentalApp
                     {
                         Car cmdCar = new Car(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validBootCap);
                         vehicles.Add(newKey, cmdCar);
-                        Console.WriteLine($"Car Added - {cmdCar.ToFile()}");
-                    } 
+                        Console.WriteLine($"Car Added - {cmdCar.ConfirmDetails()}");
+                        SerializeDictionary();
+                    }
                     else
                     {
                         Console.WriteLine($"New car fail");
@@ -1024,7 +997,8 @@ namespace VehicleRentalApp
                     {
                         Van cmdVan = new Van(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validLoadCap, validLength, validWidth, validHeight);
                         vehicles.Add(newKey, cmdVan);
-                        Console.WriteLine($"Van Added - {cmdVan.ToFile()}");
+                        Console.WriteLine($"Van Added - {cmdVan.ConfirmDetails()}");
+                        SerializeDictionary();
                     }
                     else
                     {
@@ -1058,7 +1032,8 @@ namespace VehicleRentalApp
                     {
                         Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validCC, validStorage, validProtection);
                         vehicles.Add(newKey, cmdMotor);
-                        Console.WriteLine($"Motorcycle Added - {cmdMotor.ToFile()}");
+                        Console.WriteLine($"Motorcycle Added - {cmdMotor.ConfirmDetails()}");
+                        SerializeDictionary();
                     }
                     else
                     {
