@@ -71,7 +71,7 @@ namespace VehicleRentalApp
             set { _Volume = value ?? 0; }
         }
         public override string? GetLWH() { return $"{IntLength}m x {IntWidth}m x {IntHeight}m"; }
-        public override string ToFile()
+        public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {LoadCapacity}, {IntLength}, {IntWidth}, {IntHeight}, {Volume}";
         }

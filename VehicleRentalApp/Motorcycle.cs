@@ -49,7 +49,7 @@ namespace VehicleRentalApp
             get { return _WithProtection; }
             set { _WithProtection = value ?? false; }
         }
-        public override string ToFile()
+        public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";
         }

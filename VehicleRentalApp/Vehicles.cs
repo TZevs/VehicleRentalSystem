@@ -51,6 +51,6 @@ namespace VehicleRentalApp
             get { return _Status; }
             set { _Status = value; }
         }
-        public abstract string ToFile();
+        public abstract string ConfirmDetails();
     }
 }

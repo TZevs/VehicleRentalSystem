@@ -35,7 +35,7 @@ namespace VehicleRentalApp
             set { _BootCapacity = value ?? 0; }
         }
         public override void SetVType() { TypeOfVehicle = "Car"; }
-        public override string ToFile()
+        public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
         }
