@@ -79,7 +79,6 @@ namespace VehicleRentalApp
                 break;
             }
 
-            Console.ResetColor();
             return message;
         }
     }
