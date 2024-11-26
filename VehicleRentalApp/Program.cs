@@ -25,7 +25,6 @@ namespace VehicleRentalApp
         }
         static void Main(string[] args)
         {
-            string binFilePath = "vehicles.bin";
             string filePath = "vehicles.txt";
 
             //Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
@@ -61,7 +60,7 @@ namespace VehicleRentalApp
             //        }
             //        else { return; }
             //    }
-            //}
+            //}]
             
             if (args.Length <= 0)
             {
@@ -129,11 +128,6 @@ namespace VehicleRentalApp
             {
                 Console.WriteLine("Invalid input: --help for assistance");
             }
-        }
-
-        public void CmdInputs()
-        {
-
         }
         private static void SerializeDictionary()
         {
