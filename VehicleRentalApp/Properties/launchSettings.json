@@ -1,8 +1,7 @@
 {
   "profiles": {
     "VehicleRentalApp": {
-      "commandName": "Project",
-      "commandLineArgs": "--add c Mercedes E/Class 2024 42.83 Automatic 5 Electric 100"
+      "commandName": "Project"
     }
   }
 }
