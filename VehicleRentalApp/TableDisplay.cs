@@ -93,7 +93,7 @@ namespace VehicleRentalApp
         }
         public void DisplayVans(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
-            string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type", "Load Capacity", "Internal Dimensions", "Volume(Cubic)" };
+            string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type", "Load Capacity", "Internal Dimensions", "Volume" };
 
             var vans = new Table();
 
@@ -101,6 +101,7 @@ namespace VehicleRentalApp
             {
                 vans.AddColumn(col);
             }
+
             foreach (var item in view)
             {
                 vans.AddRow(
@@ -112,8 +113,8 @@ namespace VehicleRentalApp
                     item.Value.GetTransmission(),
                     item.Value.GetSeatCap().ToString(),
                     item.Value.GetFuel(),
-                    item.Value.LoadCapacity.ToString(),
-                    item.Value.GetLWH(),
+                    $"{item.Value.LoadCapacity.ToString()}kg",
+                    item.Value.GetLWH(),   
                     $"{item.Value.Volume.ToString()}m"
                 );
             }
