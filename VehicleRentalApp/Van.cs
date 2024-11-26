@@ -67,7 +67,7 @@ namespace VehicleRentalApp
         [JsonInclude]
         public override float? Volume
         {
-            get { return _Volume; }
+            get { return (float)Math.Round(_Volume, 2); }
             set { _Volume = value ?? 0; }
         }
         public override string? GetLWH() { return $"{IntLength}m x {IntWidth}m x {IntHeight}m"; }
