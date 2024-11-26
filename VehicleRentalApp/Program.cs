@@ -13,7 +13,7 @@ namespace VehicleRentalApp
 {
     public class Program
     {
-        public static Menus menu = new Menus();
+        private readonly static Menus menu = new Menus();
 
         public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json");
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
@@ -130,6 +130,10 @@ namespace VehicleRentalApp
                 Console.WriteLine("Invalid input: --help for assistance");
             }
         }
+        public void CmdInputs()
+        {
+
+        }
         private static void SerializeDictionary()
         {
             var options = new JsonSerializerOptions
@@ -164,22 +168,7 @@ namespace VehicleRentalApp
             DisplayVehicles(allMotors);
 
             // Outputs options waits for correct input.  
-            Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles");
-            Console.WriteLine("[2] View Cars || [3] View Vans || [4] View Motorcycles");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": SearchVehicles(); return;
-                    case "2": ViewCars(); return;
-                    case "3": ViewVans(); return;
-                    case "4": ViewMotors(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForViewing("All");
         }
         public static void ViewCars()
         {
@@ -202,22 +191,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
-            Console.WriteLine("[3] View Vans || [4] View Motorcycles");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": SearchVehicles(); return;
-                    case "2": ViewVehicles(); return;
-                    case "3": ViewVans(); return;
-                    case "4": ViewMotors(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForViewing("Cars");
         }
         public static void ViewVans()
         {
@@ -241,22 +215,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
-            Console.WriteLine("[3] View Cars || [4] View Motorcycles");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": SearchVehicles(); return;
-                    case "2": ViewVehicles(); return;
-                    case "3": ViewCars(); return;
-                    case "4": ViewMotors(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForViewing("Vans");
         }
         public static void ViewMotors()
         {
@@ -280,22 +239,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.WriteLine("\n[0] Back to Main || [1] Search Vehicles || [2] View All");
-            Console.WriteLine("[3] View Vans || [4] View Cars");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": SearchVehicles(); return;
-                    case "2": ViewVehicles(); return;
-                    case "3": ViewVans(); return;
-                    case "4": ViewCars(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForViewing("Motorcycles");
         }
         public static void SearchVehicles()
         {
