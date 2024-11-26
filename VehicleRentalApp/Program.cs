@@ -24,44 +24,7 @@ namespace VehicleRentalApp
             return JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
         }
         static void Main(string[] args)
-        {
-            string filePath = "vehicles.txt";
-
-            //Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-
-            //if (File.Exists(filePath))
-            //{
-            //    List<string> output = new List<string>();
-            //    foreach (string line in File.ReadLines(filePath))
-            //    {
-            //        output.Clear();
-            //        foreach (string parts in line.Split(", "))
-            //        {
-            //            output.Add(parts);
-            //        }
-
-            //        if (output[1] == "Car")
-            //        {
-            //            Car fileCar = new Car(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToInt32(output[10]));
-            //            fileCar.Status = output[9];
-            //            vehicles.Add(Convert.ToInt32(output[0]), fileCar);
-            //        }
-            //        else if (output[1] == "Motorcycle")
-            //        {
-            //            Motorcycle fileMotor = new Motorcycle(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToInt32(output[10]), Convert.ToBoolean(output[11]), Convert.ToBoolean(output[12]));
-            //            fileMotor.Status = output[9];
-            //            vehicles.Add(Convert.ToInt32(output[0]), fileMotor);
-            //        }
-            //        else if (output[1] == "Van")
-            //        {
-            //            Van fileVan = new Van(output[2], output[3], Convert.ToInt32(output[4]), Convert.ToDecimal(output[5]), output[6], Convert.ToInt32(output[7]), output[8], Convert.ToSingle(output[10]), Convert.ToSingle(output[11]), Convert.ToSingle(output[12]), Convert.ToSingle(output[13]));
-            //            fileVan.Status = output[9];
-            //            vehicles.Add(Convert.ToInt32(output[0]), fileVan);
-            //        }
-            //        else { return; }
-            //    }
-            //}]
-            
+        {   
             if (args.Length <= 0)
             {
                 menu.GetMainMenu();
