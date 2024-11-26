@@ -256,19 +256,7 @@ namespace VehicleRentalApp
             );
             DisplayVehicles(query);
 
-            Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": RentAndReturn(); return;
-                    case "2": SearchVehicles(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForFuncs("Search");
         }
         public static void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> display)
         {
@@ -362,20 +350,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            // Outputs options, waits for correct input.
-            Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": ViewVehicles(); return;
-                    case "2": AddVehicles(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForFuncs("Add");            
         }
         public static float GetValidFloat(string prompt)
         {
@@ -588,20 +563,7 @@ namespace VehicleRentalApp
                 Console.WriteLine($"Vehicle ID: '{id}' not found.");
             }
 
-            // Outputs options waits for correct input.  
-            Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": ViewVehicles(); return;
-                    case "2": DeleteVehicles(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForFuncs("Delete");            
         }
         public static void RentAndReturn()
         {
@@ -667,20 +629,7 @@ namespace VehicleRentalApp
                 Console.WriteLine($"Vehicle ID: '{id}' not found.");
             }
 
-            // Outputs options waits for correct input.  
-            Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Rent & Return");
-            while (true)
-            {
-                Console.Write("Enter Option: ");
-                string select = Console.ReadLine().Trim();
-                switch (select)
-                {
-                    case "0": menu.GetMainMenu(); return;
-                    case "1": ViewVehicles(); return;
-                    case "2": RentAndReturn(); return;
-                    default: break;
-                }
-            }
+            menu.GetMenuForViewing("RentAndReturn");            
         }
         public static void CmdRentAndReturn(string action, string inputId)
         {
