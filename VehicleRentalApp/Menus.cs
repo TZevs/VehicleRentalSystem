@@ -114,5 +114,72 @@ namespace VehicleRentalApp
                 }
             }
         }
+        public void GetMenuForFuncs(string func)
+        {
+            if (func == "Add")
+            {
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": GetMainMenu(); return;
+                        case "1": Program.ViewVehicles(); return;
+                        case "2": Program.AddVehicles(); return;
+                        default: break;
+                    }
+                }
+            }
+            else if (func == "Delete")
+            {
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": GetMainMenu(); return;
+                        case "1": Program.ViewVehicles(); return;
+                        case "2": Program.DeleteVehicles(); return;
+                        default: break;
+                    }
+                }
+            }
+            else if (func == "RentAndReturn") 
+            {
+                Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Rent & Return Again");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": GetMainMenu(); return;
+                        case "1": Program.ViewVehicles(); return;
+                        case "2": Program.RentAndReturn(); return;
+                        default: break;
+                    }
+                }
+            }
+            else if (func == "Search")
+            {
+                Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle || [2] Search Again");
+                while (true)
+                {
+                    Console.Write("Enter Option: ");
+                    string select = Console.ReadLine().Trim();
+                    switch (select)
+                    {
+                        case "0": GetMainMenu(); return;
+                        case "1": Program.RentAndReturn(); return;
+                        case "2": Program.SearchVehicles(); return;
+                        default: break;
+                    }
+                }
+            }
+        }
     }
 }
