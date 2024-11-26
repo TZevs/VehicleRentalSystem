@@ -905,7 +905,54 @@ namespace VehicleRentalApp
                 else
                 {
                     Errors err = new Errors();
-                    errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Input: Enter y / yes or n / no";
+                    errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Input '{cmdInput}': Enter y / yes or n / no";
+                }
+            }
+            void CmdCheckFuel(string cmdInput, out string? errorMsg, out string? validFuel)
+            {
+                errorMsg = null;
+                validFuel = null;
+                string input = cmdInput.ToLower();
+
+                if (input == "p" || input == "petrol")
+                {
+                    validFuel = "Petrol";
+                }
+                else if (input == "d" || input == "diesel")
+                {
+                    validFuel = "Diesel";
+                }
+                else if (input == "e" || input == "electric")
+                {
+                    validFuel = "Electric";
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Type '{cmdInput}': [E / Electric] [P / Petrol] [D / Diesel]";
+                }
+            }
+            void CmdCheckTransmission(string cmdInput, out string? errorMsg, out string? validTrans)
+            {
+                errorMsg = null;
+                validTrans = null;
+                string input = cmdInput.ToLower();
+
+                string[] a = { "a", "automatic", "auto" };
+                string[] m = { "m", "manual", "man" };
+
+                if (a.Contains(input))
+                {
+                    validTrans = "Automatic";
+                }
+                else if (m.Contains(input))
+                {
+                    validTrans = "Manual";
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Transmission '{cmdInput}': [Manual (m / man) / Automatic (a / auto)]";
                 }
             }
 
@@ -920,9 +967,13 @@ namespace VehicleRentalApp
                 string? errorMsg;
                 int? checkInt;
                 decimal? checkDecimal;
+                string? checkFuelType;
+                string? checkTransmision;
                 int validYear = 0;
                 int validSeatNum = 0;
                 decimal validRate = 0m;
+                string validFuelType = "";
+                string validTransmission = "";
 
                 CmdValidInt(newVehicle[3], out errorMsg, out checkInt);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
@@ -947,6 +998,14 @@ namespace VehicleRentalApp
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkDecimal != null) validRate = checkDecimal.Value;
 
+                CmdCheckFuel(newVehicle[7], out errorMsg, out checkFuelType);
+                if (errorMsg != null) errorOutput.Add(errorMsg);
+                else if (checkFuelType != null) validFuelType = checkFuelType;
+
+                CmdCheckFuel(newVehicle[5], out errorMsg, out checkTransmision);
+                if (errorMsg != null) errorOutput.Add(errorMsg);
+                else if (checkTransmision != null) validTransmission = checkTransmision;
+
                 if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 9)
                 {
                     int validBootCap = 0;
@@ -956,7 +1015,7 @@ namespace VehicleRentalApp
 
                     if (errorOutput.Count == 0)
                     {
-                        Car cmdCar = new Car(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validBootCap);
+                        Car cmdCar = new Car(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validBootCap);
                         vehicles.Add(newKey, cmdCar);
                         Console.WriteLine($"Car Added - {cmdCar.ConfirmDetails()}");
                         SerializeDictionary();
@@ -967,6 +1026,7 @@ namespace VehicleRentalApp
                         foreach (string error in errorOutput)
                         {
                             Console.WriteLine(error);
+                            Console.ResetColor();
                         }
                     }
                 }
@@ -995,7 +1055,7 @@ namespace VehicleRentalApp
 
                     if (errorOutput.Count == 0)
                     {
-                        Van cmdVan = new Van(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validLoadCap, validLength, validWidth, validHeight);
+                        Van cmdVan = new Van(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validLoadCap, validLength, validWidth, validHeight);
                         vehicles.Add(newKey, cmdVan);
                         Console.WriteLine($"Van Added - {cmdVan.ConfirmDetails()}");
                         SerializeDictionary();
@@ -1006,6 +1066,7 @@ namespace VehicleRentalApp
                         foreach (string error in errorOutput)
                         {
                             Console.WriteLine(error);
+                            Console.ResetColor();
                         }
                         return;
                     }
@@ -1030,7 +1091,7 @@ namespace VehicleRentalApp
 
                     if (errorOutput.Count == 0)
                     {
-                        Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], validYear, validRate, newVehicle[5], validSeatNum, newVehicle[7], validCC, validStorage, validProtection);
+                        Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validCC, validStorage, validProtection);
                         vehicles.Add(newKey, cmdMotor);
                         Console.WriteLine($"Motorcycle Added - {cmdMotor.ConfirmDetails()}");
                         SerializeDictionary();
@@ -1040,6 +1101,7 @@ namespace VehicleRentalApp
                         foreach (string error in errorOutput)
                         {
                             Console.WriteLine(error);
+                            Console.ResetColor();
                         }
                         return;
                     }
