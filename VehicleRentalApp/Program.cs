@@ -107,25 +107,20 @@ namespace VehicleRentalApp
         public static void ViewVehicles()
         {
             Console.Clear();
-            Console.WriteLine("ALL VEHICLES");
+            TableDisplay all = new TableDisplay();
 
-            // Displays all vehicles in the Dictionary.
-            Console.WriteLine("\nCARS:");
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+            Console.WriteLine("ALL CARS:");
             IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
-            DisplayVehicles(allCars);
+            all.DisplayVehicles(allCars);
 
-            Console.WriteLine("\nVANS:");
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+            Console.WriteLine("\n All VANS:");
             IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
-            DisplayVehicles(allVans);
+            all.DisplayVehicles(allVans);
 
-            Console.WriteLine("\nMOTORCYCLES:");
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission");
+            Console.WriteLine("\n ALL MOTORCYCLES:");
             IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
-            DisplayVehicles(allMotors);
+            all.DisplayVehicles(allMotors);
 
-            // Outputs options waits for correct input.  
             menu.GetMenuForViewing("All");
         }
         public static void ViewCars()
@@ -133,8 +128,6 @@ namespace VehicleRentalApp
             Console.Clear();
             Console.WriteLine("ALL CARS");
 
-            // Displays all Cars in the Dictionary and all their stored data.
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Boot Capacity");
             IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
             if (allCars.Count() == 0)
             {
@@ -142,11 +135,8 @@ namespace VehicleRentalApp
             }
             else
             {
-                foreach (KeyValuePair<int, Vehicle> v in allCars)
-                {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                        $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.BootCapacity}");
-                }
+                TableDisplay cars = new TableDisplay();
+                cars.DisplayCars(allCars);
             }
 
             menu.GetMenuForViewing("Cars");
@@ -156,8 +146,6 @@ namespace VehicleRentalApp
             Console.Clear();
             Console.WriteLine("ALL VANS");
 
-            // Displays all Vans in the Dictionary and all their stored data.
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || Max Load || Internal || Volume(Cubed)");
             IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
             if (allVans.Count() == 0)
             {
@@ -165,12 +153,8 @@ namespace VehicleRentalApp
             }
             else
             {
-                foreach (KeyValuePair<int, Vehicle> v in allVans)
-                {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                        $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.LoadCapacity}kg || {v.Value.GetLWH()} " +
-                        $"|| {v.Value.Volume}m");
-                }
+                TableDisplay vans = new TableDisplay(); 
+                vans.DisplayVans(allVans);
             }
 
             menu.GetMenuForViewing("Vans");
@@ -180,8 +164,6 @@ namespace VehicleRentalApp
             Console.Clear();
             Console.WriteLine("ALL MOTORCYCLES");
 
-            // Displays all Motorcycles in the Dictionary and all their stored data.
-            Console.WriteLine("ID || Make || Model || Year || Daily Rate || Transmission || CC || With Storage || With Protection");
             IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
             if (allMotors.Count() == 0)
             {
@@ -189,12 +171,8 @@ namespace VehicleRentalApp
             }
             else
             {
-                foreach (KeyValuePair<int, Vehicle> v in allMotors)
-                {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} " +
-                        $"|| £{v.Value.GetRate()} || {v.Value.GetTransmission()} || {v.Value.CC}cc || {v.Value.Storage} " +
-                        $"|| {v.Value.WithProtection}");
-                }
+                TableDisplay motors = new TableDisplay();
+                motors.DisplayMotors(allMotors);
             }
 
             menu.GetMenuForViewing("Motorcycles");
@@ -212,23 +190,10 @@ namespace VehicleRentalApp
                     q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase)
                 )
             );
-            DisplayVehicles(query);
+            TableDisplay searchDisplay = new TableDisplay();
+            searchDisplay.DisplayVehicles(query);
 
             menu.GetMenuForFuncs("Search");
-        }
-        public static void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> display)
-        {
-            if (display.Count() == 0)
-            {
-                Console.WriteLine("No Vehicles Available");
-            }
-            else
-            {
-                foreach (KeyValuePair<int, Vehicle> v in display)
-                {
-                    Console.WriteLine($"{v.Key} || {v.Value.GetMake()} || {v.Value.GetModel()} || {v.Value.GetYear()} || £{v.Value.GetRate()} || {v.Value.GetTransmission()}");
-                }
-            }
         }
         
         private readonly static Validation validate = new Validation();
@@ -328,7 +293,6 @@ namespace VehicleRentalApp
             {
                 Console.WriteLine($"Invalid Input: {inputId}: Number ID Required.");
             }
-            //int id = InvalidIntInput(Console.ReadLine().Trim());
 
             if (vehicles.ContainsKey(id))
             {
