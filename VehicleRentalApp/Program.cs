@@ -130,6 +130,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("Invalid input: --help for assistance");
             }
         }
+
         public void CmdInputs()
         {
 
@@ -272,6 +273,8 @@ namespace VehicleRentalApp
                 }
             }
         }
+        
+        private readonly static Validation validate = new Validation();
         public static void AddVehicles()
         {
             Console.Clear();
@@ -292,11 +295,11 @@ namespace VehicleRentalApp
             Console.Write("Model: ");
             string model = Console.ReadLine().Trim();
 
-            int yr = GetValidYear("Year: ");
-            decimal rate = GetValidDecimal("Daily Rate: ");
-            string transm = GetValidTransmission("Transmission Type [Manual / Automatic]: ");
-            int numOfSeats = GetValidInt("Number of Seats: ");
-            string fuelType = GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
+            int yr = validate.GetValidYear("Year: ");
+            decimal rate = validate.GetValidDecimal("Daily Rate: ");
+            string transm = validate.GetValidTransmission("Transmission Type [Manual / Automatic]: ");
+            int numOfSeats = validate.GetValidInt("Number of Seats: ");
+            string fuelType = validate.GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
 
             int newKey = 0;
             if (vehicles.Count == 0)
@@ -309,11 +312,11 @@ namespace VehicleRentalApp
             }
             if (typeInput == "Car")
             {
-                int boot = GetValidInt("Boot Capacity (In Litres): ");
+                int boot = validate.GetValidInt("Boot Capacity (In Litres): ");
 
                 Car newCar = new Car(make, model, yr, rate, transm, numOfSeats, fuelType, boot);
                 Console.WriteLine($"\nCar Added - {newCar.ConfirmDetails()}");
-                if (GetValidBool("Add Car [ y / n ]: "))
+                if (validate.GetValidBool("Add Car [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newCar);
                     SerializeDictionary();
@@ -321,15 +324,15 @@ namespace VehicleRentalApp
             }
             else if (typeInput == "Van")
             {
-                float loadCap = GetValidFloat("Load Capacity(Kg): ");
+                float loadCap = validate.GetValidFloat("Load Capacity(Kg): ");
                 Console.WriteLine("Internal Measurements");
-                float length = GetValidFloat("Lenth (In metres): ");
-                float width = GetValidFloat("Width (In metres): ");
-                float height = GetValidFloat("Height (In metres): ");
+                float length = validate.GetValidFloat("Lenth (In metres): ");
+                float width = validate.GetValidFloat("Width (In metres): ");
+                float height = validate.GetValidFloat("Height (In metres): ");
 
                 Van newVan = new Van(make, model, yr, rate, transm, numOfSeats, fuelType, loadCap, length, width, height);
                 Console.WriteLine($"\nVan Added - {newVan.ConfirmDetails()}");
-                if (GetValidBool("Add Van [ y / n ]: "))
+                if (validate.GetValidBool("Add Van [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newVan);
                     SerializeDictionary();
@@ -337,13 +340,13 @@ namespace VehicleRentalApp
             }
             else if (typeInput == "Motorcycle")
             {
-                int cc = GetValidInt("CC: ");
-                bool storage = GetValidBool("Storage [y / n]: ");
-                bool protection = GetValidBool("With Protection (Helmet, etc) [y / n]: ");
+                int cc = validate.GetValidInt("CC: ");
+                bool storage = validate.GetValidBool("Storage [y / n]: ");
+                bool protection = validate.GetValidBool("With Protection (Helmet, etc) [y / n]: ");
 
                 Motorcycle newMot = new Motorcycle(make, model, yr, rate, transm, numOfSeats, fuelType, cc, storage, protection);
                 Console.WriteLine($"\nMotorcycle Added - {newMot.ConfirmDetails()}");
-                if (GetValidBool("Add Motorcycle [ y / n ]: "))
+                if (validate.GetValidBool("Add Motorcycle [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newMot);
                     SerializeDictionary();
@@ -351,166 +354,6 @@ namespace VehicleRentalApp
             }
 
             menu.GetMenuForFuncs("Add");            
-        }
-        public static float GetValidFloat(string prompt)
-        {
-            Errors err = new Errors();
-            float input = 0f;
-            while (true)
-            {
-                Console.Write(prompt);
-                try
-                {
-                    input = Convert.ToSingle(Console.ReadLine());
-                    if (input <= 0)
-                    {
-                        err.PrintError(ErrorType.Info, "Invalid Number");
-                    }
-                    else { break; }
-                }
-                catch (FormatException e)
-                {
-                    err.PrintError(ErrorType.Warning, e.Message);
-                }
-            }
-            return input;
-        }
-        public static int GetValidInt(string prompt)
-        {
-            Errors err = new Errors();
-            int input = 0;
-            while (true)
-            {
-                Console.Write(prompt);
-                try
-                {
-                    input = Convert.ToInt32(Console.ReadLine());
-                    if (input <= 0)
-                    {
-                        err.PrintError(ErrorType.Info, "Invalid Input");
-                    }
-                    else { break; }
-                }
-                catch (FormatException e)
-                {
-                    err.PrintError(ErrorType.Warning, e.Message);
-                }
-            }
-            return input;
-        }
-        public static bool GetValidBool(string prompt)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string input = Console.ReadLine().Trim().ToLower();
-                if (input == "y" || input == "yes")
-                {
-                    return true;
-                }
-                else if (input == "n" || input == "no")
-                {
-                    return false;
-                }
-                else
-                {
-                    Errors err = new Errors();
-                    err.PrintError(ErrorType.Info, "Invalid Input.Enter 'y' or 'n'");
-                }
-            }
-        }
-        public static int GetValidYear(string prompt)
-        {
-            Errors err = new Errors();
-            int input = 0;
-            while (true)
-            {
-                Console.Write(prompt);
-                try
-                {
-                    input = Convert.ToInt32(Console.ReadLine());
-                    if (input >= DateTime.Now.Year - 30 && input <= DateTime.Now.Year) { break; }
-                    else
-                    {
-                        err.PrintError(ErrorType.Info, "Invalid Year");
-                    }
-                }
-                catch (FormatException e)
-                {
-                    err.PrintError(ErrorType.Warning, e.Message);
-                }
-            }
-            return input;
-        }
-        public static string GetValidTransmission(string prompt)
-        {
-            string[] a = { "a", "automatic", "auto" };
-            string[] m = { "m", "manual", "man" };
-            while (true)
-            {
-                Console.Write(prompt);
-                string input = Console.ReadLine().Trim().ToLower();
-                if (a.Contains(input))
-                {
-                    return "Automatic";
-                }
-                else if (m.Contains(input))
-                {
-                    return "Manual";
-                }
-                else
-                {
-                    Errors err = new Errors();
-                    err.PrintError(ErrorType.Info, "Invalid Transmission. Enter 'Automatic' or 'Manual'");
-                }
-            }
-        }
-        public static string GetValidFuel(string prompt)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string input = Console.ReadLine().Trim().ToLower();
-                if (input == "d" || input == "diesel")
-                {
-                    return "Diesel";
-                }
-                else if (input == "p" || input == "petrol")
-                {
-                    return "Petrol";
-                }
-                else if (input == "e" || input == "electric")
-                {
-                    return "Electric";
-                }
-                else
-                {
-                    Errors err = new Errors();
-                    err.PrintError(ErrorType.Info, "Invalid Fuel Input. Enter 'Diesel', 'Petrol' or 'Electric'");
-                }
-            }
-        }
-        public static decimal GetValidDecimal(string prompt)
-        {
-            Errors err = new Errors();
-            decimal input = 0m;
-            while (true)
-            {
-                try
-                {
-                    input = Convert.ToDecimal(Console.ReadLine());
-                    if (input <= 0)
-                    {
-                        err.PrintError(ErrorType.Info, "Invalid Amount");
-                    }
-                    else { break; }
-                }
-                catch (FormatException e)
-                {
-                    err.PrintError(ErrorType.Warning, e.Message);
-                }
-            }
-            return input;
         }
         public static void DeleteVehicles()
         {
@@ -571,7 +414,7 @@ namespace VehicleRentalApp
             Console.WriteLine("RENT & RETURN VEHICLES");
 
             // Validates input 
-            int id = GetValidInt("Enter Vehicle ID: ");
+            int id = validate.GetValidInt("Enter Vehicle ID: ");
 
             // Checks collection for vehicle ID.
             if (vehicles.ContainsKey(id))
@@ -738,144 +581,6 @@ namespace VehicleRentalApp
                 Console.WriteLine($"Vehicle with ID {id} not found.");
             }
         }
-        public static void CmdValidInt(string cmdInput, out string? errorMsg, out int? validNum)
-        {
-            int input = 0;
-            errorMsg = null;
-            validNum = null;
-            Errors err = new Errors();
-
-            try
-            {
-                input = Convert.ToInt32(cmdInput);
-                if (input <= 0)
-                {
-                    errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
-                }
-                else
-                {
-                    validNum = input;
-                }
-            }
-            catch (FormatException e)
-            {
-                errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
-            }
-        }
-        public static void CmdValidDecimal(string cmdInput, out string? errorMsg, out decimal? validNum)
-        {
-            decimal input = 0;
-            errorMsg = null;
-            validNum = null;
-            Errors err = new Errors();
-
-            try
-            {
-                input = Convert.ToDecimal(cmdInput);
-                if (input <= 0)
-                {
-                    errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
-                }
-                else
-                {
-                    validNum = input;
-                }
-            }
-            catch (FormatException e)
-            {
-                errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
-            }
-        }
-        public static void CmdCheckFloat(string cmdInput, out string? errorMsg, out float? validNum)
-        {
-            float input = 0f;
-            errorMsg = null;
-            validNum = null;
-            Errors err = new Errors();
-
-            try
-            {
-                input = Convert.ToSingle(cmdInput);
-                if (input <= 0)
-                {
-                    errorMsg = err.PrintErrorString(ErrorType.Info) + "Invalid Amount";
-                }
-                else
-                {
-                    validNum = input;
-                }
-            }
-            catch (FormatException e)
-            {
-                errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
-            }
-        }
-        public static void CmdCheckBool(string cmdInput, out string? errorMsg, out bool? validOutput)
-        {
-            errorMsg = null;
-            validOutput = null;
-
-            if (cmdInput == "y" || cmdInput == "yes")
-            {
-                validOutput = true;
-            }
-            else if (cmdInput == "n" || cmdInput == "no")
-            {
-                validOutput = false;
-            }
-            else
-            {
-                Errors err = new Errors();
-                errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Input '{cmdInput}': Enter y / yes or n / no";
-            }
-        }
-        public static void CmdCheckFuel(string cmdInput, out string? errorMsg, out string? validFuel)
-        {
-            errorMsg = null;
-            validFuel = null;
-            string input = cmdInput.ToLower();
-
-            if (input == "p" || input == "petrol")
-            {
-                validFuel = "Petrol";
-            }
-            else if (input == "d" || input == "diesel")
-            {
-                validFuel = "Diesel";
-            }
-            else if (input == "e" || input == "electric")
-            {
-                validFuel = "Electric";
-            }
-            else
-            {
-                Errors err = new Errors();
-                errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Type '{cmdInput}': [E / Electric] [P / Petrol] [D / Diesel]";
-            }
-        }
-        public static void CmdCheckTransmission(string cmdInput, out string? errorMsg, out string? validTrans)
-        {
-            errorMsg = null;
-            validTrans = null;
-            string input = cmdInput.ToLower();
-
-            string[] a = { "a", "automatic", "auto" };
-            string[] m = { "m", "manual", "man" };
-
-            if (a.Contains(input))
-            {
-                validTrans = "Automatic";
-            }
-            else if (m.Contains(input))
-            {
-                validTrans = "Manual";
-            }
-            else
-            {
-                Errors err = new Errors();
-                errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Transmission '{cmdInput}': [Manual (m / man) / Automatic (a / auto)]";
-            }
-        }
         public static void CmdAddVehicle(string[] newV)
         {
             // If an array item has a / it is replaced with a space. New items are now in a List collection. 
@@ -895,7 +600,7 @@ namespace VehicleRentalApp
             string validFuelType = "";
             string validTransmission = "";
 
-            CmdValidInt(newVehicle[3], out errorMsg, out checkInt);
+            validate.CmdValidInt(newVehicle[3], out errorMsg, out checkInt);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkInt != null)
             {
@@ -910,26 +615,26 @@ namespace VehicleRentalApp
                 }
             }
 
-            CmdValidInt(newVehicle[6], out errorMsg, out checkInt);
+            validate.CmdValidInt(newVehicle[6], out errorMsg, out checkInt);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkInt != null) validSeatNum = checkInt.Value;
 
-            CmdValidDecimal(newVehicle[4], out errorMsg, out checkDecimal);
+            validate.CmdValidDecimal(newVehicle[4], out errorMsg, out checkDecimal);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkDecimal != null) validRate = checkDecimal.Value;
 
-            CmdCheckFuel(newVehicle[7], out errorMsg, out checkFuelType);
+            validate.CmdCheckFuel(newVehicle[7], out errorMsg, out checkFuelType);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkFuelType != null) validFuelType = checkFuelType;
 
-            CmdCheckFuel(newVehicle[5], out errorMsg, out checkTransmision);
+            validate.CmdCheckFuel(newVehicle[5], out errorMsg, out checkTransmision);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkTransmision != null) validTransmission = checkTransmision;
 
             if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 9)
             {
                 int validBootCap = 0;
-                CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
+                validate.CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkInt != null) validBootCap = checkInt.Value;
 
@@ -954,22 +659,22 @@ namespace VehicleRentalApp
             {
                 float? checkFloat;
                 float validLoadCap = 0f;
-                CmdCheckFloat(newVehicle[8], out errorMsg, out checkFloat);
+                validate.CmdCheckFloat(newVehicle[8], out errorMsg, out checkFloat);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkFloat != null) validLoadCap = checkFloat.Value;
 
                 float validLength = 0f;
-                CmdCheckFloat(newVehicle[9], out errorMsg, out checkFloat);
+                validate.CmdCheckFloat(newVehicle[9], out errorMsg, out checkFloat);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkFloat != null) validLength = checkFloat.Value;
 
                 float validWidth = 0f;
-                CmdCheckFloat(newVehicle[10], out errorMsg, out checkFloat);
+                validate.CmdCheckFloat(newVehicle[10], out errorMsg, out checkFloat);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkFloat != null) validWidth = checkFloat.Value;
 
                 float validHeight = 0f;
-                CmdCheckFloat(newVehicle[11], out errorMsg, out checkFloat);
+                validate.CmdCheckFloat(newVehicle[11], out errorMsg, out checkFloat);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkFloat != null) validHeight = checkFloat.Value;
 
@@ -982,7 +687,6 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-
                     foreach (string error in errorOutput)
                     {
                         Console.WriteLine(error);
@@ -994,18 +698,18 @@ namespace VehicleRentalApp
             else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 11)
             {
                 int validCC = 0;
-                CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
+                validate.CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkInt != null) validCC = checkInt.Value;
 
                 bool? checkBool;
                 bool validStorage = false;
-                CmdCheckBool(newVehicle[9].ToLower(), out errorMsg, out checkBool);
+                validate.CmdCheckBool(newVehicle[9].ToLower(), out errorMsg, out checkBool);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkBool != null) validStorage = checkBool.Value;
 
                 bool validProtection = false;
-                CmdCheckBool(newVehicle[10].ToLower(), out errorMsg, out checkBool);
+                validate.CmdCheckBool(newVehicle[10].ToLower(), out errorMsg, out checkBool);
                 if (errorMsg != null) errorOutput.Add(errorMsg);
                 else if (checkBool != null) validProtection = checkBool.Value;
 
