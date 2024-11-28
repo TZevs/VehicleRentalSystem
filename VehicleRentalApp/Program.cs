@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -27,6 +28,24 @@ namespace VehicleRentalApp
         {   
             if (args.Length <= 0)
             {
+                //int maxKey = vehicles.Keys.Max() + 1;
+                //Parallel.For(maxKey, 3000, a =>
+                //{
+                //    vehicles.TryAdd(a, new Van("Mercedes Benz", "E-Vito", 2023, 83.95m, "Automatic", 3, "Electric", 3200, 1.89f, 1.6f, 1.95f));
+                //});
+                //SerializeDictionary();
+                //if (a % 3 == 0)
+                //{
+                //    vehicles.TryAdd(a, new Car("Ford", "Fiesta", 2018, 60, "Manual", 5, "Petrol", 76));
+                //}
+                //else if (a % 3 == 1)
+                //{
+                //    vehicles.TryAdd(a, new Van("Mercedes Benz", "E-Vito", 2023, 83.95m, "Automatic", 3, "Electric", 3200, 1.89f, 1.6f, 1.95f));
+                //}
+                //else
+                //{
+                //    vehicles.TryAdd(a, new Motorcycle("Yamaha", "MT-07", 2021, 42.9m, "Manual", 2, "Petrol", 125, false, false));
+                //}
                 menu.GetMainMenu();
             }
             else if (args.Length == 1)
@@ -183,13 +202,25 @@ namespace VehicleRentalApp
             Console.WriteLine("SEARCH VEHICLES (Use commas to seperate)");
             Console.Write("Search: ");
             List<string> searching = Console.ReadLine().Split(", ").ToList();
-            IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.Where(q =>
+
+            decimal dailyRate = 0;
+            bool hasDailyRate = searching.Any(s => decimal.TryParse(s, out dailyRate));
+
+            decimal lowerB = dailyRate - 50;
+            decimal upperB = dailyRate + 50;
+
+            var timer1 = Stopwatch.StartNew();
+            IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.AsParallel().Where(q =>
+                q.Value.Status == "Available" &&
                 searching.All(s =>
                     q.Value.GetModel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                     q.Value.GetMake().Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                    q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase)
+                    q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) || 
+                    q.Value.GetFuel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                    q.Value.GetYear().ToString().Contains(s)
                 )
             );
+            Console.WriteLine($"Timer: {timer1.ElapsedMilliseconds}");
             TableDisplay searchDisplay = new TableDisplay();
             searchDisplay.DisplayVehicles(query);
 
