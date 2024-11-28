@@ -153,6 +153,7 @@ namespace VehicleRentalApp
             decimal input = 0m;
             while (true)
             {
+                Console.Write(prompt);
                 try
                 {
                     input = Convert.ToDecimal(Console.ReadLine());
