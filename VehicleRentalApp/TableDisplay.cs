@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace VehicleRentalApp
     {
         public void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
-            string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type" };
+            string[] headers = { "ID", "Type", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type" };
 
             var all = new Table();
 
@@ -19,10 +20,27 @@ namespace VehicleRentalApp
             {
                 all.AddColumn(col);
             }
-            foreach (var item in view)
+            var timer = Stopwatch.StartNew();
+            // 48ms
+            //foreach (var item in view)
+            //{
+            //    all.AddRow(
+            //        item.Key.ToString(),
+            //        item.Value.GetVType(),
+            //        item.Value.GetMake(),
+            //        item.Value.GetModel(),
+            //        item.Value.GetYear().ToString(),
+            //        $"£{item.Value.GetRate():F2}",
+            //        item.Value.GetTransmission(),
+            //        item.Value.GetSeatCap().ToString(),
+            //        item.Value.GetFuel()
+            //    );
+            //}
+            Parallel.ForEach(view, item =>
             {
                 all.AddRow(
                     item.Key.ToString(),
+                    item.Value.GetVType(),
                     item.Value.GetMake(),
                     item.Value.GetModel(),
                     item.Value.GetYear().ToString(),
@@ -31,8 +49,8 @@ namespace VehicleRentalApp
                     item.Value.GetSeatCap().ToString(),
                     item.Value.GetFuel()
                 );
-            }
-
+            });
+            Console.WriteLine($"{timer.ElapsedMilliseconds}ms");
             AnsiConsole.Write(all);
         }
         public void DisplayCars(IEnumerable<KeyValuePair<int, Vehicle>> view)
