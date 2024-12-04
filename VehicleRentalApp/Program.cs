@@ -22,10 +22,17 @@ namespace VehicleRentalApp
         public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json");
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
         {
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new VehicleConverter());
-            string fromJsonString = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
+            if (File.Exists(filePath))
+            {
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new VehicleConverter());
+                string fromJsonString = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
+            }
+            else
+            {
+                return Dictionary<int, Vehicle>().empty();
+            }
         }
         static void Main(string[] args)
         {   
@@ -232,19 +239,62 @@ namespace VehicleRentalApp
         public static void Login()
         {
             Console.WriteLine("LOGIN");
-            int id = validate.GetValidInt("ID: ");
-            Console.Write("Username: ");
-            string username = Console.ReadLine();
+            int id = validate.GetValidInt("Username: ");
             Console.Write("Password: ");
-            string password = Console.ReadLine();   
+            string password = Console.ReadLine();
+
+            Users login = new Users();
+            if (login.VerifyLogin(id, password))
+            {
+                userCache.Add(id, users[id]);
+                menu.GetMainMenu();
+            }
+            else
+            {
+                Console.Write("Would you like to try again? [y / n]: ");
+            }
         }
         public static void Register()
         {
-            Console.Write("Email: ");
-            Console.Write("Confirm Email: ");
-            Console.Write("Username: ");
-            Console.Write("Password: ");
-            Console.Write("Confirm Password: ");
+            Console.Write("First Name: ");
+            string fName = Console.ReadLine();
+            Console.Write("Last Name: ");
+            string lName = Console.ReadLine();
+            string email = validate.InputMatch("Email: ", "Confirm Email: ");
+            string password = validate.InputMatch("Password: ", "Confirm Password: ");
+
+            Users newUser = new Users();
+            int newKey = 0;
+            if (users.Count == 0)
+            {
+                newKey = 1;
+            }
+            else
+            {
+                newKey = users.Keys.Max() + 1;
+            }
+            newUser.SetUser(newKey, fName, lName, email, password);
+            Console.WriteLine($"Account Created use ID: {newKey} as your username.");
+            
+            Console.Write("Login? [y / n]: ");
+            string input = Console.ReadLine().ToLower();
+            while (true)
+            {
+                if (input == "y")
+                {
+                    Login();
+                    break;
+                }
+                else if (input == "n")
+                {
+                    menu.GetMainMenu();
+                    break;
+                }
+                else
+                {
+
+                }
+            }
         }
         
         private readonly static Validation validate = new Validation();
