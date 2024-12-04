@@ -12,25 +12,31 @@ namespace VehicleRentalApp
         {
             Console.Clear();
             Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
-            Console.WriteLine("[1] View All");
-            Console.WriteLine("[2] Search");
-            Console.WriteLine("[3] Add Vehicle");
-            Console.WriteLine("[4] Delete Vehicle");
-            Console.WriteLine("[5] Rent & Return");
-            Console.WriteLine("[6] Exit");
+            Console.WriteLine("[0] Login");
+            Console.WriteLine("[1] Register Account");
+            Console.WriteLine("[2] View Cars");
+            Console.WriteLine("[3] View Vans");
+            Console.WriteLine("[4] View Motorcycles");
+            Console.WriteLine("[5] Search");
+            Console.WriteLine("[6] Add Vehicle");
+            Console.WriteLine("[7] Delete Vehicle");
+            Console.WriteLine("[8] Rent & Return");
+            Console.WriteLine("[9] Exit");
 
             while (true)
             {
-                Console.Write("Enter Menu Option: ");
+                Console.Write(">> ");
                 string select = Console.ReadLine().Trim();
                 switch (select)
                 {
-                    case "1": Program.ViewVehicles(); return;
-                    case "2": Program.SearchVehicles(); return;
-                    case "3": Program.AddVehicles(); return;
-                    case "4": Program.DeleteVehicles(); return;
-                    case "5": Program.RentAndReturn(); return;
-                    case "6": return;
+                    case "2": Program.ViewCars(); return;
+                    case "3": Program.ViewVans(); return;
+                    case "4": Program.ViewMotors(); return;
+                    case "5": Program.SearchVehicles(); return;
+                    case "6": Program.AddVehicles(); return;
+                    case "7": Program.DeleteVehicles(); return;
+                    case "8": Program.RentAndReturn(); return;
+                    case "9": return;
                     default: break;
                 }
             }
@@ -43,7 +49,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("[2] View Cars || [3] View Vans || [4] View Motorcycles");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -62,7 +68,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("[3] View Vans || [4] View Motorcycles");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -81,7 +87,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("[3] View Cars || [4] View Motorcycles");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -100,7 +106,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("[3] View Vans || [4] View Cars");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -121,7 +127,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Add Another Vehicle");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -137,7 +143,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Delete Another Vehicle");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -153,7 +159,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("\n[0] Back to Main || [1] View Vehicles || [2] Rent & Return Again");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
@@ -169,7 +175,7 @@ namespace VehicleRentalApp
                 Console.WriteLine("\n[0] Back to Main || [1] Rent Vehicle || [2] Search Again");
                 while (true)
                 {
-                    Console.Write("Enter Option: ");
+                    Console.Write(">> ");
                     string select = Console.ReadLine().Trim();
                     switch (select)
                     {
