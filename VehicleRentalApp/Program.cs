@@ -15,6 +15,9 @@ namespace VehicleRentalApp
     public class Program
     {
         private readonly static Menus menu = new Menus();
+        private static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
+        // Dictionary for users.
+        public static Dictionary<int, Users> users = new Dictionary<int, Users>();
 
         public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json");
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
@@ -225,6 +228,23 @@ namespace VehicleRentalApp
             searchDisplay.DisplayVehicles(query);
 
             menu.GetMenuForFuncs("Search");
+        }
+        public static void Login()
+        {
+            Console.WriteLine("LOGIN");
+            int id = validate.GetValidInt("ID: ");
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
+            Console.Write("Password: ");
+            string password = Console.ReadLine();   
+        }
+        public static void Register()
+        {
+            Console.Write("Email: ");
+            Console.Write("Confirm Email: ");
+            Console.Write("Username: ");
+            Console.Write("Password: ");
+            Console.Write("Confirm Password: ");
         }
         
         private readonly static Validation validate = new Validation();
