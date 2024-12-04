@@ -310,5 +310,26 @@ namespace VehicleRentalApp
                 errorMsg = err.PrintErrorString(ErrorType.Info) + $"Invalid Transmission '{cmdInput}': [Manual (m / man) / Automatic (a / auto)]";
             }
         }
+
+        // Registering Account
+        public string InputMatch(string prompt, string confirmPrompt)
+        {
+            Errors err = new Errors();
+            string input = "";
+            while (true)
+            {
+                Console.Write(prompt);
+                input = Console.ReadLine();
+                Console.Write(confirmPrompt);
+                string input2 = Console.ReadLine();
+
+                if (input != input2)
+                {
+                    err.PrintError(ErrorType.Info, "Inputs need to match");
+                }
+                else { break; }
+            }
+            return input;
+        }
     }
 }
