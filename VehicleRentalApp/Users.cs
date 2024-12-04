@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    internal class Users
+    public class Users
     {
         private int UserID;
         private string FirstName;
         private string LastName;
         private string Email;
-        private string Username;
         private string Password;
         private List<int> OwnVehicles;
         private List<int> RentedVehicles;
 
-        public Users(int id, string fName, string lName, string email, string username, string password)
+        public void SetUser(int id, string fName, string lName, string email, string password)
         {
             UserID = id;
             FirstName = fName;
@@ -25,21 +24,24 @@ namespace VehicleRentalApp
             Email = email;
             Password = password;
         }
-        public bool VerifyLogin(int id, string username, string password)
+        public bool VerifyLogin(int id, string password)
         {
+            Errors err = new Errors();
             if (Program.users.ContainsKey(id))
             {
-                if (Program.users[id].GetUsername() == username && Program.users[id].GetPassword() == password)
+                if (Program.users[id].GetPassword() == password)
                 {
                     return true;
                 }
                 else
                 {
+                    err.PrintError(ErrorType.Warning, "Incorrect Password");
                     return false;
                 }
             }
             else
             {
+                err.PrintError(ErrorType.Info, $"ID: '{id}' not found.");
                 return false;
             }
         }
@@ -58,7 +60,10 @@ namespace VehicleRentalApp
                 Console.WriteLine("You cannot delete a vehicle you do not own!");
             }
         }
-        public string GetUsername() { return Username; }
         public string GetPassword() { return Password; }
+        public void ToFile()
+        {
+
+        }
     }
 }
