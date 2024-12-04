@@ -12,8 +12,6 @@ namespace VehicleRentalApp
         {
             Console.Clear();
             Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
-            Console.WriteLine("[0] Login");
-            Console.WriteLine("[1] Register Account");
             Console.WriteLine("[2] View Cars");
             Console.WriteLine("[3] View Vans");
             Console.WriteLine("[4] View Motorcycles");
@@ -29,8 +27,6 @@ namespace VehicleRentalApp
                 string select = Console.ReadLine().Trim();
                 switch (select)
                 {
-                    case "0": Program.Login(); return;
-                    case "1": Program.Register(); return;
                     case "2": Program.ViewCars(); return;
                     case "3": Program.ViewVans(); return;
                     case "4": Program.ViewMotors(); return;
@@ -38,6 +34,35 @@ namespace VehicleRentalApp
                     case "6": Program.AddVehicles(); return;
                     case "7": Program.DeleteVehicles(); return;
                     case "8": Program.RentAndReturn(); return;
+                    case "9": return;
+                    default: break;
+                }
+            }
+        }
+        public void GetBeforeLogin()
+        {
+            Console.Clear();
+            Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
+            Console.WriteLine("[0] Login");
+            Console.WriteLine("[1] Register Account");
+            Console.WriteLine("[2] View Cars");
+            Console.WriteLine("[3] View Vans");
+            Console.WriteLine("[4] View Motorcycles");
+            Console.WriteLine("[5] Search");
+            Console.WriteLine("[9] Exit");
+
+            while (true)
+            {
+                Console.Write(">> ");
+                string select = Console.ReadLine().Trim();
+                switch (select)
+                {
+                    case "0": Program.Login(); return;
+                    case "1": Program.Register(); return;
+                    case "2": Program.ViewCars(); return;
+                    case "3": Program.ViewVans(); return;
+                    case "4": Program.ViewMotors(); return;
+                    case "5": Program.SearchVehicles(); return;
                     case "9": return;
                     default: break;
                 }
