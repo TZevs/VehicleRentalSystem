@@ -14,11 +14,33 @@ namespace VehicleRentalApp
 {
     public class Program
     {
-        private readonly static Menus menu = new Menus();
-        private static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
-        // Dictionary for users.
-        public static Dictionary<int, Users> users = new Dictionary<int, Users>();
+        public readonly static Menus menu = new Menus();
+        private readonly static Validation validate = new Validation();
+        public static void AddingData()
+        {
+            vehicles.Add(1, new Car(1, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(2, new Van(1, "VW", "Caddy", 2021, 104.48m, "Manual", 2, "Petrol", 600f, 1.7f, 1.55f, 1.25f));
+            vehicles.Add(3, new Motorcycle(2, "BMW", "R1300 GS", 2024, 265m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(4, new Van(5, "Citroen", "Berlingo", 2020, 58.45m, "Manual", 2, "Petrol", 1361f, 2f, 2.1f, 1.79f));
+            vehicles.Add(5, new Car(2, "Mercedes", "E Class", 2024, 42.83m, "Automatic", 5, "Electric", 100));
+            vehicles.Add(6, new Motorcycle(2, "BMW", "R1200 TS", 2023, 200m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(7, new Van(5, "Citroen", "Berlingo", 2019, 505m, "Manual", 2, "Petrol", 900f, 1.8f, 1.9f, 1.79f));
+            vehicles.Add(8, new Car(3, "Ford", "Focus", 2019, 50m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(9, new Car(4, "Ford", "Fiesta", 2018, 60m, "Manual", 5, "Petrol", 76));
+            vehicles.Add(10, new Motorcycle(3, "KTM", "SX", 2024, 270m, "Automatic", 1, "Diesel", 500, true, true));
+            vehicles.Add(11, new Motorcycle(4, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
+            vehicles.Add(12, new Van(5, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
+            SerializeDictionary();
 
+            users.Add(1, new Users(1, "Mark", "Summers", "Mark@Summers.com", "123Hello"));
+            users.Add(2, new Users(2, "June", "Thomas", "June@Thomas.com", "123Hello"));
+            users.Add(3, new Users(3, "Ann", "Marie", "Ann@Marie.com", "123Hello"));
+            users.Add(4, new Users(4, "Dean", "Winchester", "Dean@Winchester.com", "123Hello"));
+            users.Add(5, new Users(5, "Harry", "Miller", "Harry@Miller.com", "123Hello"));
+            WriteBinary();
+        }
+        private static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
+        public static Dictionary<int, Users> users = ReadBinary("Users.bin");
         public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json");
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
         {
@@ -36,34 +58,16 @@ namespace VehicleRentalApp
         }
         static void Main(string[] args)
         {   
-            if (args.Length <= 0)
+            if (args.Length == 0)
             {
-                //int maxKey = vehicles.Keys.Max() + 1;
-                //Parallel.For(maxKey, 3000, a =>
-                //{
-                //    vehicles.TryAdd(a, new Van("Mercedes Benz", "E-Vito", 2023, 83.95m, "Automatic", 3, "Electric", 3200, 1.89f, 1.6f, 1.95f));
-                //});
-                //SerializeDictionary();
-                //if (a % 3 == 0)
-                //{
-                //    vehicles.TryAdd(a, new Car("Ford", "Fiesta", 2018, 60, "Manual", 5, "Petrol", 76));
-                //}
-                //else if (a % 3 == 1)
-                //{
-                //    vehicles.TryAdd(a, new Van("Mercedes Benz", "E-Vito", 2023, 83.95m, "Automatic", 3, "Electric", 3200, 1.89f, 1.6f, 1.95f));
-                //}
-                //else
-                //{
-                //    vehicles.TryAdd(a, new Motorcycle("Yamaha", "MT-07", 2021, 42.9m, "Manual", 2, "Petrol", 125, false, false));
-                //}
-                menu.GetMainMenu();
+                menu.GetBeforeLogin();
             }
             else if (args.Length == 1)
             {
                 switch (args[0].ToLower())
                 {
                     case "--menu":
-                        menu.GetMainMenu();
+                        menu.GetBeforeLogin();
                         break;
                     case "--view":
                         ViewVehicles();
@@ -132,6 +136,85 @@ namespace VehicleRentalApp
             };
             string jsonStr = JsonSerializer.Serialize(vehicles, options);
             File.WriteAllText("vehicles.json", jsonStr);
+        }
+        public static void WriteBinary()
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Open("Users.bin", FileMode.OpenOrCreate)))
+            {
+                bw.Write(users.Count());
+                foreach (var user in users)
+                {
+                    bw.Write(user.Value.GetUserID());
+                    bw.Write(user.Value.GetFirstName());
+                    bw.Write(user.Value.GetLastName());
+                    bw.Write(user.Value.GetEmail());
+                    bw.Write(user.Value.GetPassword());
+                    if (user.Value.GetOwnVehicles() == null)
+                    {
+                        bw.Write(0);
+                    }
+                    else
+                    {
+                        foreach (int id in user.Value.GetOwnVehicles())
+                        {
+                            bw.Write(id);
+                        }
+                    }
+                    if (user.Value.GetRentedVehicles() == null)
+                    {
+                        bw.Write(0);
+                    }
+                    else
+                    {
+                        foreach (int id in user.Value.GetRentedVehicles())
+                        {
+                            bw.Write(id);
+                        }
+                    }
+                }
+            }
+        }
+        public static Dictionary<int, Users> ReadBinary(string filePath)
+        {
+            Dictionary<int, Users> users = new Dictionary<int, Users>();
+            if (File.Exists(filePath))
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(filePath, FileMode.Open)))
+                {
+                    int userCount = br.ReadInt32();
+                    for (int i = 0; i < userCount; i++)
+                    {
+
+                        int id = br.ReadInt32();
+                        string fName = br.ReadString();
+                        string lName = br.ReadString();
+                        string email = br.ReadString();
+                        string password = br.ReadString();
+
+                        Users user = new Users(id, fName, lName, email, password);
+
+                        int ownCount = br.ReadInt32();
+                        for (int j = 0; j < ownCount; j++)
+                        {
+                            user.UserAddVehicle(br.ReadInt32());
+                        }
+
+                        int rentCount = br.ReadInt32();
+                        for (int j = 0; j < rentCount; j++)
+                        {
+                            user.UserRentVehicle(br.ReadInt32());
+                        }
+
+                        users.Add(id, user);
+                    }
+                }
+            }
+            else
+            {
+                return new Dictionary<int, Users>();
+            }
+
+            return users;
         }
         public static void ViewVehicles()
         {
@@ -238,24 +321,37 @@ namespace VehicleRentalApp
         }
         public static void Login()
         {
-            Console.WriteLine("LOGIN");
+            Console.Clear();
+            Console.WriteLine("LOGIN - (Username is your ID)");
             int id = validate.GetValidInt("Username: ");
             Console.Write("Password: ");
             string password = Console.ReadLine();
 
-            Users login = new Users();
-            if (login.VerifyLogin(id, password))
+            if (users.ContainsKey(id))
             {
-                userCache.Add(id, users[id]);
-                menu.GetMainMenu();
+                if (users[id].GetPassword() == password)
+                {
+                    userCache.Add(id, users[id]);
+                    menu.GetMainMenu();
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Warning, "Incorrect Password");
+                }
             }
             else
             {
-                Console.Write("Would you like to try again? [y / n]: ");
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Info, $"ID: '{id}' not found.");
             }
+
+            Console.Write("Would you like to try again? [y / n]: ");
         }
         public static void Register()
         {
+            Console.Clear();
+            Console.WriteLine("REGISTER");
             Console.Write("First Name: ");
             string fName = Console.ReadLine();
             Console.Write("Last Name: ");
@@ -263,7 +359,6 @@ namespace VehicleRentalApp
             string email = validate.InputMatch("Email: ", "Confirm Email: ");
             string password = validate.InputMatch("Password: ", "Confirm Password: ");
 
-            Users newUser = new Users();
             int newKey = 0;
             if (users.Count == 0)
             {
@@ -273,31 +368,19 @@ namespace VehicleRentalApp
             {
                 newKey = users.Keys.Max() + 1;
             }
-            newUser.SetUser(newKey, fName, lName, email, password);
+            users.Add(newKey, new Users(newKey, fName, lName, email, password));
             Console.WriteLine($"Account Created use ID: {newKey} as your username.");
-            
-            Console.Write("Login? [y / n]: ");
-            string input = Console.ReadLine().ToLower();
-            while (true)
-            {
-                if (input == "y")
-                {
-                    Login();
-                    break;
-                }
-                else if (input == "n")
-                {
-                    menu.GetMainMenu();
-                    break;
-                }
-                else
-                {
 
-                }
+            bool login = validate.GetValidBool("Login? [y / n]: ");
+            if (login)
+            {
+                Login();
+            }
+            else
+            {
+                menu.GetMainMenu();
             }
         }
-        
-        private readonly static Validation validate = new Validation();
         public static void AddVehicles()
         {
             Console.Clear();
@@ -323,6 +406,19 @@ namespace VehicleRentalApp
             string transm = validate.GetValidTransmission("Transmission Type [Manual / Automatic]: ");
             int numOfSeats = validate.GetValidInt("Number of Seats: ");
             string fuelType = validate.GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
+            
+            Users owner = userCache.Values.FirstOrDefault();
+            int ownerId = 0;
+            if (owner == null)
+            {
+                Console.WriteLine("User must be logged in");
+                Thread.Sleep(1000);
+                menu.GetBeforeLogin();
+            }
+            else
+            {
+                ownerId = owner.GetUserID();
+            }
 
             int newKey = 0;
             if (vehicles.Count == 0)
@@ -337,12 +433,13 @@ namespace VehicleRentalApp
             {
                 int boot = validate.GetValidInt("Boot Capacity (In Litres): ");
 
-                Car newCar = new Car(make, model, yr, rate, transm, numOfSeats, fuelType, boot);
+                Car newCar = new Car(ownerId, make, model, yr, rate, transm, numOfSeats, fuelType, boot);
                 Console.WriteLine($"\nCar Added - {newCar.ConfirmDetails()}");
                 if (validate.GetValidBool("Add Car [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newCar);
                     SerializeDictionary();
+                    owner.UserAddVehicle(newKey);
                 }
             }
             else if (typeInput == "Van")
@@ -353,12 +450,13 @@ namespace VehicleRentalApp
                 float width = validate.GetValidFloat("Width (In metres): ");
                 float height = validate.GetValidFloat("Height (In metres): ");
 
-                Van newVan = new Van(make, model, yr, rate, transm, numOfSeats, fuelType, loadCap, length, width, height);
+                Van newVan = new Van(ownerId, make, model, yr, rate, transm, numOfSeats, fuelType, loadCap, length, width, height);
                 Console.WriteLine($"\nVan Added - {newVan.ConfirmDetails()}");
                 if (validate.GetValidBool("Add Van [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newVan);
                     SerializeDictionary();
+                    owner.UserAddVehicle(newKey);
                 }
             }
             else if (typeInput == "Motorcycle")
@@ -367,12 +465,13 @@ namespace VehicleRentalApp
                 bool storage = validate.GetValidBool("Storage [y / n]: ");
                 bool protection = validate.GetValidBool("With Protection (Helmet, etc) [y / n]: ");
 
-                Motorcycle newMot = new Motorcycle(make, model, yr, rate, transm, numOfSeats, fuelType, cc, storage, protection);
+                Motorcycle newMot = new Motorcycle(ownerId, make, model, yr, rate, transm, numOfSeats, fuelType, cc, storage, protection);
                 Console.WriteLine($"\nMotorcycle Added - {newMot.ConfirmDetails()}");
                 if (validate.GetValidBool("Add Motorcycle [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newMot);
                     SerializeDictionary();
+                    owner.UserAddVehicle(newKey);
                 }
             }
 
@@ -610,6 +709,18 @@ namespace VehicleRentalApp
             List<string> errorOutput = new List<string>();
 
             int newKey = vehicles.Count() == 0 ? 1 : vehicles.Keys.Max() + 1;
+            Users owner = userCache.Values.FirstOrDefault();
+            int ownerId = 0;
+            if (owner == null)
+            {
+                Console.WriteLine("User must be logged in");
+                Thread.Sleep(1000);
+                menu.GetBeforeLogin();
+            }
+            else
+            {
+                ownerId = owner.GetUserID();
+            }
 
             string? errorMsg;
             int? checkInt;
@@ -662,7 +773,7 @@ namespace VehicleRentalApp
 
                 if (errorOutput.Count == 0)
                 {
-                    Car cmdCar = new Car(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validBootCap);
+                    Car cmdCar = new Car(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validBootCap);
                     vehicles.Add(newKey, cmdCar);
                     Console.WriteLine($"Car Added - {cmdCar.ConfirmDetails()}");
                     SerializeDictionary();
@@ -702,7 +813,7 @@ namespace VehicleRentalApp
 
                 if (errorOutput.Count == 0)
                 {
-                    Van cmdVan = new Van(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validLoadCap, validLength, validWidth, validHeight);
+                    Van cmdVan = new Van(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validLoadCap, validLength, validWidth, validHeight);
                     vehicles.Add(newKey, cmdVan);
                     Console.WriteLine($"Van Added - {cmdVan.ConfirmDetails()}");
                     SerializeDictionary();
@@ -737,7 +848,7 @@ namespace VehicleRentalApp
 
                 if (errorOutput.Count == 0)
                 {
-                    Motorcycle cmdMotor = new Motorcycle(newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validCC, validStorage, validProtection);
+                    Motorcycle cmdMotor = new Motorcycle(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validCC, validStorage, validProtection);
                     vehicles.Add(newKey, cmdMotor);
                     Console.WriteLine($"Motorcycle Added - {cmdMotor.ConfirmDetails()}");
                     SerializeDictionary();
