@@ -15,8 +15,9 @@ namespace VehicleRentalApp
 
         [JsonConstructor]
         public Car() { }
-        public Car(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
+        public Car(int ownerId, string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
         {
+            OwnerID = ownerId;
             Make = make;
             Model = model;
             Year = yr;

@@ -10,6 +10,7 @@ namespace VehicleRentalApp
     public abstract class Vehicle
     {
         [JsonInclude] protected string TypeOfVehicle;
+        [JsonInclude] protected int OwnerID;
         [JsonInclude] protected string Make;
         [JsonInclude] protected string Model;
         [JsonInclude] protected int Year;
@@ -21,6 +22,7 @@ namespace VehicleRentalApp
         
         // Base Getters
         public string GetVType() { return TypeOfVehicle; }
+        public int GetOwnerID() { return OwnerID; }
         public string GetMake() { return Make; }
         public string GetModel () { return Model; }
         public int GetYear() { return Year; }

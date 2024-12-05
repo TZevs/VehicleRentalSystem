@@ -15,8 +15,9 @@ namespace VehicleRentalApp
 
         [JsonConstructor]
         public Motorcycle() { }
-        public Motorcycle(string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool Storage, bool WithProtection)
+        public Motorcycle(int ownerId, string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int cc, bool Storage, bool WithProtection)
         {
+            OwnerID = ownerId;
             Make = make;
             Model = model;
             Year = yr;
