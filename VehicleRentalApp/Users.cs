@@ -16,34 +16,13 @@ namespace VehicleRentalApp
         private List<int> OwnVehicles;
         private List<int> RentedVehicles;
 
-        public void SetUser(int id, string fName, string lName, string email, string password)
+        public Users(int id, string fName, string lName, string email, string password)
         {
             UserID = id;
             FirstName = fName;
             LastName = lName;
             Email = email;
             Password = password;
-        }
-        public bool VerifyLogin(int id, string password)
-        {
-            Errors err = new Errors();
-            if (Program.users.ContainsKey(id))
-            {
-                if (Program.users[id].GetPassword() == password)
-                {
-                    return true;
-                }
-                else
-                {
-                    err.PrintError(ErrorType.Warning, "Incorrect Password");
-                    return false;
-                }
-            }
-            else
-            {
-                err.PrintError(ErrorType.Info, $"ID: '{id}' not found.");
-                return false;
-            }
         }
         public void UserAddVehicle(int vehicleID)
         {
