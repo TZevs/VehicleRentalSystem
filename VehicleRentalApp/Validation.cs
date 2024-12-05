@@ -72,7 +72,7 @@ namespace VehicleRentalApp
                 else
                 {
                     Errors err = new Errors();
-                    err.PrintError(ErrorType.Info, "Invalid Input.Enter 'y' or 'n'");
+                    err.PrintError(ErrorType.Info, "Invalid Input. Enter 'y' or 'n'");
                 }
             }
         }
