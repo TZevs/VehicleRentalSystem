@@ -31,7 +31,7 @@ namespace VehicleRentalApp
             }
             else
             {
-                return Dictionary<int, Vehicle>().empty();
+                return new Dictionary<int, Vehicle>();
             }
         }
         static void Main(string[] args)
