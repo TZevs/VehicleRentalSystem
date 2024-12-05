@@ -20,36 +20,45 @@ namespace VehicleRentalApp
             {
                 all.AddColumn(col);
             }
+
+            int count = view.Count();
             var timer = Stopwatch.StartNew();
-            // 48ms
-            //foreach (var item in view)
-            //{
-            //    all.AddRow(
-            //        item.Key.ToString(),
-            //        item.Value.GetVType(),
-            //        item.Value.GetMake(),
-            //        item.Value.GetModel(),
-            //        item.Value.GetYear().ToString(),
-            //        $"£{item.Value.GetRate():F2}",
-            //        item.Value.GetTransmission(),
-            //        item.Value.GetSeatCap().ToString(),
-            //        item.Value.GetFuel()
-            //    );
-            //}
-            Parallel.ForEach(view, item =>
+
+            if (count < 100000)
             {
-                all.AddRow(
-                    item.Key.ToString(),
-                    item.Value.GetVType(),
-                    item.Value.GetMake(),
-                    item.Value.GetModel(),
-                    item.Value.GetYear().ToString(),
-                    $"£{item.Value.GetRate():F2}",
-                    item.Value.GetTransmission(),
-                    item.Value.GetSeatCap().ToString(),
-                    item.Value.GetFuel()
-                );
-            });
+                foreach (var item in view)
+                {
+                    all.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetVType(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel()
+                    );
+                }
+            } 
+            else
+            {
+                Parallel.ForEach(view, item =>
+                {
+                    all.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetVType(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel()
+                    );
+                });
+            }
+
             Console.WriteLine($"{timer.ElapsedMilliseconds}ms");
             AnsiConsole.Write(all);
         }
@@ -63,21 +72,43 @@ namespace VehicleRentalApp
             {
                 cars.AddColumn(col);
             }
-            foreach (var item in view)
-            {
-                cars.AddRow(
-                    item.Key.ToString(),
-                    item.Value.GetMake(),
-                    item.Value.GetModel(),
-                    item.Value.GetYear().ToString(),
-                    $"£{item.Value.GetRate():F2}",
-                    item.Value.GetTransmission(),
-                    item.Value.GetSeatCap().ToString(),
-                    item.Value.GetFuel(),
-                    item.Value.BootCapacity.ToString()
-                );
-            }
 
+            int count = view.Count();
+            if (count < 100000)
+            {
+                foreach (var item in view)
+                {
+                    cars.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        item.Value.BootCapacity.ToString()
+                    );
+                }
+            }
+            else
+            {
+                Parallel.ForEach(view, item =>
+                {
+                    cars.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        item.Value.BootCapacity.ToString()
+                    );
+                });
+            }
+            
             AnsiConsole.Write(cars);
         }
         public void DisplayMotors(IEnumerable<KeyValuePair<int, Vehicle>> view)
@@ -90,21 +121,45 @@ namespace VehicleRentalApp
             {
                 motors.AddColumn(col);
             }
-            foreach (var item in view)
+
+            int count = view.Count();
+            if (count < 100000)
             {
-                motors.AddRow(
-                    item.Key.ToString(),
-                    item.Value.GetMake(),
-                    item.Value.GetModel(),
-                    item.Value.GetYear().ToString(),
-                    $"£{item.Value.GetRate():F2}",
-                    item.Value.GetTransmission(),
-                    item.Value.GetSeatCap().ToString(),
-                    item.Value.GetFuel(),
-                    item.Value.CC.ToString(),
-                    item.Value.Storage.ToString(),
-                    item.Value.WithProtection.ToString()
-                );
+                foreach (var item in view)
+                {
+                    motors.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        item.Value.CC.ToString(),
+                        item.Value.Storage.ToString(),
+                        item.Value.WithProtection.ToString()
+                    );
+                }
+            }
+            else
+            {
+                Parallel.ForEach(view, item =>
+                {
+                    motors.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        item.Value.CC.ToString(),
+                        item.Value.Storage.ToString(),
+                        item.Value.WithProtection.ToString()
+                    );
+                });
             }
 
             AnsiConsole.Write(motors);
@@ -120,21 +175,44 @@ namespace VehicleRentalApp
                 vans.AddColumn(col);
             }
 
-            foreach (var item in view)
+            int count = view.Count();
+            if (count < 100000)
             {
-                vans.AddRow(
-                    item.Key.ToString(),
-                    item.Value.GetMake(),
-                    item.Value.GetModel(),
-                    item.Value.GetYear().ToString(),
-                    $"£{item.Value.GetRate():F2}",
-                    item.Value.GetTransmission(),
-                    item.Value.GetSeatCap().ToString(),
-                    item.Value.GetFuel(),
-                    $"{item.Value.LoadCapacity.ToString()}kg",
-                    item.Value.GetLWH(),   
-                    $"{item.Value.Volume.ToString()}m"
-                );
+                foreach (var item in view)
+                {
+                    vans.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        $"{item.Value.LoadCapacity.ToString()}kg",
+                        item.Value.GetLWH(),
+                        $"{item.Value.Volume.ToString()}m"
+                    );
+                }
+            }
+            else
+            {
+                Parallel.ForEach(view, item =>
+                {
+                    vans.AddRow(
+                        item.Key.ToString(),
+                        item.Value.GetMake(),
+                        item.Value.GetModel(),
+                        item.Value.GetYear().ToString(),
+                        $"£{item.Value.GetRate():F2}",
+                        item.Value.GetTransmission(),
+                        item.Value.GetSeatCap().ToString(),
+                        item.Value.GetFuel(),
+                        $"{item.Value.LoadCapacity.ToString()}kg",
+                        item.Value.GetLWH(),
+                        $"{item.Value.Volume.ToString()}m"
+                    );
+                });
             }
 
             AnsiConsole.Write(vans);
