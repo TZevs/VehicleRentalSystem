@@ -39,10 +39,16 @@ namespace VehicleRentalApp
                 Console.WriteLine("You cannot delete a vehicle you do not own!");
             }
         }
-        public string GetPassword() { return Password; }
-        public void ToFile()
+        public void UserRentVehicle(int vehicleID)
         {
-
+            RentedVehicles.Add(vehicleID);
         }
+        public string GetPassword() { return Password; }
+        public int GetUserID() { return UserID; }   
+        public string GetFirstName() { return FirstName; }
+        public string GetLastName() { return LastName; }
+        public string GetEmail() { return Email; }
+        public List<int> GetOwnVehicles() { return OwnVehicles; }
+        public List<int> GetRentedVehicles() {return RentedVehicles;}
     }
 }
