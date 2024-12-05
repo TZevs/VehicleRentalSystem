@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
-    internal class Menus
+    public class Menus
     {
         public void GetMainMenu()
         {
