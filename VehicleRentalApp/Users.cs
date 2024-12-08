@@ -40,6 +40,7 @@ namespace VehicleRentalApp
         {
             RentedVehicles.Remove(vehicleID);
         }
+
         public string GetPassword() { return Password; }
         public int GetUserID() { return UserID; }   
         public string GetFirstName() { return FirstName; }
@@ -47,6 +48,7 @@ namespace VehicleRentalApp
         public string GetEmail() { return Email; }
         public List<int> GetOwnVehicles() { return OwnVehicles; }
         public List<int> GetRentedVehicles() {return RentedVehicles;}
+
         public bool CheckOwnVehicles(int id)
         {
             if (OwnVehicles == null || !OwnVehicles.Contains(id)) return false;
