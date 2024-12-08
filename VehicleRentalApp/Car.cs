@@ -9,8 +9,6 @@ namespace VehicleRentalApp
 {
     internal class Car : Vehicle
     {
-        // Shall I change to int ? 
-        // Use kg - not something that allways appears on rental apps.
         private int _BootCapacity;
 
         [JsonConstructor]
