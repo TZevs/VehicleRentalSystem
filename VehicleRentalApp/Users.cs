@@ -30,18 +30,15 @@ namespace VehicleRentalApp
         }
         public void UserDelVehicle(int vehicleID)
         {
-            if (OwnVehicles.Contains(vehicleID))
-            {
-                OwnVehicles.Remove(vehicleID);
-            }
-            else
-            {
-                Console.WriteLine("You cannot delete a vehicle you do not own!");
-            }
+            OwnVehicles.Remove(vehicleID);
         }
         public void UserRentVehicle(int vehicleID)
         {
             RentedVehicles.Add(vehicleID);
+        }
+        public void UserReturnVehicle(int vehicleID)
+        {
+            RentedVehicles.Remove(vehicleID);
         }
         public string GetPassword() { return Password; }
         public int GetUserID() { return UserID; }   
@@ -50,5 +47,15 @@ namespace VehicleRentalApp
         public string GetEmail() { return Email; }
         public List<int> GetOwnVehicles() { return OwnVehicles; }
         public List<int> GetRentedVehicles() {return RentedVehicles;}
+        public bool CheckOwnVehicles(int id)
+        {
+            if (OwnVehicles == null || !OwnVehicles.Contains(id)) return false;
+            else return true;
+        } 
+        public bool CheckRentedVehicles(int id)
+        {
+            if (RentedVehicles == null || !RentedVehicles.Contains(id)) return false;
+            else return true;
+        }
     }
 }
