@@ -33,7 +33,7 @@ namespace VehicleRentalApp
 
         // Car member Getters / Setters
         public virtual int? BootCapacity { get; set; }
-        // Van member Getters
+        // Van member Getters / Setters
         public virtual float? LoadCapacity { get; set; }
         public virtual float? IntLength { get; set; } 
         public virtual float? IntWidth { get; set; } 
