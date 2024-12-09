@@ -246,8 +246,10 @@ namespace VehicleRentalApp
                 cars.DisplayCars(allCars);
             }
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            if (userCache.Count() == 1) { menu.GetMainMenu(); }
+            else { menu.GetBeforeLogin(); }
         }
         public static void ViewVans()
         {
@@ -265,8 +267,10 @@ namespace VehicleRentalApp
                 vans.DisplayVans(allVans);
             }
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            if (userCache.Count() == 1) { menu.GetMainMenu(); }
+            else { menu.GetBeforeLogin(); }
         }
         public static void ViewMotors()
         {
@@ -284,8 +288,10 @@ namespace VehicleRentalApp
                 motors.DisplayMotors(allMotors);
             }
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            if (userCache.Count() == 1) { menu.GetMainMenu(); }
+            else { menu.GetBeforeLogin(); }
         }
         public static void SearchVehicles()
         {
@@ -332,6 +338,7 @@ namespace VehicleRentalApp
                 {
                     userCache.Add(id, users[id]);
                     menu.GetMainMenu();
+                    return;
                 }
                 else
                 {
@@ -347,7 +354,7 @@ namespace VehicleRentalApp
 
             bool tryAgain = validate.GetValidBool("Would you like to try again? [y / n]: ");
             if (tryAgain) { Login(); }
-            else { menu.GetMainMenu(); }
+            else { menu.GetBeforeLogin(); }
         }
         public static void Register()
         {
@@ -470,8 +477,9 @@ namespace VehicleRentalApp
                 }
             }
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            menu.GetMainMenu();
         }
         public static void DeleteVehicles()
         {
@@ -519,8 +527,9 @@ namespace VehicleRentalApp
                 menu.GetBeforeLogin();
             }
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            menu.GetMainMenu();
         }
         public static void RentVehicle()
         {
@@ -556,6 +565,8 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
         public static void ReturnVehicle()
@@ -594,6 +605,8 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
+            Console.Write("Press enter to go back>> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
         public static void CmdRentVehicle(string[] input)
