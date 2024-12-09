@@ -22,7 +22,6 @@ namespace VehicleRentalApp
             }
 
             int count = view.Count();
-            var timer = Stopwatch.StartNew();
 
             if (count < 100000)
             {
@@ -59,7 +58,6 @@ namespace VehicleRentalApp
                 });
             }
 
-            Console.WriteLine($"{timer.ElapsedMilliseconds}ms");
             AnsiConsole.Write(all);
         }
         public void DisplayCars(IEnumerable<KeyValuePair<int, Vehicle>> view)
