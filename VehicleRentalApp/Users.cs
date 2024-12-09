@@ -24,6 +24,8 @@ namespace VehicleRentalApp
             Email = email;
             Password = password;
         }
+
+        // Adding and removing items from the owned and rented vehicle lists. 
         public void UserAddVehicle(int vehicleID)
         {
             OwnVehicles.Add(vehicleID);
@@ -41,6 +43,7 @@ namespace VehicleRentalApp
             RentedVehicles.Remove(vehicleID);
         }
 
+        // Getters
         public string GetPassword() { return Password; }
         public int GetUserID() { return UserID; }   
         public string GetFirstName() { return FirstName; }
@@ -49,6 +52,7 @@ namespace VehicleRentalApp
         public List<int> GetOwnVehicles() { return OwnVehicles; }
         public List<int> GetRentedVehicles() {return RentedVehicles;}
 
+        // Checks if vehicle id is stored in either list. 
         public bool CheckOwnVehicles(int id)
         {
             if (OwnVehicles == null || !OwnVehicles.Contains(id)) return false;
