@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.FileIO;
+using Spectre.Console;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -56,76 +57,7 @@ namespace VehicleRentalApp
                 return new Dictionary<int, Vehicle>();
             }
         }
-        static void Main(string[] args)
-        {   
-            if (args.Length == 0)
-            {
-                menu.GetBeforeLogin();
-            }
-            else if (args.Length == 1)
-            {
-                switch (args[0].ToLower())
-                {
-                    case "--menu":
-                        menu.GetBeforeLogin();
-                        break;
-                    case "--view":
-                        ViewVehicles();
-                        break;
-                    case "--help":
-                        Console.WriteLine("--help:");
-                        Console.WriteLine("--menu : Opens the main menu");
-                        Console.WriteLine("--view : Displays all vehicles");
-                        Console.WriteLine("--rent : Requires Vehicle ID (Format: --rent 2)");
-                        Console.WriteLine("--return : Requires Vehicle ID (Format: --return 2)");
-                        Console.WriteLine("--del or --delete: Requires Vehicle ID (Format: --del 2 or --delete 2)");
-                        Console.WriteLine("--add: Requires (VehicleType Make Model Year DailyRate Transmission + Vehicle specific details)");
-                        Console.WriteLine("  Example Format: (--add Car Land/Rover Defender 2019 230.23 Hybrid 100)");
-                        break;
-                    default:
-                        Console.WriteLine($"Unknown Command: {args[0]}");
-                        break;
-                }
-            }
-            else if (args.Length >= 2)
-            {
-                switch (args[0].ToLower())
-                {
-                    case "--rent":
-                        CmdRentAndReturn("Rent", args[1]);
-                        break;
-                    case "--return":
-                        CmdRentAndReturn("Return", args[1]);
-                        break;
-                    case "--del":
-                        CmdDelVehicle(args[1]);
-                        break;
-                    case "--delete":
-                        CmdDelVehicle(args[1]);
-                        break;
-                    case "--add":
-                        if (args.Length >= 6)
-                        {
-                            string[] newVehicles = args.Skip(1).ToArray();
-                            CmdAddVehicle(newVehicles);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Incorrect Input: Replace any spaces in names with a /.");
-                        }
-                        break;
-                    default:
-                        Console.WriteLine($"Unknown Command: {args[0]}");
-                        Console.WriteLine("Enter --help for assistance");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid input: --help for assistance");
-            }
-        }
-        private static void SerializeDictionary()
+        private static void SerializeDictionary() // Serialises the vehicle dictionary and stores in a JSON file.
         {
             var options = new JsonSerializerOptions
             {
@@ -137,7 +69,7 @@ namespace VehicleRentalApp
             string jsonStr = JsonSerializer.Serialize(vehicles, options);
             File.WriteAllText("vehicles.json", jsonStr);
         }
-        public static void WriteBinary()
+        public static void WriteBinary() // Writes to the binary file that contains user data.
         {
             using (BinaryWriter bw = new BinaryWriter(File.Open("Users.bin", FileMode.OpenOrCreate)))
             {
@@ -174,7 +106,7 @@ namespace VehicleRentalApp
                 }
             }
         }
-        public static Dictionary<int, Users> ReadBinary(string filePath)
+        public static Dictionary<int, Users> ReadBinary(string filePath) // Reads from the user binary file and outputs it into a dictionary.
         {
             Dictionary<int, Users> users = new Dictionary<int, Users>();
             if (File.Exists(filePath))
@@ -216,24 +148,87 @@ namespace VehicleRentalApp
 
             return users;
         }
-        public static void ViewVehicles()
-        {
-            Console.Clear();
-            TableDisplay all = new TableDisplay();
-
-            Console.WriteLine("ALL CARS:");
-            IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
-            all.DisplayVehicles(allCars);
-
-            Console.WriteLine("\n All VANS:");
-            IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
-            all.DisplayVehicles(allVans);
-
-            Console.WriteLine("\n ALL MOTORCYCLES:");
-            IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
-            all.DisplayVehicles(allMotors);
-
-            menu.GetMenuForViewing("All");
+        static void Main(string[] args)
+        {   
+            if (args.Length == 0) { menu.GetBeforeLogin(); }
+            else if (args.Length == 1)
+            {
+                switch (args[0].ToLower())
+                {
+                    case "--menu":
+                        menu.GetBeforeLogin();
+                        break;
+                    case "--cars":
+                        ViewCars();
+                        break;
+                    case "--vans":
+                        ViewVans();
+                        break;
+                    case "--motors":
+                        ViewMotors();
+                        break;
+                    case "--help":
+                        Console.WriteLine("--help:");
+                        Console.WriteLine("--menu : Opens the menu");
+                        Console.WriteLine("--cars : Displays all Cars");
+                        Console.WriteLine("--vans : Displays all Vans");
+                        Console.WriteLine("--motors : Displays all Motorcycles");
+                        Console.WriteLine();
+                        Console.WriteLine("--rent : Requires Vehicle ID and your username and password");
+                        Console.WriteLine("         Format: --rent 2 username=password");
+                        Console.WriteLine("--return : Requires Vehicle ID and your username and password");
+                        Console.WriteLine("         Format: --return 2 username=password");
+                        Console.WriteLine();
+                        Console.WriteLine("--del or --delete: Requires Vehicle ID and your username and password");
+                        Console.WriteLine("         Format: --del 2 username=password");
+                        Console.WriteLine();
+                        Console.WriteLine("--add: VehicleType, Make, Model, Year, DailyRate, Transmission, Number of Seats, Fuel Type, + Vehicle specific details, and your username and password");
+                        Console.WriteLine("         Format: --add C Land/Rover Defender 2019 230.23 Automatic 5 Petrol 100 username=password");
+                        Console.WriteLine("         Format: --add V VW Caddy 2021 104.48m Manual 2 Petrol 600 1.7 1.55 1.25 username=password");
+                        Console.WriteLine("         Format: --add M KTM SX 2024 270m Automatic 1 Diesel 500 true true username=password");
+                        break;
+                    default:
+                        Console.WriteLine($"Unknown Command: '{args[0]}'");
+                        break;
+                }
+            }
+            else if (args.Length >= 3)
+            {
+                switch (args[0].ToLower())
+                {
+                    case "--rent":
+                        CmdRentVehicle(args.Skip(1).ToArray());
+                        break;
+                    case "--return":
+                        CmdReturnVehicle(args.Skip(1).ToArray());
+                        break;
+                    case "--del":
+                        CmdDelVehicle(args.Skip(1).ToArray());
+                        break;
+                    case "--delete":
+                        CmdDelVehicle(args.Skip(1).ToArray());
+                        break;
+                    case "--add":
+                        if (args.Length == 11 || args.Length == 14 || args.Length == 13)
+                        {
+                            string[] newVehicles = args.Skip(1).ToArray();
+                            CmdAddVehicle(newVehicles);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect Input: Replace any spaces in names with a /.");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine($"Unknown Command: {args[0]}");
+                        Console.WriteLine("Enter --help for assistance");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid input: --help for assistance");
+            }
         }
         public static void ViewCars()
         {
@@ -251,7 +246,8 @@ namespace VehicleRentalApp
                 cars.DisplayCars(allCars);
             }
 
-            menu.GetMenuForViewing("Cars");
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
         public static void ViewVans()
         {
@@ -269,7 +265,8 @@ namespace VehicleRentalApp
                 vans.DisplayVans(allVans);
             }
 
-            menu.GetMenuForViewing("Vans");
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
         public static void ViewMotors()
         {
@@ -287,7 +284,8 @@ namespace VehicleRentalApp
                 motors.DisplayMotors(allMotors);
             }
 
-            menu.GetMenuForViewing("Motorcycles");
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
         public static void SearchVehicles()
         {
@@ -317,7 +315,8 @@ namespace VehicleRentalApp
             TableDisplay searchDisplay = new TableDisplay();
             searchDisplay.DisplayVehicles(query);
 
-            menu.GetMenuForFuncs("Search");
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
         public static void Login()
         {
@@ -346,7 +345,9 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Info, $"ID: '{id}' not found.");
             }
 
-            Console.Write("Would you like to try again? [y / n]: ");
+            bool tryAgain = validate.GetValidBool("Would you like to try again? [y / n]: ");
+            if (tryAgain) { Login(); }
+            else { menu.GetMainMenu(); }
         }
         public static void Register()
         {
@@ -372,14 +373,8 @@ namespace VehicleRentalApp
             Console.WriteLine($"Account Created use ID: {newKey} as your username.");
 
             bool login = validate.GetValidBool("Login? [y / n]: ");
-            if (login)
-            {
-                Login();
-            }
-            else
-            {
-                menu.GetMainMenu();
-            }
+            if (login) { Login(); }
+            else { menu.GetBeforeLogin(); } 
         }
         public static void AddVehicles()
         {
@@ -406,18 +401,18 @@ namespace VehicleRentalApp
             string transm = validate.GetValidTransmission("Transmission Type [Manual / Automatic]: ");
             int numOfSeats = validate.GetValidInt("Number of Seats: ");
             string fuelType = validate.GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
-            
-            Users owner = userCache.Values.FirstOrDefault();
+
             int ownerId = 0;
-            if (owner == null)
+            if (userCache.Count() == 1)
+            {
+                Users owner = userCache.Values.First();
+                ownerId = owner.GetUserID();
+            }
+            else
             {
                 Console.WriteLine("User must be logged in");
                 Thread.Sleep(1000);
                 menu.GetBeforeLogin();
-            }
-            else
-            {
-                ownerId = owner.GetUserID();
             }
 
             int newKey = 0;
@@ -439,7 +434,7 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newCar);
                     SerializeDictionary();
-                    owner.UserAddVehicle(newKey);
+                    userCache[ownerId].UserAddVehicle(newKey);
                 }
             }
             else if (typeInput == "Van")
@@ -456,7 +451,7 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newVan);
                     SerializeDictionary();
-                    owner.UserAddVehicle(newKey);
+                    userCache[ownerId].UserAddVehicle(newKey);
                 }
             }
             else if (typeInput == "Motorcycle")
@@ -471,235 +466,332 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newMot);
                     SerializeDictionary();
-                    owner.UserAddVehicle(newKey);
+                    userCache[ownerId].UserAddVehicle(newKey);
                 }
             }
 
-            menu.GetMenuForFuncs("Add");            
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
         public static void DeleteVehicles()
         {
             Console.Clear();
             Console.WriteLine("DELETE VEHICLES");
-            Console.Write("Vehicle ID: ");
 
-            string inputId = Console.ReadLine().Trim();
-            int id = 0;
-            try
+            if (userCache.Count() == 1)
             {
-                id = Convert.ToInt32(inputId);
-            }
-            catch
-            {
-                Console.WriteLine($"Invalid Input: {inputId}: Number ID Required.");
-            }
+                int inputID = validate.GetValidInt("Vehicle ID: ");
+                Users owner = userCache.Values.First();
+                int ownerId = owner.GetUserID();
 
-            if (vehicles.ContainsKey(id))
-            {
-                // Displays selected vehicles information.
-                Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
-                Console.Write("Is this the vehicle you want to delete [y/n]: ");
+                bool vehicleOwner = owner.CheckOwnVehicles(inputID);
+                bool vehicleExists = vehicles.ContainsKey(inputID);
 
-                // Asks for confirmation to delete the vehicle. 
-                while (true)
+                if (vehicleOwner && vehicleExists)
                 {
-                    string confirm = Console.ReadLine().Trim().ToLower();
-                    if (confirm == "y")
+                    Console.WriteLine(vehicles[inputID].ConfirmDetails());
+                    bool confirmDel = validate.GetValidBool("Is this the vehicle you want to delete [y/n]: ");
+
+                    if (confirmDel)
                     {
-                        vehicles.Remove(id);
+                        vehicles.Remove(inputID);
+                        owner.UserDelVehicle(inputID);
+                        WriteBinary();
                         SerializeDictionary();
-                        Console.WriteLine($"Vehicle with ID {id} has been deleted");
-                        break;
-                    }
-                    else if (confirm == "n")
-                    {
-                        Console.WriteLine($"Vehicle with ID {id} will not be deleted");
-                        break;
+                        Console.WriteLine($"Vehicle with ID {inputID} has been deleted.");
                     }
                     else
                     {
-                        Console.Write("[y/n]?: ");
+                        Console.WriteLine($"Vehicle with ID {inputID} has not been deleted.");
                     }
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    if (!vehicleOwner) { err.PrintError(ErrorType.Warning, "You cannot delete a vehicle you do not own."); }
+                    else if (!vehicleExists) { err.PrintError(ErrorType.Info, $"Vehicle ID: '{inputID}' not found."); }
                 }
             }
             else
             {
-                Console.WriteLine($"Vehicle ID: '{id}' not found.");
+                Console.WriteLine("You must be logged in to delete a vehicle.");
+                Thread.Sleep(1000);
+                menu.GetBeforeLogin();
             }
 
-            menu.GetMenuForFuncs("Delete");            
+            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
+            else { menu.GetMainMenu(); }
         }
-        public static void RentAndReturn()
+        public static void RentVehicle()
         {
             Console.Clear();
-            Console.WriteLine("RENT & RETURN VEHICLES");
+            Console.WriteLine("RENT VEHICLES");
 
-            // Validates input 
             int id = validate.GetValidInt("Enter Vehicle ID: ");
 
-            // Checks collection for vehicle ID.
             if (vehicles.ContainsKey(id))
             {
-                // Displays selected vehicles information.
-                Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()}");
-
-                // Asks for confirmation of the vehicle's status update. 
-                string action = vehicles[id].Status == "Available" ? "Rent" : "Return";
-                Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
-
-                while (true)
+                if (vehicles[id].Status == "Available")
                 {
-                    string confirm = Console.ReadLine().Trim().ToLower();
-                    if (confirm == "y")
+                    Console.WriteLine(vehicles[id].ConfirmDetails());
+                    bool confimAction = validate.GetValidBool($"Is this the vehicle you want to rent [y/n]: ");
+                    if (confimAction)
                     {
-                        if (vehicles[id].Status == "Available" && action == "Rent")
-                        {
-                            vehicles[id].Status = "Rented";
-                            Console.WriteLine($"Vehicle {id} Rented");
-                            SerializeDictionary();
-                        }
-                        else if (vehicles[id].Status == "Rented" && action == "Return")
-                        {
-                            vehicles[id].Status = "Available";
-                            Console.WriteLine($"Vehicle {id} Returned");
-                            SerializeDictionary();
-                        }
-                        else
-                        {
-                            if (action == "Rent")
-                            {
-                                Console.WriteLine($"Vehicle {id} is not available.");
-                            }
-                            else if (action == "Return")
-                            {
-                                Console.WriteLine($"Vehicle {id} has already been returned.");
-                            }
-                        }
-                        break;
-                    }
-                    else if (confirm == "n")
-                    {
-                        Console.WriteLine($"{action} Cancelled.");
-                        break;
-                    }
-                    else
-                    {
-                        Console.Write("[y/n]?: ");
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Vehicle ID: '{id}' not found.");
-            }
-
-            menu.GetMenuForViewing("RentAndReturn");            
-        }
-        public static void CmdRentAndReturn(string action, string inputId)
-        {
-            int id = 0;
-            try
-            {
-                id = Convert.ToInt32(inputId);
-            }
-            catch
-            {
-                Console.WriteLine($"Second argument should be a number.");
-            }
-
-            if (vehicles.ContainsKey(id))
-            {
-                Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
-
-                Console.Write($"Is this the vehicle you want to {action} [y/n]: ");
-
-                while (true)
-                {
-                    string confirm = Console.ReadLine().Trim().ToLower();
-                    if (confirm == "y")
-                    {
-                        if (vehicles[id].Status == "Available" && action == "Rent")
-                        {
-                            vehicles[id].Status = "Rented";
-                            Console.WriteLine($"Vehicle {id} Rented.");
-                            SerializeDictionary();
-                        }
-                        else if (vehicles[id].Status == "Rented" && action == "Return")
-                        {
-                            vehicles[id].Status = "Available";
-                            Console.WriteLine($"Vehicle {id} Returned");
-                            SerializeDictionary();
-                        }
-                        else
-                        {
-                            if (action == "Rent")
-                            {
-                                Console.WriteLine($"Vehicle {id} is not available.");
-                            }
-                            else if (action == "Return")
-                            {
-                                Console.WriteLine($"Vehicle {id} has already been returned.");
-                            }
-                        }
-                        break;
-                    }
-                    else if (confirm == "n")
-                    {
-                        Console.WriteLine($"{action}ing Cancelled");
-                        break;
-                    }
-                    else
-                    {
-                        Console.Write("[y/n]?: ");
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Vehicle ID: '{id}' not found.");
-            }
-        }
-        public static void CmdDelVehicle(string inputDel)
-        {
-            int id = 0;
-            try
-            {
-                id = Convert.ToInt32(inputDel);
-            }
-            catch
-            {
-                Console.WriteLine($"Invalid Input: {inputDel}: Number ID required.");
-            }
-
-            if (vehicles.ContainsKey(id))
-            {
-                Console.WriteLine($"{vehicles[id].GetMake()} || {vehicles[id].GetModel()} || {vehicles[id].GetYear()} || £{vehicles[id].GetRate()} || {vehicles[id].GetTransmission()} || {vehicles[id].Status}");
-                Console.Write("Is this the vehicle you want to delete [y/n]: ");
-
-                while (true)
-                {
-                    string confirm = Console.ReadLine().Trim().ToLower();
-                    if (confirm == "y")
-                    {
-                        vehicles.Remove(id);
-                        Console.WriteLine($"Vehicle with ID {id} has been deleted");
+                        vehicles[id].Status = "Rented";
+                        Users user = userCache.Values.First();
+                        user.UserRentVehicle(id);
                         SerializeDictionary();
-                        break;
+                        WriteBinary();
                     }
-                    else if (confirm == "n")
-                    {
-                        Console.WriteLine($"Vehicle with ID {id} will not be deleted");
-                        break;
-                    }
-                    else
-                    {
-                        Console.Write("[y/n]?: ");
-                    }
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle {id} is not available");
                 }
             }
             else
             {
-                Console.WriteLine($"Vehicle with ID {id} not found.");
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
+            }
+
+            menu.GetMainMenu();
+        }
+        public static void ReturnVehicle()
+        {
+            Console.Clear();
+            Console.WriteLine("RETURN VEHICLES");
+
+            int id = validate.GetValidInt("Enter Vehicle ID: ");
+
+            if (vehicles.ContainsKey(id))
+            {
+                Users user = userCache.Values.First();
+                bool hasRented = user.CheckRentedVehicles(id);
+                if (vehicles[id].Status == "Rented" && hasRented)
+                {
+                    Console.WriteLine(vehicles[id].ConfirmDetails());
+                    bool confimAction = validate.GetValidBool($"Is this the vehicle you want to return [y/n]: ");
+                    if (confimAction)
+                    {
+                        vehicles[id].Status = "Available";
+                        user.UserReturnVehicle(id);
+                        SerializeDictionary();
+                        WriteBinary();
+                    }
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    if (!hasRented) { err.PrintError(ErrorType.Warning, $"You cannot return a vehicle you did not rent."); }
+                    else if (vehicles[id].Status == "Available") { err.PrintError(ErrorType.Info, $"Vehicle {id} is already available"); }
+                }
+            }
+            else
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
+            }
+
+            menu.GetMainMenu();
+        }
+        public static void CmdRentVehicle(string[] input)
+        {
+            string? errorMsg;
+            int? checkInt;
+            int validVehicleID = 0;
+            int validUserID = 0;
+
+            validate.CmdValidInt(input[0], out errorMsg, out checkInt);
+            if (errorMsg != null) 
+            { 
+                Console.WriteLine(errorMsg);
+                errorMsg = null;
+                return; 
+            }
+            else if (checkInt != null)
+            {
+                validVehicleID = (int)checkInt;
+                checkInt = null; 
+                if (!vehicles.ContainsKey(validVehicleID))
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' does not exist.");
+                    return;
+                }
+                else if (vehicles[validVehicleID].Status == "Rented")
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' is not available.");
+                    return;
+                }
+            }
+
+            string[] getID = input[1].Split('=');
+            validate.CmdValidInt(getID[0], out errorMsg, out checkInt);
+            if (errorMsg != null) 
+            { 
+                Console.WriteLine(errorMsg);
+                return; 
+            }
+            else if (checkInt != null) 
+            { 
+                validUserID = (int)checkInt;
+                bool validPassword = users[validUserID].GetPassword() == getID[1];
+                if (users.ContainsKey(validUserID) && validPassword)
+                {
+                    vehicles[validVehicleID].Status = "Available";
+                    users[validUserID].UserRentVehicle(validVehicleID);
+                    SerializeDictionary();
+                    WriteBinary();
+                    Console.WriteLine($"Rented: {vehicles[validVehicleID].ConfirmDetails()}");
+                    return;
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    if (!validPassword)
+                    {
+                        err.PrintError(ErrorType.Error, $"Incorrect password for user '{validUserID}'");
+                    }
+                    return;
+                }
+            }
+            
+        }
+        public static void CmdReturnVehicle(string[] input)
+        {
+            string? errorMsg;
+            int? checkInt;
+            int validVehicleID = 0;
+            int validUserID = 0;
+
+            validate.CmdValidInt(input[0], out errorMsg, out checkInt);
+            if (errorMsg != null)
+            {
+                Console.WriteLine(errorMsg);
+                errorMsg = null;
+                return;
+            }
+            else if (checkInt != null)
+            {
+                validVehicleID = (int)checkInt;
+                checkInt = null;
+                if (!vehicles.ContainsKey(validVehicleID))
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' does not exist.");
+                    return;
+                }
+                else if (vehicles[validVehicleID].Status == "Available")
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' is already available.");
+                    return;
+                }
+            }
+
+            string[] getID = input[1].Split('=');
+            validate.CmdValidInt(getID[0], out errorMsg, out checkInt);
+            if (errorMsg != null)
+            {
+                Console.WriteLine(errorMsg);
+                return;
+            }
+            else if (checkInt != null)
+            {
+                validUserID = (int)checkInt;
+                bool validPassword = users[validUserID].GetPassword() == getID[1];
+                if (users.ContainsKey(validUserID) && validPassword)
+                {
+                    vehicles[validVehicleID].Status = "Available";
+                    users[validUserID].UserReturnVehicle(validVehicleID);
+                    SerializeDictionary();
+                    WriteBinary();
+                    Console.WriteLine($"Returned: {vehicles[validVehicleID].ConfirmDetails()}");
+                    return;
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    if (!validPassword)
+                    {
+                        err.PrintError(ErrorType.Error, $"Incorrect password for user '{validUserID}'");
+                    }
+                    return;
+                }
+            }
+
+        }
+        public static void CmdDelVehicle(string[] input)
+        {
+            string? errorMsg;
+            int? checkInt;
+            int validVehicleID = 0;
+            int validUserID = 0;
+
+            validate.CmdValidInt(input[0], out errorMsg, out checkInt);
+            if (errorMsg != null)
+            {
+                Console.WriteLine(errorMsg);
+                errorMsg = null;
+                return;
+            }
+            else if (checkInt != null)
+            {
+                validVehicleID = (int)checkInt;
+                checkInt = null;
+                if (!vehicles.ContainsKey(validVehicleID))
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' does not exist.");
+                    return;
+                }
+            }
+
+            string[] getID = input[1].Split('=');
+            validate.CmdValidInt(getID[0], out errorMsg, out checkInt);
+            if (errorMsg != null)
+            {
+                Console.WriteLine(errorMsg);
+                return;
+            }
+            else if (checkInt != null && errorMsg == null)
+            {
+                validUserID = (int)checkInt;
+                Users owner = users[validUserID];
+                bool validPassword = users[validUserID].GetPassword() == getID[1];
+                if (users.ContainsKey(validUserID) && validPassword)
+                {
+                    if (owner.CheckOwnVehicles(validVehicleID))
+                    {
+                        owner.UserDelVehicle(validVehicleID);
+                        vehicles.Remove(validVehicleID);
+                        SerializeDictionary();
+                        WriteBinary();
+                        Console.WriteLine($"Deleted: {vehicles[validVehicleID].ConfirmDetails()}");
+                        return;
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        err.PrintError(ErrorType.Warning, $"Can not delete a vehicle you do not own.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    if (!validPassword)
+                    {
+                        err.PrintError(ErrorType.Error, $"Incorrect password for user '{validUserID}'");
+                    }
+                    return;
+                }
             }
         }
         public static void CmdAddVehicle(string[] newV)
