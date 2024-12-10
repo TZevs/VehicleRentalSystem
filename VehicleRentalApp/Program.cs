@@ -15,7 +15,8 @@ namespace VehicleRentalApp
 {
     public class Program
     {
-        public readonly static Menus menu = new Menus();
+        // Global access to the menu and validation class member functions.
+        private readonly static Menus menu = new Menus();
         private readonly static Validation validate = new Validation();
         public static void AddingData()
         {
@@ -41,8 +42,9 @@ namespace VehicleRentalApp
             WriteBinary();
         }
         private static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
-        public static Dictionary<int, Users> users = ReadBinary("Users.bin");
-        public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json");
+
+        public static Dictionary<int, Users> users = ReadBinary("Users.bin"); 
+        public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json"); 
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
         {
             if (File.Exists(filePath))
@@ -81,23 +83,25 @@ namespace VehicleRentalApp
                     bw.Write(user.Value.GetLastName());
                     bw.Write(user.Value.GetEmail());
                     bw.Write(user.Value.GetPassword());
-                    if (user.Value.GetOwnVehicles() == null)
+                    if (user.Value.GetOwnVehicles().Count() == 0 || user.Value.GetOwnVehicles().Count() == null)
                     {
                         bw.Write(0);
                     }
                     else
                     {
+                        bw.Write(user.Value.GetOwnVehicles().Count());
                         foreach (int id in user.Value.GetOwnVehicles())
                         {
                             bw.Write(id);
                         }
                     }
-                    if (user.Value.GetRentedVehicles() == null)
+                    if (user.Value.GetRentedVehicles().Count() == null || user.Value.GetRentedVehicles().Count() == 0)
                     {
                         bw.Write(0);
                     }
                     else
                     {
+                        bw.Write(user.Value.GetRentedVehicles().Count());
                         foreach (int id in user.Value.GetRentedVehicles())
                         {
                             bw.Write(id);
@@ -116,28 +120,30 @@ namespace VehicleRentalApp
                     int userCount = br.ReadInt32();
                     for (int i = 0; i < userCount; i++)
                     {
-
-                        int id = br.ReadInt32();
-                        string fName = br.ReadString();
-                        string lName = br.ReadString();
-                        string email = br.ReadString();
-                        string password = br.ReadString();
-
-                        Users user = new Users(id, fName, lName, email, password);
-
-                        int ownCount = br.ReadInt32();
-                        for (int j = 0; j < ownCount; j++)
+                        while (br.BaseStream.Position < br.BaseStream.Length)
                         {
-                            user.UserAddVehicle(br.ReadInt32());
-                        }
+                            int id = br.ReadInt32();
+                            string fName = br.ReadString();
+                            string lName = br.ReadString();
+                            string email = br.ReadString();
+                            string password = br.ReadString();
 
-                        int rentCount = br.ReadInt32();
-                        for (int j = 0; j < rentCount; j++)
-                        {
-                            user.UserRentVehicle(br.ReadInt32());
-                        }
+                            Users user = new Users(id, fName, lName, email, password);
 
-                        users.Add(id, user);
+                            int ownCount = br.ReadInt32();
+                            for (int o = 0; o < ownCount; o++)
+                            {
+                                user.UserAddVehicle(br.ReadInt32());
+                            }
+
+                            int rentCount = br.ReadInt32();
+                            for (int r = 0; r < rentCount; r++)
+                            {
+                                user.UserRentVehicle(br.ReadInt32());
+                            }
+
+                            users.Add(id, user);
+                        }
                     }
                 }
             }
@@ -148,9 +154,12 @@ namespace VehicleRentalApp
 
             return users;
         }
-        static void Main(string[] args)
-        {   
-            if (args.Length == 0) { menu.GetBeforeLogin(); }
+        static void Main(string[] args) // Handles command line arguments.
+        {
+            if (args.Length == 0) 
+            {
+                menu.GetBeforeLogin(); 
+            }
             else if (args.Length == 1)
             {
                 switch (args[0].ToLower())
@@ -229,7 +238,7 @@ namespace VehicleRentalApp
             {
                 Console.WriteLine("Invalid input: --help for assistance");
             }
-        }
+        } 
         public static void ViewCars()
         {
             Console.Clear();
