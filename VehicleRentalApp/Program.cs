@@ -16,7 +16,7 @@ namespace VehicleRentalApp
     public class Program
     {
         // Global access to the menu and validation class member functions.
-        private readonly static Menus menu = new Menus();
+        public readonly static Menus menu = new Menus();
         private readonly static Validation validate = new Validation();
         public static void AddingData()
         {
@@ -41,7 +41,7 @@ namespace VehicleRentalApp
             users.Add(5, new Users(5, "Harry", "Miller", "Harry@Miller.com", "123Hello"));
             WriteBinary();
         }
-        private static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
+        public static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
 
         public static Dictionary<int, Users> users = ReadBinary("Users.bin"); 
         public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json"); 
@@ -59,7 +59,7 @@ namespace VehicleRentalApp
                 return new Dictionary<int, Vehicle>();
             }
         }
-        private static void SerializeDictionary() // Serialises the vehicle dictionary and stores in a JSON file.
+        public static void SerializeDictionary() // Serialises the vehicle dictionary and stores in a JSON file.
         {
             var options = new JsonSerializerOptions
             {
@@ -156,17 +156,15 @@ namespace VehicleRentalApp
         }
         static void Main(string[] args) // Handles command line arguments.
         {
-            if (args.Length == 0) 
+            if (args.Length == 0 || args[0].ToLower() == "--menu") 
             {
                 menu.GetBeforeLogin(); 
             }
-            else if (args.Length == 1)
+            else if (args.Length >= 1)
             {
+                CmdArguments cmd = new CmdArguments();
                 switch (args[0].ToLower())
                 {
-                    case "--menu":
-                        menu.GetBeforeLogin();
-                        break;
                     case "--help":
                         Console.WriteLine("--help:");
                         Console.WriteLine("--rent : Requires Vehicle ID and your username and password");
@@ -182,32 +180,23 @@ namespace VehicleRentalApp
                         Console.WriteLine("         Format: --add V VW Caddy 2021 104.48m Manual 2 Petrol 600 1.7 1.55 1.25 username=password");
                         Console.WriteLine("         Format: --add M KTM SX 2024 270m Automatic 1 Diesel 500 true true username=password");
                         break;
-                    default:
-                        Console.WriteLine($"Unknown Command: '{args[0]}'");
-                        break;
-                }
-            }
-            else if (args.Length >= 3)
-            {
-                switch (args[0].ToLower())
-                {
                     case "--rent":
-                        CmdRentVehicle(args.Skip(1).ToArray());
+                        cmd.CmdRentVehicle(args.Skip(1).ToArray());
                         break;
                     case "--return":
-                        CmdReturnVehicle(args.Skip(1).ToArray());
+                        cmd.CmdReturnVehicle(args.Skip(1).ToArray());
                         break;
                     case "--del":
-                        CmdDelVehicle(args.Skip(1).ToArray());
+                        cmd.CmdDelVehicle(args.Skip(1).ToArray());
                         break;
                     case "--delete":
-                        CmdDelVehicle(args.Skip(1).ToArray());
+                        cmd.CmdDelVehicle(args.Skip(1).ToArray());
                         break;
                     case "--add":
                         if (args.Length == 11 || args.Length == 14 || args.Length == 13)
                         {
                             string[] newVehicles = args.Skip(1).ToArray();
-                            CmdAddVehicle(newVehicles);
+                            cmd.CmdAddVehicle(newVehicles);
                         }
                         else
                         {
@@ -215,14 +204,10 @@ namespace VehicleRentalApp
                         }
                         break;
                     default:
-                        Console.WriteLine($"Unknown Command: {args[0]}");
+                        Console.WriteLine($"Unknown Command: '{args[0]}'");
                         Console.WriteLine("Enter --help for assistance");
                         break;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Invalid input: --help for assistance");
             }
         } 
         public static void ViewCars()
