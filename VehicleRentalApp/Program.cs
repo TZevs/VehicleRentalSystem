@@ -20,26 +20,26 @@ namespace VehicleRentalApp
         private readonly static Validation validate = new Validation();
         public static void AddingData()
         {
-            vehicles.Add(1, new Car(1, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
-            vehicles.Add(2, new Van(1, "VW", "Caddy", 2021, 104.48m, "Manual", 2, "Petrol", 600f, 1.7f, 1.55f, 1.25f));
-            vehicles.Add(3, new Motorcycle(2, "BMW", "R1300 GS", 2024, 265m, "Manual", 1, "Petrol", 1300, true, false));
-            vehicles.Add(4, new Van(5, "Citroen", "Berlingo", 2020, 58.45m, "Manual", 2, "Petrol", 1361f, 2f, 2.1f, 1.79f));
-            vehicles.Add(5, new Car(2, "Mercedes", "E Class", 2024, 42.83m, "Automatic", 5, "Electric", 100));
-            vehicles.Add(6, new Motorcycle(2, "BMW", "R1200 TS", 2023, 200m, "Manual", 1, "Petrol", 1300, true, false));
-            vehicles.Add(7, new Van(5, "Citroen", "Berlingo", 2019, 505m, "Manual", 2, "Petrol", 900f, 1.8f, 1.9f, 1.79f));
-            vehicles.Add(8, new Car(3, "Ford", "Focus", 2019, 50m, "Manual", 5, "Petrol", 100));
-            vehicles.Add(9, new Car(4, "Ford", "Fiesta", 2018, 60m, "Manual", 5, "Petrol", 76));
-            vehicles.Add(10, new Motorcycle(3, "KTM", "SX", 2024, 270m, "Automatic", 1, "Diesel", 500, true, true));
-            vehicles.Add(11, new Motorcycle(4, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
-            vehicles.Add(12, new Van(5, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
+            vehicles.Add(13, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(14, new Van(5, "VW", "Caddy", 2021, 104.48m, "Manual", 2, "Petrol", 600f, 1.7f, 1.55f, 1.25f));
+            vehicles.Add(15, new Motorcycle(4, "BMW", "R1300 GS", 2024, 265m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(16, new Van(1, "Citroen", "Berlingo", 2020, 58.45m, "Manual", 2, "Petrol", 1361f, 2f, 2.1f, 1.79f));
+            vehicles.Add(17, new Car(4, "Mercedes", "E Class", 2024, 42.83m, "Automatic", 5, "Electric", 100));
+            vehicles.Add(18, new Motorcycle(4, "BMW", "R1200 TS", 2023, 200m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(19, new Van(1, "Citroen", "Berlingo", 2019, 505m, "Manual", 2, "Petrol", 900f, 1.8f, 1.9f, 1.79f));
+            vehicles.Add(20, new Car(5, "Ford", "Focus", 2019, 50m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(21, new Car(2, "Ford", "Fiesta", 2018, 60m, "Manual", 5, "Petrol", 76));
+            vehicles.Add(22, new Motorcycle(4, "KTM", "SX", 2024, 270m, "Automatic", 1, "Diesel", 500, true, true));
+            vehicles.Add(23, new Motorcycle(2, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
+            vehicles.Add(24, new Van(3, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
             SerializeDictionary();
 
-            users.Add(1, new Users(1, "Mark", "Summers", "Mark@Summers.com", "123Hello"));
-            users.Add(2, new Users(2, "June", "Thomas", "June@Thomas.com", "123Hello"));
-            users.Add(3, new Users(3, "Ann", "Marie", "Ann@Marie.com", "123Hello"));
-            users.Add(4, new Users(4, "Dean", "Winchester", "Dean@Winchester.com", "123Hello"));
-            users.Add(5, new Users(5, "Harry", "Miller", "Harry@Miller.com", "123Hello"));
-            WriteBinary();
+            //users.Add(1, new Users(1, "Mark", "Summers", "Mark@Summers.com", "123Hello"));
+            //users.Add(2, new Users(2, "June", "Thomas", "June@Thomas.com", "123Hello"));
+            //users.Add(3, new Users(3, "Ann", "Marie", "Ann@Marie.com", "123Hello"));
+            //users.Add(4, new Users(4, "Dean", "Winchester", "Dean@Winchester.com", "123Hello"));
+            //users.Add(5, new Users(5, "Harry", "Miller", "Harry@Miller.com", "123Hello"));
+            //WriteBinary();
         }
         public static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
 
@@ -226,7 +226,7 @@ namespace VehicleRentalApp
                 cars.DisplayCars(allCars);
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             if (userCache.Count() == 1) { menu.GetMainMenu(); }
             else { menu.GetBeforeLogin(); }
@@ -247,7 +247,7 @@ namespace VehicleRentalApp
                 vans.DisplayVans(allVans);
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             if (userCache.Count() == 1) { menu.GetMainMenu(); }
             else { menu.GetBeforeLogin(); }
@@ -268,7 +268,7 @@ namespace VehicleRentalApp
                 motors.DisplayMotors(allMotors);
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             if (userCache.Count() == 1) { menu.GetMainMenu(); }
             else { menu.GetBeforeLogin(); }
@@ -280,13 +280,6 @@ namespace VehicleRentalApp
             Console.Write("Search: ");
             List<string> searching = Console.ReadLine().Split(", ").ToList();
 
-            decimal dailyRate = 0;
-            bool hasDailyRate = searching.Any(s => decimal.TryParse(s, out dailyRate));
-
-            decimal lowerB = dailyRate - 50;
-            decimal upperB = dailyRate + 50;
-
-            var timer1 = Stopwatch.StartNew();
             IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.AsParallel().Where(q =>
                 q.Value.Status == "Available" &&
                 searching.All(s =>
@@ -297,12 +290,13 @@ namespace VehicleRentalApp
                     q.Value.GetYear().ToString().Contains(s)
                 )
             );
-            Console.WriteLine($"Timer: {timer1.ElapsedMilliseconds}");
             TableDisplay searchDisplay = new TableDisplay();
             searchDisplay.DisplayVehicles(query);
 
-            if (userCache.Count() == 0) { menu.GetBeforeLogin(); }
-            else { menu.GetMainMenu(); }
+            Console.Write("Press enter to go back >> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            if (userCache.Count() == 1) { menu.GetMainMenu(); }
+            else { menu.GetBeforeLogin(); }
         }
         public static void Login()
         {
@@ -457,7 +451,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -507,7 +501,7 @@ namespace VehicleRentalApp
                 menu.GetBeforeLogin();
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -545,7 +539,7 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -585,7 +579,7 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter to go back>> ");
+            Console.Write("Press enter to go back >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
