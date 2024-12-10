@@ -31,7 +31,7 @@ namespace VehicleRentalApp
         public override int? BootCapacity
         {
             get { return _BootCapacity; }
-            set { _BootCapacity = value ?? 0; }
+            set { _BootCapacity = (int)value; }
         }
         public override void SetVType() { TypeOfVehicle = "Car"; }
         public override string ConfirmDetails()
