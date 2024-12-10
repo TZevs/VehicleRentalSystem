@@ -167,22 +167,8 @@ namespace VehicleRentalApp
                     case "--menu":
                         menu.GetBeforeLogin();
                         break;
-                    case "--cars":
-                        ViewCars();
-                        break;
-                    case "--vans":
-                        ViewVans();
-                        break;
-                    case "--motors":
-                        ViewMotors();
-                        break;
                     case "--help":
                         Console.WriteLine("--help:");
-                        Console.WriteLine("--menu : Opens the menu");
-                        Console.WriteLine("--cars : Displays all Cars");
-                        Console.WriteLine("--vans : Displays all Vans");
-                        Console.WriteLine("--motors : Displays all Motorcycles");
-                        Console.WriteLine();
                         Console.WriteLine("--rent : Requires Vehicle ID and your username and password");
                         Console.WriteLine("         Format: --rent 2 username=password");
                         Console.WriteLine("--return : Requires Vehicle ID and your username and password");
