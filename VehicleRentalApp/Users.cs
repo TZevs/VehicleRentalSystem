@@ -13,8 +13,8 @@ namespace VehicleRentalApp
         private string LastName;
         private string Email;
         private string Password;
-        private List<int> OwnVehicles;
-        private List<int> RentedVehicles;
+        private List<int> OwnVehicles = new List<int>();
+        private List<int> RentedVehicles = new List<int>();
 
         public Users(int id, string fName, string lName, string email, string password)
         {
