@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -210,22 +214,14 @@ namespace VehicleRentalApp
         }
         public void CmdAddVehicle(string[] newV)
         {
+            var timer = Stopwatch.StartNew();
             List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
             List<string> errorOutput = new List<string>();
 
             int newKey = Program.vehicles.Count() == 0 ? 1 : Program.vehicles.Keys.Max() + 1;
-            Users owner = Program.userCache.Values.FirstOrDefault();
-            int ownerId = 0;
-            if (owner == null)
-            {
-                Console.WriteLine("User must be logged in");
-                Thread.Sleep(1000);
-                Program.menu.GetBeforeLogin();
-            }
-            else
-            {
-                ownerId = owner.GetUserID();
-            }
+
+            string[] user = newVehicle[newVehicle.Count - 1].Split('=');
+            int ownerId = Convert.ToInt32(user[0]);
 
             string? errorMsg;
             int? checkInt;
@@ -265,11 +261,11 @@ namespace VehicleRentalApp
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkFuelType != null) validFuelType = checkFuelType;
 
-            validate.CmdCheckFuel(newVehicle[5], out errorMsg, out checkTransmision);
+            validate.CmdCheckTransmission(newVehicle[5], out errorMsg, out checkTransmision);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkTransmision != null) validTransmission = checkTransmision;
 
-            if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 9)
+            if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 10)
             {
                 int validBootCap = 0;
                 validate.CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
@@ -293,7 +289,7 @@ namespace VehicleRentalApp
                     }
                 }
             }
-            else if (newVehicle[0].ToUpper() == "V" && newVehicle.Count() == 12)
+            else if (newVehicle[0].ToUpper() == "V" && newVehicle.Count() == 13)
             {
                 float? checkFloat;
                 float validLoadCap = 0f;
@@ -333,7 +329,7 @@ namespace VehicleRentalApp
                     return;
                 }
             }
-            else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 11)
+            else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 12)
             {
                 int validCC = 0;
                 validate.CmdValidInt(newVehicle[8], out errorMsg, out checkInt);
@@ -372,6 +368,116 @@ namespace VehicleRentalApp
             {
                 Console.WriteLine($"Unknown vehicle type: '{newVehicle[0]}' or Incorrect number of inputs");
                 return;
+            }
+            Console.WriteLine($"{timer.ElapsedMilliseconds}ms");
+        }
+
+        public async Task CmdAddVehicleAsync(string[] newV)
+        {
+            List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
+            List<string> errorOutput = new List<string>();
+
+            int newKey = Program.vehicles.Count() == 0 ? 1 : Program.vehicles.Keys.Max() + 1;
+            Users owner = Program.userCache.Values.FirstOrDefault();
+            string[] user = newVehicle[newVehicle.Count - 1].Split('=');
+            int ownerId = Convert.ToInt32(user[0]);
+
+            Validation v = new Validation();
+            var validationTasks = new List<Task<(string? errorMsg, object? result)>>()
+            {
+                v.CmdValidIntAsync(newVehicle[3]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)),
+                v.CmdValidIntAsync(newVehicle[6]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)),
+                v.CmdValidDecimalAsync(newVehicle[4]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)),
+                v.CmdValidFuelAsync(newVehicle[7]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validFuel)),
+                v.CmdValidTransAsync(newVehicle[5]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validTrans))
+            };
+
+            if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 10)
+            {
+                validationTasks.Add(v.CmdValidIntAsync(newVehicle[8]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));   
+            }
+            else if (newVehicle[0].ToUpper() == "V" && newVehicle.Count() == 13)
+            {
+                validationTasks.Add(v.CmdValidFloatAsync(newVehicle[8]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));
+                validationTasks.Add(v.CmdValidFloatAsync(newVehicle[9]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));
+                validationTasks.Add(v.CmdValidFloatAsync(newVehicle[10]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));
+                validationTasks.Add(v.CmdValidFloatAsync(newVehicle[11]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));
+            }
+            else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 12)
+            {
+                validationTasks.Add(v.CmdValidIntAsync(newVehicle[8]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validNum)));
+                validationTasks.Add(v.CmdValidBoolAsync(newVehicle[9]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validBool)));
+                validationTasks.Add(v.CmdValidBoolAsync(newVehicle[10]).ContinueWith(t => (t.Result.errorMsg, (object?)t.Result.validBool)));
+            }
+
+            var validationResults = await Task.WhenAll(validationTasks);
+
+            foreach (var result in validationResults)
+            {
+                if (result.errorMsg != null)
+                {
+                    errorOutput.Add(result.errorMsg);   
+                }
+            }
+
+            int validYear = (int?)validationResults[0].result ?? 0;
+            int validSeatNum = (int?)validationResults[1].result ?? 0;
+            decimal validRate = (decimal?)validationResults[2].result ?? 0m;
+            string validFuelType = (string?)validationResults[3].result ?? "";
+            string validTransmission = (string?)validationResults[4].result ?? "";
+
+            if (newVehicle[0].ToUpper() == "C" && newVehicle.Count() == 10)
+            {
+                int validBootCap = (int?)validationResults[0].result ?? 0;
+                if (errorOutput.Count() == 0)
+                {
+                    Car cmdCar = new Car(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validBootCap);
+                    Program.vehicles.Add(newKey, cmdCar);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Console.WriteLine($"Car Added - {cmdCar.ConfirmDetails()}");
+                    Program.SerializeDictionary();
+                    Program.WriteBinary();
+                }
+            }
+            else if (newVehicle[0].ToUpper() == "V" && newVehicle.Count() == 13)
+            {
+                float validLoadCap = (float?)validationResults[5].result ?? 0f;
+                float validLength = (float?)validationResults[6].result ?? 0f;
+                float validWidth = (float?)validationResults[7].result ?? 0f;
+                float validHeight = (float?)validationResults[8].result ?? 0f;
+
+                if (errorOutput.Count == 0)
+                {
+                    Van cmdVan = new Van(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validLoadCap, validLength, validWidth, validHeight);
+                    Program.vehicles.Add(newKey, cmdVan);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Console.WriteLine($"Van Added - {cmdVan.ConfirmDetails()}");
+                    Program.SerializeDictionary();
+                    Program.WriteBinary();
+                }
+            }
+            else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 12)
+            {
+                int validCC = (int?)validationResults[5].result ?? 0;
+                bool validStorage = (bool?)validationResults[6].result ?? false;
+                bool validProtection = (bool?)validationResults[7].result ?? false;
+
+                if (errorOutput.Count() == 0)
+                {
+                    Motorcycle cmdMotor = new Motorcycle(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validCC, validStorage, validProtection);
+                    Program.vehicles.Add(newKey, cmdMotor);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Console.WriteLine($"Van Added - {cmdMotor.ConfirmDetails()}");
+                    Program.SerializeDictionary();
+                    Program.WriteBinary();
+                }
+            }
+            else
+            {
+                foreach (string error in errorOutput)
+                {
+                    Console.WriteLine(error);   
+                }
             }
         }
     }
