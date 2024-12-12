@@ -1,8 +1,7 @@
 {
   "profiles": {
     "VehicleRentalApp": {
-      "commandName": "Project",
-      "commandLineArgs": "--add C Ford Fiesta 2023 23.2 a 5 e 100 4=123Hello"
+      "commandName": "Project"
     }
   }
 }
