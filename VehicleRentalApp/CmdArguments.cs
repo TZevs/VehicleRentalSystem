@@ -61,9 +61,9 @@ namespace VehicleRentalApp
                 {
                     Program.vehicles[validVehicleID].Status = "Available";
                     Program.users[validUserID].UserRentVehicle(validVehicleID);
-                    Program.SerializeDictionary();
-                    Program.WriteBinary();
                     Console.WriteLine($"Rented: {Program.vehicles[validVehicleID].ConfirmDetails()}");
+                    Program.SerialiseUsers();
+                    Program.WritingAllVehicles();
                     return;
                 }
                 else
@@ -126,9 +126,9 @@ namespace VehicleRentalApp
                 {
                     Program.vehicles[validVehicleID].Status = "Available";
                     Program.users[validUserID].UserReturnVehicle(validVehicleID);
-                    Program.SerializeDictionary();
-                    Program.WriteBinary();
                     Console.WriteLine($"Returned: {Program.vehicles[validVehicleID].ConfirmDetails()}");
+                    Program.SerialiseUsers();
+                    Program.WritingAllVehicles();
                     return;
                 }
                 else
@@ -188,9 +188,9 @@ namespace VehicleRentalApp
                     {
                         owner.UserDelVehicle(validVehicleID);
                         Program.vehicles.Remove(validVehicleID);
-                        Program.SerializeDictionary();
-                        Program.WriteBinary();
                         Console.WriteLine($"Deleted: {Program.vehicles[validVehicleID].ConfirmDetails()}");
+                        Program.SerialiseUsers();
+                        Program.WritingAllVehicles();
                         return;
                     }
                     else
@@ -300,7 +300,9 @@ namespace VehicleRentalApp
                     Car cmdCar = new Car(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validBootCap);
                     Program.vehicles.Add(newKey, cmdCar);
                     Console.WriteLine($"Car Added - {cmdCar.ConfirmDetails()}");
-                    Program.SerializeDictionary();
+                    cmdCar.AppendVehicles(newKey);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Program.SerialiseUsers();
                 }
                 else
                 {
@@ -340,7 +342,9 @@ namespace VehicleRentalApp
                     Van cmdVan = new Van(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validLoadCap, validLength, validWidth, validHeight);
                     Program.vehicles.Add(newKey, cmdVan);
                     Console.WriteLine($"Van Added - {cmdVan.ConfirmDetails()}");
-                    Program.SerializeDictionary();
+                    cmdVan.AppendVehicles(newKey);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Program.SerialiseUsers();
                 }
                 else
                 {
@@ -375,7 +379,9 @@ namespace VehicleRentalApp
                     Motorcycle cmdMotor = new Motorcycle(ownerId, newVehicle[1], newVehicle[2], validYear, validRate, validTransmission, validSeatNum, validFuelType, validCC, validStorage, validProtection);
                     Program.vehicles.Add(newKey, cmdMotor);
                     Console.WriteLine($"Motorcycle Added - {cmdMotor.ConfirmDetails()}");
-                    Program.SerializeDictionary();
+                    cmdMotor.AppendVehicles(newKey);
+                    Program.users[ownerId].UserAddVehicle(newKey);
+                    Program.SerialiseUsers();
                 }
                 else
                 {
