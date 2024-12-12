@@ -50,32 +50,6 @@ namespace VehicleRentalApp
 
         public static Dictionary<int, Users> users = DeserialiseUsers("users.json");
         public static Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-        private static Dictionary<int, Vehicle> LoadFiles(string filePath)
-        {
-            if (File.Exists(filePath))
-            {
-                var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new VehicleConverter());
-                string fromJsonString = File.ReadAllText(filePath);
-                return JsonSerializer.Deserialize<Dictionary<int, Vehicle>>(fromJsonString, serializeOptions);
-            }
-            else
-            {
-                return new Dictionary<int, Vehicle>();
-            }
-        }
-        public static void SerializeDictionary() // Serialises the vehicle dictionary and stores in a JSON file.
-        {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                IncludeFields = true,
-                // Ignores the variables not related to their object.
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            };
-            string jsonStr = JsonSerializer.Serialize(vehicles, options);
-            File.WriteAllText("vehicles.json", jsonStr);
-        }
         public static void SerialiseUsers()
         {
             var options = new JsonSerializerOptions
@@ -98,88 +72,16 @@ namespace VehicleRentalApp
                 return new Dictionary<int, Users>();
             }
         }
-        public static void WriteBinary() // Writes to the binary file that contains user data.
+        public static void WritingAllVehicles()
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Open("Users.bin", FileMode.OpenOrCreate)))
+            using (FileStream fs = new FileStream("VehiclesBinary.bin", FileMode.OpenOrCreate, FileAccess.Write))
+            using (BinaryWriter bw = new BinaryWriter(fs))
             {
-                bw.Write(users.Count());
-                foreach (var user in users)
+                foreach (var veh in vehicles)
                 {
-                    bw.Write(user.Value.GetUserID());
-                    bw.Write(user.Value.GetFirstName());
-                    bw.Write(user.Value.GetLastName());
-                    bw.Write(user.Value.GetEmail());
-                    bw.Write(user.Value.GetPassword());
-                    if (user.Value.GetOwnVehicles().Count() == 0 || user.Value.GetOwnVehicles().Count() == null)
-                    {
-                        bw.Write(0);
-                    }
-                    else
-                    {
-                        bw.Write(user.Value.GetOwnVehicles().Count());
-                        foreach (int id in user.Value.GetOwnVehicles())
-                        {
-                            bw.Write(id);
-                        }
-                    }
-                    if (user.Value.GetRentedVehicles().Count() == null || user.Value.GetRentedVehicles().Count() == 0)
-                    {
-                        bw.Write(0);
-                    }
-                    else
-                    {
-                        bw.Write(user.Value.GetRentedVehicles().Count());
-                        foreach (int id in user.Value.GetRentedVehicles())
-                        {
-                            bw.Write(id);
-                        }
-                    }
+                    veh.Value.WritingVehicles(bw, veh.Key);
                 }
             }
-        }
-        public static Dictionary<int, Users> ReadBinary(string filePath) // Reads from the user binary file and outputs it into a dictionary.
-        {
-            Dictionary<int, Users> users = new Dictionary<int, Users>();
-            if (File.Exists(filePath))
-            {
-                using (BinaryReader br = new BinaryReader(File.Open(filePath, FileMode.Open)))
-                {
-                    int userCount = br.ReadInt32();
-                    for (int i = 0; i < userCount; i++)
-                    {
-                        while (br.BaseStream.Position < br.BaseStream.Length)
-                        {
-                            int id = br.ReadInt32();
-                            string fName = br.ReadString();
-                            string lName = br.ReadString();
-                            string email = br.ReadString();
-                            string password = br.ReadString();
-
-                            Users user = new Users(id, fName, lName, email, password);
-
-                            int ownCount = br.ReadInt32();
-                            for (int o = 0; o < ownCount; o++)
-                            {
-                                user.UserAddVehicle(br.ReadInt32());
-                            }
-
-                            int rentCount = br.ReadInt32();
-                            for (int r = 0; r < rentCount; r++)
-                            {
-                                user.UserRentVehicle(br.ReadInt32());
-                            }
-
-                            users.Add(id, user);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                return new Dictionary<int, Users>();
-            }
-
-            return users;
         }
         static void Main(string[] args) // Handles command line arguments.
         {
@@ -405,6 +307,7 @@ namespace VehicleRentalApp
             }
             users.Add(newKey, new Users(newKey, fName, lName, email, password));
             Console.WriteLine($"Account Created use ID: {newKey} as your username.");
+            SerialiseUsers();
 
             bool login = validate.GetValidBool("Login? [y / n]: ");
             if (login) { Login(); }
@@ -467,8 +370,10 @@ namespace VehicleRentalApp
                 if (validate.GetValidBool("Add Car [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newCar);
-                    SerializeDictionary();
+                    newCar.AppendVehicles(newKey);
                     userCache[ownerId].UserAddVehicle(newKey);
+                    users[ownerId].UserAddVehicle(newKey);
+                    SerialiseUsers();
                 }
             }
             else if (typeInput == "Van")
@@ -484,8 +389,10 @@ namespace VehicleRentalApp
                 if (validate.GetValidBool("Add Van [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newVan);
-                    SerializeDictionary();
+                    newVan.AppendVehicles(newKey);
                     userCache[ownerId].UserAddVehicle(newKey);
+                    users[ownerId].UserAddVehicle(newKey);
+                    SerialiseUsers();
                 }
             }
             else if (typeInput == "Motorcycle")
@@ -499,8 +406,10 @@ namespace VehicleRentalApp
                 if (validate.GetValidBool("Add Motorcycle [ y / n ]: "))
                 {
                     vehicles.Add(newKey, newMot);
-                    SerializeDictionary();
+                    newMot.AppendVehicles(newKey);
                     userCache[ownerId].UserAddVehicle(newKey);
+                    users[ownerId].UserAddVehicle(newKey);
+                    SerialiseUsers();
                 }
             }
 
@@ -531,9 +440,10 @@ namespace VehicleRentalApp
                     {
                         vehicles.Remove(inputID);
                         owner.UserDelVehicle(inputID);
-                        WriteBinary();
-                        SerializeDictionary();
+                        users[ownerId].UserDelVehicle(inputID);
+                        SerialiseUsers();
                         Console.WriteLine($"Vehicle with ID {inputID} has been deleted.");
+                        WritingAllVehicles();
                     }
                     else
                     {
@@ -576,8 +486,9 @@ namespace VehicleRentalApp
                         vehicles[id].Status = "Rented";
                         Users user = userCache.Values.First();
                         user.UserRentVehicle(id);
-                        SerializeDictionary();
-                        WriteBinary();
+                        users[user.GetUserID()].UserRentVehicle(id);
+                        SerialiseUsers();
+                        WritingAllVehicles();
                     }
                 }
                 else
@@ -610,13 +521,14 @@ namespace VehicleRentalApp
                 if (vehicles[id].Status == "Rented" && hasRented)
                 {
                     Console.WriteLine(vehicles[id].ConfirmDetails());
-                    bool confimAction = validate.GetValidBool($"Is this the vehicle you want to return [y/n]: ");
+                    bool confimAction = validate.GetValidBool($"Is this the vehicle you want to return [y / n]: ");
                     if (confimAction)
                     {
                         vehicles[id].Status = "Available";
                         user.UserReturnVehicle(id);
-                        SerializeDictionary();
-                        WriteBinary();
+                        users[user.GetUserID()].UserReturnVehicle(id);
+                        SerialiseUsers();
+                        WritingAllVehicles();
                     }
                 }
                 else
