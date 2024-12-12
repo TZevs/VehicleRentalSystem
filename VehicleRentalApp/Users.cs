@@ -3,19 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace VehicleRentalApp
 {
     public class Users
     {
-        private int UserID;
-        private string FirstName;
-        private string LastName;
-        private string Email;
-        private string Password;
-        private List<int> OwnVehicles = new List<int>();
-        private List<int> RentedVehicles = new List<int>();
+        [JsonInclude] private int UserID;
+        [JsonInclude] private string FirstName;
+        [JsonInclude] private string LastName;
+        [JsonInclude] private string Email;
+        [JsonInclude] private string Password;
+        [JsonInclude] private List<int> OwnVehicles = new List<int>();
+        [JsonInclude] private List<int> RentedVehicles = new List<int>();
 
+        [JsonConstructor]
+        public Users() { }
         public Users(int id, string fName, string lName, string email, string password)
         {
             UserID = id;
