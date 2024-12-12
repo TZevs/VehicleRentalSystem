@@ -54,5 +54,7 @@ namespace VehicleRentalApp
             set { _Status = value; }
         }
         public abstract string ConfirmDetails();
+
+        public abstract void ToBinFile();
     }
 }

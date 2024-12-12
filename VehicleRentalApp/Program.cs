@@ -34,6 +34,11 @@ namespace VehicleRentalApp
             vehicles.Add(24, new Van(3, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
             SerializeDictionary();
 
+            Parallel.For(25, 1000000, i =>
+            {
+                vehicles.Add(i, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+            });
+
             //users.Add(1, new Users(1, "Mark", "Summers", "Mark@Summers.com", "123Hello"));
             //users.Add(2, new Users(2, "June", "Thomas", "June@Thomas.com", "123Hello"));
             //users.Add(3, new Users(3, "Ann", "Marie", "Ann@Marie.com", "123Hello"));
@@ -120,8 +125,7 @@ namespace VehicleRentalApp
                     int userCount = br.ReadInt32();
                     for (int i = 0; i < userCount; i++)
                     {
-                        while (br.BaseStream.Position < br.BaseStream.Length)
-                        {
+                        
                             int id = br.ReadInt32();
                             string fName = br.ReadString();
                             string lName = br.ReadString();
@@ -143,7 +147,7 @@ namespace VehicleRentalApp
                             }
 
                             users.Add(id, user);
-                        }
+                        
                     }
                 }
             }
@@ -154,10 +158,22 @@ namespace VehicleRentalApp
 
             return users;
         }
+        //public static Dictionary<int, Vehicle> ReadFile(string filePath)
+        //{
+            
+        //}
         static void Main(string[] args) // Handles command line arguments.
         {
             if (args.Length == 0 || args[0].ToLower() == "--menu") 
             {
+                //for (int j = 27; j < 1000000; j++)
+                //{
+                //    vehicles.Add(j, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+                //}
+                //Parallel.For(26, 1000000, i =>
+                //{
+                //    vehicles.Add(i, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+                //});
                 menu.GetBeforeLogin(); 
             }
             else if (args.Length >= 1)
@@ -196,7 +212,7 @@ namespace VehicleRentalApp
                         if (args.Length == 11 || args.Length == 14 || args.Length == 13)
                         {
                             string[] newVehicles = args.Skip(1).ToArray();
-                            cmd.CmdAddVehicleAsync(newVehicles);
+                            cmd.CmdAddVehicle(newVehicles);
                         }
                         else
                         {

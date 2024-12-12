@@ -76,5 +76,29 @@ namespace VehicleRentalApp
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {LoadCapacity}, {IntLength}, {IntWidth}, {IntHeight}, {Volume}";
         }
+        public override void ToBinFile()
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Open("VehicleBinary.bin", FileMode.OpenOrCreate)))
+            {
+                Parallel.ForEach(Program.vehicles, veh =>
+                {
+                    bw.Write(veh.Value.GetVType());
+                    bw.Write(veh.Value.GetOwnerID());
+                    bw.Write(veh.Value.GetMake());
+                    bw.Write(veh.Value.GetModel());
+                    bw.Write(veh.Value.GetYear());
+                    bw.Write(veh.Value.GetRate());
+                    bw.Write(veh.Value.GetTransmission());
+                    bw.Write(veh.Value.GetSeatCap());
+                    bw.Write(veh.Value.GetFuel());
+                    bw.Write((float)veh.Value.LoadCapacity);
+                    bw.Write((float)veh.Value.IntLength);
+                    bw.Write((float)veh.Value.IntWidth);
+                    bw.Write((float)veh.Value.IntHeight);
+                    bw.Write((float)veh.Value.Volume);
+                    bw.Write(veh.Value.Status);
+                });
+            }
+        }
     }
 }
