@@ -57,5 +57,6 @@ namespace VehicleRentalApp
 
         public abstract void WritingVehicles(BinaryWriter bw, int id);
         public abstract void ReadingVehicles(BinaryReader br);
+        public abstract void AppendVehicles(int id);
     }
 }

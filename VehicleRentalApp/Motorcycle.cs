@@ -66,6 +66,27 @@ namespace VehicleRentalApp
             bw.Write(_WithProtection);
             bw.Write(_Status);
         }
+        public override void AppendVehicles(int id)
+        {
+            using (FileStream fs = new FileStream("vehiclesBinary.bin", FileMode.Append, FileAccess.Write))
+            using (BinaryWriter bw = new BinaryWriter(fs))
+            {
+                bw.Write(TypeOfVehicle);
+                bw.Write(id);
+                bw.Write(OwnerID);
+                bw.Write(Make);
+                bw.Write(Model);
+                bw.Write(Year);
+                bw.Write(DailyRate);
+                bw.Write(Transmission);
+                bw.Write(SeatCapacity);
+                bw.Write(FuelType);
+                bw.Write(_CC);
+                bw.Write(_Storage);
+                bw.Write(_WithProtection);
+                bw.Write(_Status);
+            }
+        }
         public override void ReadingVehicles(BinaryReader br)
         {
             SetVType();
