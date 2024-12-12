@@ -48,7 +48,7 @@ namespace VehicleRentalApp
         }
         public static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
 
-        public static Dictionary<int, Users> users = ReadBinary("Users.bin");
+        public static Dictionary<int, Users> users = DeserialiseUsers("users.json");
         public static Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
         {
@@ -75,6 +75,28 @@ namespace VehicleRentalApp
             };
             string jsonStr = JsonSerializer.Serialize(vehicles, options);
             File.WriteAllText("vehicles.json", jsonStr);
+        }
+        public static void SerialiseUsers()
+        {
+            var options = new JsonSerializerOptions
+            {
+                IncludeFields = true,
+                WriteIndented = true,
+            };
+            string jsonStr = JsonSerializer.Serialize(users, options);
+            File.WriteAllText("users.json", jsonStr);
+        }
+        public static Dictionary<int, Users> DeserialiseUsers(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonStr = File.ReadAllText(filePath);
+                return JsonSerializer.Deserialize<Dictionary<int, Users>>(jsonStr);
+            }
+            else
+            {
+                return new Dictionary<int, Users>();
+            }
         }
         public static void WriteBinary() // Writes to the binary file that contains user data.
         {
@@ -189,14 +211,6 @@ namespace VehicleRentalApp
                         }
                     }
                 }
-
-                //using (BinaryWriter bw = new BinaryWriter(File.Open("vehiclesBinary.bin", FileMode.OpenOrCreate)))
-                //{
-                //    foreach (var veh in vehicles)
-                //    {
-                //        veh.Value.WritingVehicles(bw, veh.Key);
-                //    }
-                //}
                 menu.GetBeforeLogin();
             }
             else if (args.Length >= 1)
