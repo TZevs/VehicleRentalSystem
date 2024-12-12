@@ -11,7 +11,6 @@ namespace VehicleRentalApp
     {
         private int _BootCapacity;
 
-        [JsonConstructor]
         public Car() { }
         public Car(int ownerId, string make, string model, int yr, decimal rate, string trans, int numSeats, string fuel, int bC)
         {
@@ -27,7 +26,6 @@ namespace VehicleRentalApp
             Status = "Available";
             SetVType();
         }
-        [JsonInclude]
         public override int? BootCapacity
         {
             get { return _BootCapacity; }
@@ -39,25 +37,34 @@ namespace VehicleRentalApp
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
         }
 
-        public override void ToBinFile()
+        public override void WritingVehicles(BinaryWriter bw, int id)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Open("VehicleBinary.bin", FileMode.OpenOrCreate)))
-            {
-                Parallel.ForEach(Program.vehicles, veh =>
-                {
-                    bw.Write(veh.Value.GetVType());
-                    bw.Write(veh.Value.GetOwnerID());
-                    bw.Write(veh.Value.GetMake());
-                    bw.Write(veh.Value.GetModel());
-                    bw.Write(veh.Value.GetYear());
-                    bw.Write(veh.Value.GetRate());
-                    bw.Write(veh.Value.GetTransmission());
-                    bw.Write(veh.Value.GetSeatCap());
-                    bw.Write(veh.Value.GetFuel());
-                    bw.Write((int)veh.Value.BootCapacity);
-                    bw.Write(veh.Value.Status);
-                });
-            }
+            bw.Write(TypeOfVehicle);
+            bw.Write(id);
+            bw.Write(OwnerID);
+            bw.Write(Make);
+            bw.Write(Model);
+            bw.Write(Year);
+            bw.Write(DailyRate);
+            bw.Write(Transmission);
+            bw.Write(SeatCapacity);
+            bw.Write(FuelType);
+            bw.Write(_BootCapacity);
+            bw.Write(_Status);
+        }
+        public override void ReadingVehicles(BinaryReader br)
+        {
+            SetVType();
+            this.OwnerID = br.ReadInt32();
+            this.Make = br.ReadString();
+            this.Model = br.ReadString();
+            this.Year = br.ReadInt32();
+            this.DailyRate = br.ReadDecimal();
+            this.Transmission = br.ReadString();
+            this.SeatCapacity = br.ReadInt32();
+            this.FuelType = br.ReadString();
+            this._BootCapacity = br.ReadInt32();
+            this._Status = br.ReadString();
         }
     }
 }

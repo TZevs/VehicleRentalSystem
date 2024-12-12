@@ -9,16 +9,16 @@ namespace VehicleRentalApp
 {
     public abstract class Vehicle
     {
-        [JsonInclude] protected string TypeOfVehicle;
-        [JsonInclude] protected int OwnerID;
-        [JsonInclude] protected string Make;
-        [JsonInclude] protected string Model;
-        [JsonInclude] protected int Year;
-        [JsonInclude] protected decimal DailyRate;
-        [JsonInclude] protected string Transmission;
+        protected string TypeOfVehicle;
+        protected int OwnerID;
+        protected string Make;
+        protected string Model;
+        protected int Year;
+        protected decimal DailyRate;
+        protected string Transmission;
         protected string _Status;
-        [JsonInclude] protected int SeatCapacity;
-        [JsonInclude] protected string FuelType;
+        protected int SeatCapacity;
+        protected string FuelType;
         
         // Base Getters
         public string GetVType() { return TypeOfVehicle; }
@@ -55,6 +55,7 @@ namespace VehicleRentalApp
         }
         public abstract string ConfirmDetails();
 
-        public abstract void ToBinFile();
+        public abstract void WritingVehicles(BinaryWriter bw, int id);
+        public abstract void ReadingVehicles(BinaryReader br);
     }
 }
