@@ -48,8 +48,8 @@ namespace VehicleRentalApp
         }
         public static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
 
-        public static Dictionary<int, Users> users = ReadBinary("Users.bin"); 
-        public static Dictionary<int, Vehicle> vehicles = LoadFiles("vehicles.json"); 
+        public static Dictionary<int, Users> users = ReadBinary("Users.bin");
+        public static Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
         private static Dictionary<int, Vehicle> LoadFiles(string filePath)
         {
             if (File.Exists(filePath))
@@ -125,7 +125,8 @@ namespace VehicleRentalApp
                     int userCount = br.ReadInt32();
                     for (int i = 0; i < userCount; i++)
                     {
-                        
+                        while (br.BaseStream.Position < br.BaseStream.Length)
+                        {
                             int id = br.ReadInt32();
                             string fName = br.ReadString();
                             string lName = br.ReadString();
@@ -147,7 +148,7 @@ namespace VehicleRentalApp
                             }
 
                             users.Add(id, user);
-                        
+                        }
                     }
                 }
             }
@@ -158,23 +159,45 @@ namespace VehicleRentalApp
 
             return users;
         }
-        //public static Dictionary<int, Vehicle> ReadFile(string filePath)
-        //{
-            
-        //}
         static void Main(string[] args) // Handles command line arguments.
         {
             if (args.Length == 0 || args[0].ToLower() == "--menu") 
             {
-                //for (int j = 27; j < 1000000; j++)
+                using (BinaryReader br = new BinaryReader(File.Open("VehiclesBinary.bin", FileMode.Open)))
+                {
+                    while (br.BaseStream.Position < br.BaseStream.Length)
+                    {
+                        string type = br.ReadString();
+                        int id = br.ReadInt32();
+                        if (type == "Car")
+                        {
+                            Car newCar = new Car();
+                            newCar.ReadingVehicles(br);
+                            vehicles.Add(id, newCar);
+                        }
+                        else if (type == "Van")
+                        {
+                            Van newVan = new Van();
+                            newVan.ReadingVehicles(br);
+                            vehicles.Add(id, newVan);
+                        }
+                        else if (type == "Motorcycle")
+                        {
+                            Motorcycle newMotor = new Motorcycle();
+                            newMotor.ReadingVehicles(br);
+                            vehicles.Add(id, newMotor);
+                        }
+                    }
+                }
+
+                //using (BinaryWriter bw = new BinaryWriter(File.Open("vehiclesBinary.bin", FileMode.OpenOrCreate)))
                 //{
-                //    vehicles.Add(j, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+                //    foreach (var veh in vehicles)
+                //    {
+                //        veh.Value.WritingVehicles(bw, veh.Key);
+                //    }
                 //}
-                //Parallel.For(26, 1000000, i =>
-                //{
-                //    vehicles.Add(i, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
-                //});
-                menu.GetBeforeLogin(); 
+                menu.GetBeforeLogin();
             }
             else if (args.Length >= 1)
             {
@@ -231,7 +254,7 @@ namespace VehicleRentalApp
             Console.Clear();
             Console.WriteLine("ALL CARS");
 
-            IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
+            IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Take(100).Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
             if (allCars.Count() == 0)
             {
                 Console.WriteLine("No Cars Available");
