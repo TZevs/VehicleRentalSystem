@@ -49,24 +49,6 @@ namespace VehicleRentalApp
                 cars.AddColumn(col);
             }
 
-            //Parallel.ForEach(view, item =>
-            //{
-            //    cars.AddRow(
-            //        item.Key.ToString(),
-            //        item.Value.GetMake(),
-            //        item.Value.GetModel(),
-            //        item.Value.GetYear().ToString(),
-            //        $"£{item.Value.GetRate():F2}",
-            //        item.Value.GetTransmission(),
-            //        item.Value.GetSeatCap().ToString(),
-            //        item.Value.GetFuel(),
-            //        item.Value.BootCapacity.ToString()
-            //    );
-            //});
-            for (int i = 0; i < 100; i++)
-            {
-
-            }
             foreach (var item in view)
             {
                 cars.AddRow(
