@@ -3,6 +3,7 @@ using Spectre.Console;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -32,7 +33,6 @@ namespace VehicleRentalApp
             vehicles.Add(22, new Motorcycle(4, "KTM", "SX", 2024, 270m, "Automatic", 1, "Diesel", 500, true, true));
             vehicles.Add(23, new Motorcycle(2, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
             vehicles.Add(24, new Van(3, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
-            SerializeDictionary();
 
             Parallel.For(25, 1000000, i =>
             {
@@ -165,26 +165,40 @@ namespace VehicleRentalApp
                 }
             }
         } 
-        public static void ViewCars()
+        public static void ViewCars(int page)
         {
             Console.Clear();
-            Console.WriteLine("ALL CARS");
+            Console.WriteLine($"ALL CARS - Page: {page}");
 
-            IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles.Take(100).Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available");
-            if (allCars.Count() == 0)
+            const int pageSize = 50;
+            TableDisplay cars = new TableDisplay();
+            IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles
+                .Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available")
+                .Skip(page * pageSize)
+                .Take(pageSize);
+            cars.DisplayCars(allCars);
+            
+            while (true)
             {
-                Console.WriteLine("No Cars Available");
-            }
-            else
-            {
-                TableDisplay cars = new TableDisplay();
-                cars.DisplayCars(allCars);
-            }
+                Console.Write(">> ");
+                var key = Console.ReadKey().Key;
 
-            Console.Write("Press enter to go back >> ");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
-            if (userCache.Count() == 1) { menu.GetMainMenu(); }
-            else { menu.GetBeforeLogin(); }
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        if (userCache.Count() == 0) { menu.GetMainMenu(); }
+                        else { menu.GetBeforeLogin(); }
+                        return;
+                    case ConsoleKey.RightArrow:
+                        ViewCars(page + 1);
+                        return;
+                    case ConsoleKey.LeftArrow:
+                        if (page > 0) { ViewCars(page - 1); }
+                        return;
+                    default:
+                        break;
+                }
+            }
         }
         public static void ViewVans()
         {

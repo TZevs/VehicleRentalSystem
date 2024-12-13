@@ -49,7 +49,25 @@ namespace VehicleRentalApp
                 cars.AddColumn(col);
             }
 
-            Parallel.ForEach(view, item =>
+            //Parallel.ForEach(view, item =>
+            //{
+            //    cars.AddRow(
+            //        item.Key.ToString(),
+            //        item.Value.GetMake(),
+            //        item.Value.GetModel(),
+            //        item.Value.GetYear().ToString(),
+            //        $"£{item.Value.GetRate():F2}",
+            //        item.Value.GetTransmission(),
+            //        item.Value.GetSeatCap().ToString(),
+            //        item.Value.GetFuel(),
+            //        item.Value.BootCapacity.ToString()
+            //    );
+            //});
+            for (int i = 0; i < 100; i++)
+            {
+
+            }
+            foreach (var item in view)
             {
                 cars.AddRow(
                     item.Key.ToString(),
@@ -62,45 +80,7 @@ namespace VehicleRentalApp
                     item.Value.GetFuel(),
                     item.Value.BootCapacity.ToString()
                 );
-            });
-            //int count = view.Count();
-
-            //if (count < 1000000)
-            //{
-            //    foreach (var item in view)
-            //    {
-            //        cars.AddRow(
-            //            item.Key.ToString(),
-            //            item.Value.GetMake(),
-            //            item.Value.GetModel(),
-            //            item.Value.GetYear().ToString(),
-            //            $"£{item.Value.GetRate():F2}",
-            //            item.Value.GetTransmission(),
-            //            item.Value.GetSeatCap().ToString(),
-            //            item.Value.GetFuel(),
-            //            item.Value.BootCapacity.ToString()
-            //        );
-            //    }
-            //}
-            //else
-            //{
-            //    Parallel.ForEach(view, item =>
-            //    {
-            //        cars.AddRow(
-            //            item.Key.ToString(),
-            //            item.Value.GetMake(),
-            //            item.Value.GetModel(),
-            //            item.Value.GetYear().ToString(),
-            //            $"£{item.Value.GetRate():F2}",
-            //            item.Value.GetTransmission(),
-            //            item.Value.GetSeatCap().ToString(),
-            //            item.Value.GetFuel(),
-            //            item.Value.BootCapacity.ToString()
-            //        );
-            //    });
-            //}
-
-
+            }
             AnsiConsole.Write(cars);
         }
         public void DisplayMotors(IEnumerable<KeyValuePair<int, Vehicle>> view)

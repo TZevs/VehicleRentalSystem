@@ -28,7 +28,7 @@ namespace VehicleRentalApp
                 string select = Console.ReadLine().Trim();
                 switch (select)
                 {
-                    case "2": Program.ViewCars(); return;
+                    case "2": Program.ViewCars(0); return;
                     case "3": Program.ViewVans(); return;
                     case "4": Program.ViewMotors(); return;
                     case "5": Program.SearchVehicles(); return;
@@ -61,7 +61,7 @@ namespace VehicleRentalApp
                 {
                     case "0": Program.Login(); return;
                     case "1": Program.Register(); return;
-                    case "2": Program.ViewCars(); return;
+                    case "2": Program.ViewCars(0); return;
                     case "3": Program.ViewVans(); return;
                     case "4": Program.ViewMotors(); return;
                     case "5": Program.SearchVehicles(); return;
