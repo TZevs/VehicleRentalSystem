@@ -192,6 +192,7 @@ namespace VehicleRentalApp
             TableDisplay cars = new TableDisplay();
             cars.DisplayCars(allCars);
 
+            Console.WriteLine("Enter for main menu. Arrow keys for next and previous pages");
             while (true)
             {
                 Console.Write(">> ");
@@ -228,6 +229,7 @@ namespace VehicleRentalApp
             TableDisplay vans = new TableDisplay();
             vans.DisplayVans(allVans);
 
+            Console.WriteLine("Enter for main menu. Arrow keys for next and previous pages");
             while (true)
             {
                 Console.Write(">> ");
@@ -264,6 +266,7 @@ namespace VehicleRentalApp
             TableDisplay motors = new TableDisplay();
             motors.DisplayMotors(allMotors);
 
+            Console.WriteLine("Enter for main menu. Arrow keys for next and previous pages");
             while (true)
             {
                 Console.Write(">> ");
@@ -469,7 +472,7 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.Write("Press enter to go back >> ");
+            Console.Write("Press enter for main menu >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -519,7 +522,7 @@ namespace VehicleRentalApp
                 menu.GetBeforeLogin();
             }
 
-            Console.Write("Press enter to go back >> ");
+            Console.Write("Press enter for main menu >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -559,7 +562,7 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter to go back >> ");
+            Console.Write("Press enter for main menu >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
@@ -600,7 +603,7 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter to go back >> ");
+            Console.Write("Press enter for main menu >> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
         }
