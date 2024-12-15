@@ -21,6 +21,18 @@ namespace VehicleRentalApp
         private readonly static Validation validate = new Validation();
         public static void AddingData()
         {
+            vehicles.Add(1, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(2, new Van(5, "VW", "Caddy", 2021, 104.48m, "Manual", 2, "Petrol", 600f, 1.7f, 1.55f, 1.25f));
+            vehicles.Add(3, new Motorcycle(4, "BMW", "R1300 GS", 2024, 265m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(4, new Van(1, "Citroen", "Berlingo", 2020, 58.45m, "Manual", 2, "Petrol", 1361f, 2f, 2.1f, 1.79f));
+            vehicles.Add(5, new Car(4, "Mercedes", "E Class", 2024, 42.83m, "Automatic", 5, "Electric", 100));
+            vehicles.Add(6, new Motorcycle(4, "BMW", "R1200 TS", 2023, 200m, "Manual", 1, "Petrol", 1300, true, false));
+            vehicles.Add(7, new Van(1, "Citroen", "Berlingo", 2019, 505m, "Manual", 2, "Petrol", 900f, 1.8f, 1.9f, 1.79f));
+            vehicles.Add(8, new Car(5, "Ford", "Focus", 2019, 50m, "Manual", 5, "Petrol", 100));
+            vehicles.Add(9, new Car(2, "Ford", "Fiesta", 2018, 60m, "Manual", 5, "Petrol", 76));
+            vehicles.Add(10, new Motorcycle(4, "KTM", "SX", 2024, 270m, "Automatic", 1, "Diesel", 500, true, true));
+            vehicles.Add(11, new Motorcycle(2, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
+            vehicles.Add(12, new Van(3, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
             vehicles.Add(13, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
             vehicles.Add(14, new Van(5, "VW", "Caddy", 2021, 104.48m, "Manual", 2, "Petrol", 600f, 1.7f, 1.55f, 1.25f));
             vehicles.Add(15, new Motorcycle(4, "BMW", "R1300 GS", 2024, 265m, "Manual", 1, "Petrol", 1300, true, false));
@@ -34,10 +46,10 @@ namespace VehicleRentalApp
             vehicles.Add(23, new Motorcycle(2, "KTM", "Enduro", 1990, 150m, "Manual", 1, "Petrol", 200, true, true));
             vehicles.Add(24, new Van(3, "Ford", "Transit", 2022, 100.50m, "Manual", 2, "Petrol", 600f, 1.45f, 1.5f, 1.6f));
 
-            Parallel.For(25, 1000000, i =>
-            {
-                vehicles.Add(i, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
-            });
+            //Parallel.For(25, 1000000, i =>
+            //{
+            //    vehicles.Add(i, new Car(3, "Renault", "Captur", 2019, 20m, "Manual", 5, "Petrol", 100));
+            //});
 
             //users.Add(1, new Users(1, "Mark", "Summers", "Mark@Summers.com", "123Hello"));
             //users.Add(2, new Users(2, "June", "Thomas", "June@Thomas.com", "123Hello"));
@@ -74,7 +86,7 @@ namespace VehicleRentalApp
         }
         public static void WritingAllVehicles()
         {
-            using (FileStream fs = new FileStream("VehiclesBinary.bin", FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.OpenOrCreate, FileAccess.Write))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 foreach (var veh in vehicles)
@@ -87,7 +99,7 @@ namespace VehicleRentalApp
         {
             if (args.Length == 0 || args[0].ToLower() == "--menu") 
             {
-                using (FileStream fs = new FileStream("VehiclesBinary.bin", FileMode.Open, FileAccess.Read))
+                using (FileStream fs = new FileStream("vBinary.bin", FileMode.Open, FileAccess.Read))
                 using (BinaryReader br = new BinaryReader(fs))
                 {
                     while (br.BaseStream.Position < br.BaseStream.Length)
@@ -385,11 +397,11 @@ namespace VehicleRentalApp
             string transm = validate.GetValidTransmission("Transmission Type [Manual / Automatic]: ");
             int numOfSeats = validate.GetValidInt("Number of Seats: ");
             string fuelType = validate.GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
-
+            
+            Users owner = userCache.Values.First();
             int ownerId = 0;
             if (userCache.Count() == 1)
             {
-                Users owner = userCache.Values.First();
                 ownerId = owner.GetUserID();
             }
             else
@@ -418,8 +430,7 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newCar);
                     newCar.AppendVehicles(newKey);
-                    userCache[ownerId].UserAddVehicle(newKey);
-                    users[ownerId].UserAddVehicle(newKey);
+                    owner.UserAddVehicle(newKey); 
                     SerialiseUsers();
                 }
             }
@@ -437,8 +448,7 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newVan);
                     newVan.AppendVehicles(newKey);
-                    userCache[ownerId].UserAddVehicle(newKey);
-                    users[ownerId].UserAddVehicle(newKey);
+                    owner.UserAddVehicle(newKey);
                     SerialiseUsers();
                 }
             }
@@ -454,8 +464,7 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newMot);
                     newMot.AppendVehicles(newKey);
-                    userCache[ownerId].UserAddVehicle(newKey);
-                    users[ownerId].UserAddVehicle(newKey);
+                    owner.UserAddVehicle(newKey);
                     SerialiseUsers();
                 }
             }
@@ -487,9 +496,8 @@ namespace VehicleRentalApp
                     {
                         vehicles.Remove(inputID);
                         owner.UserDelVehicle(inputID);
-                        users[ownerId].UserDelVehicle(inputID);
-                        SerialiseUsers();
                         Console.WriteLine($"Vehicle with ID {inputID} has been deleted.");
+                        SerialiseUsers();
                         WritingAllVehicles();
                     }
                     else
@@ -524,16 +532,16 @@ namespace VehicleRentalApp
 
             if (vehicles.ContainsKey(id))
             {
-                if (vehicles[id].Status == "Available")
+                Users user = userCache.Values.First();
+                if (vehicles[id].Status == "Available" && !user.CheckOwnVehicles(id))
                 {
-                    Console.WriteLine(vehicles[id].ConfirmDetails());
+                    Console.WriteLine("\n" + vehicles[id].ConfirmDetails());
                     bool confimAction = validate.GetValidBool($"Is this the vehicle you want to rent [y/n]: ");
                     if (confimAction)
                     {
                         vehicles[id].Status = "Rented";
-                        Users user = userCache.Values.First();
                         user.UserRentVehicle(id);
-                        users[user.GetUserID()].UserRentVehicle(id);
+                        Console.WriteLine($"{vehicles[id].GetVType()} {id} - Rented");
                         SerialiseUsers();
                         WritingAllVehicles();
                     }
@@ -541,7 +549,8 @@ namespace VehicleRentalApp
                 else
                 {
                     Errors err = new Errors();
-                    err.PrintError(ErrorType.Info, $"Vehicle {id} is not available");
+                    if (vehicles[id].Status == "Rented") { err.PrintError(ErrorType.Info, $"Vehicle {id} is not available."); }
+                    else if (user.CheckOwnVehicles(id)) { err.PrintError(ErrorType.Info, $"Cannot rent a vehicle you own."); }
                 }
             }
             else
@@ -573,7 +582,7 @@ namespace VehicleRentalApp
                     {
                         vehicles[id].Status = "Available";
                         user.UserReturnVehicle(id);
-                        users[user.GetUserID()].UserReturnVehicle(id);
+                        Console.WriteLine($"{vehicles[id].GetVType()} {id} - Returned");
                         SerialiseUsers();
                         WritingAllVehicles();
                     }
