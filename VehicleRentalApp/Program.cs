@@ -83,11 +83,12 @@ namespace VehicleRentalApp
                 }
             }
         }
-        static void Main(string[] args) // Handles command line arguments.
+        static void Main(string[] args) // Handles command line arguments if passed in.
         {
             if (args.Length == 0 || args[0].ToLower() == "--menu") 
             {
-                using (BinaryReader br = new BinaryReader(File.Open("VehiclesBinary.bin", FileMode.Open)))
+                using (FileStream fs = new FileStream("VehiclesBinary.bin", FileMode.Open, FileAccess.Read))
+                using (BinaryReader br = new BinaryReader(fs))
                 {
                     while (br.BaseStream.Position < br.BaseStream.Length)
                     {
@@ -171,13 +172,14 @@ namespace VehicleRentalApp
             Console.WriteLine($"ALL CARS - Page: {page}");
 
             const int pageSize = 50;
-            TableDisplay cars = new TableDisplay();
             IEnumerable<KeyValuePair<int, Vehicle>> allCars = vehicles
                 .Where(ac => ac.Value.GetVType() == "Car" && ac.Value.Status == "Available")
                 .Skip(page * pageSize)
                 .Take(pageSize);
+
+            TableDisplay cars = new TableDisplay();
             cars.DisplayCars(allCars);
-            
+
             while (true)
             {
                 Console.Write(">> ");
@@ -186,7 +188,7 @@ namespace VehicleRentalApp
                 switch (key)
                 {
                     case ConsoleKey.Enter:
-                        if (userCache.Count() == 0) { menu.GetMainMenu(); }
+                        if (userCache.Count() == 1) { menu.GetMainMenu(); }
                         else { menu.GetBeforeLogin(); }
                         return;
                     case ConsoleKey.RightArrow:
@@ -200,47 +202,77 @@ namespace VehicleRentalApp
                 }
             }
         }
-        public static void ViewVans()
+        public static void ViewVans(int page)
         {
             Console.Clear();
             Console.WriteLine("ALL VANS");
 
-            IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles.Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available");
-            if (allVans.Count() == 0)
-            {
-                Console.WriteLine("No Vans Available");
-            }
-            else
-            {
-                TableDisplay vans = new TableDisplay(); 
-                vans.DisplayVans(allVans);
-            }
+            const int pageSize = 50;
+            IEnumerable<KeyValuePair<int, Vehicle>> allVans = vehicles
+                .Where(ac => ac.Value.GetVType() == "Van" && ac.Value.Status == "Available")
+                .Skip(page * pageSize)
+                .Take(pageSize);
 
-            Console.Write("Press enter to go back >> ");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
-            if (userCache.Count() == 1) { menu.GetMainMenu(); }
-            else { menu.GetBeforeLogin(); }
+            TableDisplay vans = new TableDisplay();
+            vans.DisplayVans(allVans);
+
+            while (true)
+            {
+                Console.Write(">> ");
+                var key = Console.ReadKey().Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        if (userCache.Count() == 1) { menu.GetMainMenu(); }
+                        else { menu.GetBeforeLogin(); }
+                        return;
+                    case ConsoleKey.RightArrow:
+                        ViewVans(page + 1);
+                        return;
+                    case ConsoleKey.LeftArrow:
+                        if (page > 0) { ViewVans(page - 1); }
+                        return;
+                    default:
+                        break;
+                }
+            }
         }
-        public static void ViewMotors()
+        public static void ViewMotors(int page)
         {
             Console.Clear();
             Console.WriteLine("ALL MOTORCYCLES");
 
-            IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles.Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available");
-            if (allMotors.Count() == 0)
-            {
-                Console.WriteLine("No Motorcycles Available");
-            }
-            else
-            {
-                TableDisplay motors = new TableDisplay();
-                motors.DisplayMotors(allMotors);
-            }
+            const int pageSize = 50;
+            IEnumerable<KeyValuePair<int, Vehicle>> allMotors = vehicles
+                .Where(ac => ac.Value.GetVType() == "Motorcycle" && ac.Value.Status == "Available")
+                .Skip(page * pageSize)
+                .Take(pageSize);
 
-            Console.Write("Press enter to go back >> ");
-            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
-            if (userCache.Count() == 1) { menu.GetMainMenu(); }
-            else { menu.GetBeforeLogin(); }
+            TableDisplay motors = new TableDisplay();
+            motors.DisplayMotors(allMotors);
+
+            while (true)
+            {
+                Console.Write(">> ");
+                var key = Console.ReadKey().Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.Enter:
+                        if (userCache.Count() == 1) { menu.GetMainMenu(); }
+                        else { menu.GetBeforeLogin(); }
+                        return;
+                    case ConsoleKey.RightArrow:
+                        ViewMotors(page + 1);
+                        return;
+                    case ConsoleKey.LeftArrow:
+                        if (page > 0) { ViewMotors(page - 1); }
+                        return;
+                    default:
+                        break;
+                }
+            }
         }
         public static void SearchVehicles()
         {
@@ -249,16 +281,17 @@ namespace VehicleRentalApp
             Console.Write("Search: ");
             List<string> searching = Console.ReadLine().Split(", ").ToList();
 
-            IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.AsParallel().Where(q =>
-                q.Value.Status == "Available" &&
-                searching.All(s =>
-                    q.Value.GetModel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                    q.Value.GetMake().Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                    q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) || 
-                    q.Value.GetFuel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                    q.Value.GetYear().ToString().Contains(s)
-                )
-            );
+            IEnumerable<KeyValuePair<int, Vehicle>> query = vehicles.Take(50)
+                .Where(q =>
+                    q.Value.Status == "Available" &&
+                    searching.All(s =>
+                        q.Value.GetModel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                        q.Value.GetMake().Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                        q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) || 
+                        q.Value.GetFuel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
+                        q.Value.GetYear().ToString().Contains(s)
+                    )
+                );
             TableDisplay searchDisplay = new TableDisplay();
             searchDisplay.DisplayVehicles(query);
 
