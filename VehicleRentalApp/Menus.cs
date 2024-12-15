@@ -29,8 +29,8 @@ namespace VehicleRentalApp
                 switch (select)
                 {
                     case "2": Program.ViewCars(0); return;
-                    case "3": Program.ViewVans(); return;
-                    case "4": Program.ViewMotors(); return;
+                    case "3": Program.ViewVans(0); return;
+                    case "4": Program.ViewMotors(0); return;
                     case "5": Program.SearchVehicles(); return;
                     case "6": Program.AddVehicles(); return;
                     case "7": Program.DeleteVehicles(); return;
@@ -62,8 +62,8 @@ namespace VehicleRentalApp
                     case "0": Program.Login(); return;
                     case "1": Program.Register(); return;
                     case "2": Program.ViewCars(0); return;
-                    case "3": Program.ViewVans(); return;
-                    case "4": Program.ViewMotors(); return;
+                    case "3": Program.ViewVans(0); return;
+                    case "4": Program.ViewMotors(0); return;
                     case "5": Program.SearchVehicles(); return;
                     case "6": return;
                     default: break;
