@@ -48,7 +48,6 @@ namespace VehicleRentalApp
             {
                 cars.AddColumn(col);
             }
-
             foreach (var item in view)
             {
                 cars.AddRow(
