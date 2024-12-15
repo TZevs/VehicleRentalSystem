@@ -30,24 +30,14 @@ namespace VehicleRentalApp
             SetVType();
         }
         public override void SetVType() { TypeOfVehicle = "Motorcycle"; }
-        public override int? CC
-        {
-            get { return _CC; }
-            set { _CC = value ?? 0; }
-        }
-        public override bool? Storage
-        {
-            get { return _Storage; }
-            set { _Storage = value ?? false; }
-        }
-        public override bool? WithProtection
-        {
-            get { return _WithProtection; }
-            set { _WithProtection = value ?? false; }
-        }
+        public override int? GetCC() { return _CC; }
+        public override bool? GetStorage() { return _Storage; }
+        public override bool? GetWithProtection() { return _WithProtection; }
         public override string ConfirmDetails()
         {
-            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {CC}, {Storage}, {WithProtection}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, " +
+                $"{Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_CC}, " +
+                $"{_Storage}, {_WithProtection}";
         }
         public override void WritingVehicles(BinaryWriter bw, int id)
         {
@@ -68,7 +58,7 @@ namespace VehicleRentalApp
         }
         public override void AppendVehicles(int id)
         {
-            using (FileStream fs = new FileStream("vehiclesBinary.bin", FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Append, FileAccess.Write))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 bw.Write(TypeOfVehicle);

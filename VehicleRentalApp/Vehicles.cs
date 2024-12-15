@@ -32,19 +32,19 @@ namespace VehicleRentalApp
         public string GetFuel() { return FuelType; }
 
         // Car member Getters / Setters
-        public virtual int? BootCapacity { get; set; }
+        public virtual int? GetBootCap() { return null; }
         // Van member Getters / Setters
-        public virtual float? LoadCapacity { get; set; }
-        public virtual float? IntLength { get; set; } 
-        public virtual float? IntWidth { get; set; } 
-        public virtual float? IntHeight { get; set; } 
-        public virtual float? Volume { get; set; }
+        public virtual float? GetLoadCap() { return null; }
+        public virtual float? GetIntLength() { return null; }
+        public virtual float? GetIntWidth() { return null; }
+        public virtual float? GetIntHeight() { return null; }
+        public virtual float? GetVolume() { return null; }
         public virtual string? GetLWH() { return null; }
         
         // Motorcycle member Getters / Setters
-        public virtual int? CC { get; set; }
-        public virtual bool? Storage { get; set; }
-        public virtual bool? WithProtection { get; set; }
+        public virtual int? GetCC() { return null; }
+        public virtual bool? GetStorage() { return null; }
+        public virtual bool? GetWithProtection() { return null; }
 
         // Base Setters
         public abstract void SetVType(); 

@@ -26,15 +26,11 @@ namespace VehicleRentalApp
             Status = "Available";
             SetVType();
         }
-        public override int? BootCapacity
-        {
-            get { return _BootCapacity; }
-            set { _BootCapacity = (int)value; }
-        }
+        public override int? GetBootCap() { return _BootCapacity; }
         public override void SetVType() { TypeOfVehicle = "Car"; }
         public override string ConfirmDetails()
         {
-            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {BootCapacity}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_BootCapacity}";
         }
 
         public override void WritingVehicles(BinaryWriter bw, int id)
@@ -54,7 +50,7 @@ namespace VehicleRentalApp
         }
         public override void AppendVehicles(int id)
         {
-            using (FileStream fs = new FileStream("vehiclesBinary.bin", FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Append, FileAccess.Write))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 bw.Write(TypeOfVehicle);

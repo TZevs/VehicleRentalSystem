@@ -59,7 +59,7 @@ namespace VehicleRentalApp
                     item.Value.GetTransmission(),
                     item.Value.GetSeatCap().ToString(),
                     item.Value.GetFuel(),
-                    item.Value.BootCapacity.ToString()
+                    item.Value.GetBootCap().ToString()
                 );
             }
             AnsiConsole.Write(cars);
@@ -86,9 +86,9 @@ namespace VehicleRentalApp
                     item.Value.GetTransmission(),
                     item.Value.GetSeatCap().ToString(),
                     item.Value.GetFuel(),
-                    item.Value.CC.ToString(),
-                    item.Value.Storage.ToString(),
-                    item.Value.WithProtection.ToString()
+                    item.Value.GetCC().ToString(),
+                    item.Value.GetStorage().ToString(),
+                    item.Value.GetWithProtection().ToString()
                 );
             }
 
@@ -116,9 +116,9 @@ namespace VehicleRentalApp
                     item.Value.GetTransmission(),
                     item.Value.GetSeatCap().ToString(),
                     item.Value.GetFuel(),
-                    $"{item.Value.LoadCapacity.ToString()}kg",
+                    $"{item.Value.GetLoadCap().ToString()}kg",
                     item.Value.GetLWH(),
-                    $"{item.Value.Volume.ToString()}m"
+                    $"{item.Value.GetVolume().ToString()}m"
                 );
             }
 

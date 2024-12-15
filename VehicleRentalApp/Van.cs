@@ -39,35 +39,14 @@ namespace VehicleRentalApp
             SetVType();
         }
         public override void SetVType() { TypeOfVehicle = "Van"; }
-        public override float? LoadCapacity
-        {
-            get { return _LoadCapacity; }
-            set { _LoadCapacity = value ?? 0; }
-        }
-        public override float? IntLength
-        {
-            get { return _IntLength; }
-            set { _IntLength = value ?? 0; }
-        }
-        public override float? IntWidth
-        {
-            get { return _IntWidth; }
-            set { _IntWidth = value ?? 0; }
-        }
-        public override float? IntHeight
-        {
-            get { return _IntHeight; }
-            set { _IntHeight = value ?? 0; }
-        }
-        public override float? Volume
-        {
-            get { return (float)Math.Round(_Volume, 2); }
-            set { _Volume = value ?? 0; }
-        }
-        public override string? GetLWH() { return $"{IntLength}m x {IntWidth}m x {IntHeight}m"; }
+        public override float? GetLoadCap() { return _LoadCapacity; }
+        public override float? GetVolume() { return (float)Math.Round(_Volume, 2); }
+        public override string? GetLWH() { return $"{_IntLength}m x {_IntWidth}m x {_IntHeight}m"; }
         public override string ConfirmDetails()
         {
-            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {LoadCapacity}, {IntLength}, {IntWidth}, {IntHeight}, {Volume}";
+            return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, " +
+                $"{Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_LoadCapacity}, " +
+                $"{_IntLength}, {_IntWidth}, {_IntHeight}, {GetVolume()}";
         }
 
         public override void WritingVehicles(BinaryWriter bw, int id)
@@ -91,7 +70,7 @@ namespace VehicleRentalApp
         }
         public override void AppendVehicles(int id)
         {
-            using (FileStream fs = new FileStream("vehiclesBinary.bin", FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Append, FileAccess.Write))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 bw.Write(TypeOfVehicle);
