@@ -29,6 +29,10 @@ namespace VehicleRentalApp
                 {
                     err.PrintError(ErrorType.Warning, e.Message);
                 }
+                catch (Exception e)
+                {
+                    err.PrintError(ErrorType.Error, e.Message);
+                }
             }
             return input;
         }
@@ -51,6 +55,10 @@ namespace VehicleRentalApp
                 catch (FormatException e)
                 {
                     err.PrintError(ErrorType.Warning, e.Message);
+                }
+                catch (Exception e)
+                {
+                    err.PrintError(ErrorType.Error, e.Message);
                 }
             }
             return input;
@@ -95,6 +103,10 @@ namespace VehicleRentalApp
                 catch (FormatException e)
                 {
                     err.PrintError(ErrorType.Warning, e.Message);
+                }
+                catch (Exception e)
+                {
+                    err.PrintError(ErrorType.Error, e.Message);
                 }
             }
             return input;
@@ -167,6 +179,10 @@ namespace VehicleRentalApp
                 {
                     err.PrintError(ErrorType.Warning, e.Message);
                 }
+                catch (Exception e)
+                {
+                    err.PrintError(ErrorType.Error, e.Message);
+                }
             }
             return input;
         }
@@ -195,6 +211,10 @@ namespace VehicleRentalApp
             {
                 errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
             }
+            catch (Exception e)
+            {
+                errorMsg = err.PrintErrorString(ErrorType.Error) + e.Message;
+            }
         }
         public void CmdValidDecimal(string cmdInput, out string? errorMsg, out decimal? validNum)
         {
@@ -219,6 +239,10 @@ namespace VehicleRentalApp
             {
                 errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
             }
+            catch (Exception e)
+            {
+                errorMsg = err.PrintErrorString(ErrorType.Error) + e.Message;
+            }
         }
         public void CmdCheckFloat(string cmdInput, out string? errorMsg, out float? validNum)
         {
@@ -242,6 +266,10 @@ namespace VehicleRentalApp
             catch (FormatException e)
             {
                 errorMsg = err.PrintErrorString(ErrorType.Warning) + e.Message;
+            }
+            catch (Exception e)
+            {
+                errorMsg = err.PrintErrorString(ErrorType.Error) + e.Message;
             }
         }
         public void CmdCheckBool(string cmdInput, out string? errorMsg, out bool? validOutput)
