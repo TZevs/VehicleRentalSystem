@@ -97,35 +97,35 @@ namespace VehicleRentalApp
         }
         static void Main(string[] args) // Handles command line arguments if passed in.
         {
-            if (args.Length == 0 || args[0].ToLower() == "--menu") 
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Open, FileAccess.Read))
+            using (BinaryReader br = new BinaryReader(fs))
             {
-                using (FileStream fs = new FileStream("vBinary.bin", FileMode.Open, FileAccess.Read))
-                using (BinaryReader br = new BinaryReader(fs))
+                while (br.BaseStream.Position < br.BaseStream.Length)
                 {
-                    while (br.BaseStream.Position < br.BaseStream.Length)
+                    string type = br.ReadString();
+                    int id = br.ReadInt32();
+                    if (type == "Car")
                     {
-                        string type = br.ReadString();
-                        int id = br.ReadInt32();
-                        if (type == "Car")
-                        {
-                            Car newCar = new Car();
-                            newCar.ReadingVehicles(br);
-                            vehicles.Add(id, newCar);
-                        }
-                        else if (type == "Van")
-                        {
-                            Van newVan = new Van();
-                            newVan.ReadingVehicles(br);
-                            vehicles.Add(id, newVan);
-                        }
-                        else if (type == "Motorcycle")
-                        {
-                            Motorcycle newMotor = new Motorcycle();
-                            newMotor.ReadingVehicles(br);
-                            vehicles.Add(id, newMotor);
-                        }
+                        Car newCar = new Car();
+                        newCar.ReadingVehicles(br);
+                        vehicles.Add(id, newCar);
+                    }
+                    else if (type == "Van")
+                    {
+                        Van newVan = new Van();
+                        newVan.ReadingVehicles(br);
+                        vehicles.Add(id, newVan);
+                    }
+                    else if (type == "Motorcycle")
+                    {
+                        Motorcycle newMotor = new Motorcycle();
+                        newMotor.ReadingVehicles(br);
+                        vehicles.Add(id, newMotor);
                     }
                 }
+            }
+            if (args.Length == 0 || args[0].ToLower() == "--menu") 
+            {
                 menu.GetBeforeLogin();
             }
             else if (args.Length >= 1)
@@ -134,7 +134,7 @@ namespace VehicleRentalApp
                 switch (args[0].ToLower())
                 {
                     case "--help":
-                        Console.WriteLine("--help:");
+                        Console.WriteLine("HELP MENU");
                         Console.WriteLine("--rent : Requires Vehicle ID and your username and password");
                         Console.WriteLine("         Format: --rent 2 username=password");
                         Console.WriteLine("--return : Requires Vehicle ID and your username and password");
