@@ -9,6 +9,7 @@ namespace VehicleRentalApp
 {
     public abstract class Vehicle
     {
+        // Protected member variables so that the derived classes have access.
         protected string TypeOfVehicle;
         protected int OwnerID;
         protected string Make;
@@ -20,6 +21,8 @@ namespace VehicleRentalApp
         protected int SeatCapacity;
         protected string FuelType;
         
+        // No constructor as abstract classes do not intialise objects. 
+
         // Base Getters
         public string GetVType() { return TypeOfVehicle; }
         public int GetOwnerID() { return OwnerID; }
@@ -31,9 +34,11 @@ namespace VehicleRentalApp
         public int GetSeatCap() { return SeatCapacity; }
         public string GetFuel() { return FuelType; }
 
-        // Car member Getters / Setters
+        // These are nullable as I want the default implementation to be nullable if the function is not defined.
+
+        // Car member Getters
         public virtual int? GetBootCap() { return null; }
-        // Van member Getters / Setters
+        // Van member Getters
         public virtual float? GetLoadCap() { return null; }
         public virtual float? GetIntLength() { return null; }
         public virtual float? GetIntWidth() { return null; }
@@ -41,20 +46,25 @@ namespace VehicleRentalApp
         public virtual float? GetVolume() { return null; }
         public virtual string? GetLWH() { return null; }
         
-        // Motorcycle member Getters / Setters
+        // Motorcycle member Getters 
         public virtual int? GetCC() { return null; }
         public virtual bool? GetStorage() { return null; }
         public virtual bool? GetWithProtection() { return null; }
 
-        // Base Setters
+        // Abstract setter method for Vehicle type - Defined in derived classes.
         public abstract void SetVType(); 
+
+        // Uses both get and set properties for the Status variable
         public string Status
         {
             get { return _Status; }
             set { _Status = value; }
         }
+
+        // Abstract method to output all the variables in an object 
         public abstract string ConfirmDetails();
 
+        // Reading and writing vehicles objects with the binary file. 
         public abstract void WritingVehicles(BinaryWriter bw, int id);
         public abstract void ReadingVehicles(BinaryReader br);
         public abstract void AppendVehicles(int id);

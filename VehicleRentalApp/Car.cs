@@ -33,6 +33,7 @@ namespace VehicleRentalApp
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_BootCapacity}";
         }
 
+        // Defining reading and writing abstract methods for Car objects in the binary file.
         public override void WritingVehicles(BinaryWriter bw, int id)
         {
             bw.Write(TypeOfVehicle);
