@@ -104,6 +104,8 @@ namespace VehicleRentalApp
                 }
             }
         }
+
+        // Starts the application, loads vehicle objects from the binary file, opens up the menu, and handles any cmd line arguments.
         static void Main(string[] args)
         {
             // Loads in the object data for the Vehicle collection.
@@ -196,11 +198,56 @@ namespace VehicleRentalApp
                 }
             }
         }
-        static void UserAccount()
+        public static void UserAccount()
         {
+            Console.Clear();
+
+            // Uses the userCache collection to quickly get the logged in user 
             Users user = userCache.Values.First();
-            Console.WriteLine($"{user.GetFirstName} {user.GetLastName()}'s Account");
+            Console.WriteLine($"YOUR ACCOUNT INFO");
+            Console.WriteLine("------------------");
+            Console.WriteLine($"ID: {user.GetUserID()}");
+            Console.WriteLine($"First Name: {user.GetFirstName()}");
+            Console.WriteLine($"Last Name: {user.GetLastName()}");
+            Console.WriteLine($"Email: {user.GetEmail()}");
+            Console.WriteLine($"Password: {user.GetPassword()}");
+            Console.WriteLine();
+            Console.WriteLine("Own Vehicles: ");
+            if (user.GetOwnVehicles().Count() == 0)
+            {
+                Console.WriteLine("You have not added any vehicles.");
+            }
+            else
+            {
+                foreach(var id in user.GetOwnVehicles())
+                {
+                    Console.WriteLine(vehicles[id].ConfirmDetails());
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("Rented Vehicles: ");
+            if (user.GetRentedVehicles().Count() == 0)
+            {
+                Console.WriteLine("You have not rented any vehicles.");
+            }
+            else
+            {
+                foreach (var id in user.GetRentedVehicles())
+                {
+                    Console.WriteLine(vehicles[id].ConfirmDetails());
+                }
+            }
+
+            Console.WriteLine("\nPress Enter for Main Menu");
+            Console.Write(">> ");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { }
+            menu.GetMainMenu();
+            return;
         }
+
+        // View functions get 50 objects at a time to save memory usage for when a large amount of objects are stored.
+        // Functions is originally called with a 0 argument passed in.
+        // If the user navigates with the arrow keys then the functions is called again passing in the previous argument plus or minus 1.
         public static void ViewCars(int page)
         {
             Console.Clear();
@@ -312,6 +359,8 @@ namespace VehicleRentalApp
                 }
             }
         }
+
+        // The search function  only gets 50 objects per search to save memory.
         public static void SearchVehicles()
         {
             Console.Clear();
@@ -329,7 +378,8 @@ namespace VehicleRentalApp
                         q.Value.GetFuel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                         q.Value.GetYear().ToString().Contains(s)
                     )
-                );
+                )
+                .Take(50);
             TableDisplay searchDisplay = new TableDisplay();
             searchDisplay.DisplayVehicles(query);
 
@@ -394,6 +444,8 @@ namespace VehicleRentalApp
             if (login) { Login(); }
             else { menu.GetBeforeLogin(); }
         }
+
+        // There is a class with member functions that handle the following actions from the command line.
         public static void AddVehicles()
         {
             // New vehicle objects are appended onto the end of the file to prevent having to write the entire collection to the file.

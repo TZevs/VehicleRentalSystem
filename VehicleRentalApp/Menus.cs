@@ -8,10 +8,12 @@ namespace VehicleRentalApp
 {
     public class Menus
     {
+        // Menu for after user has logged in, access to functions that require login.
         public void GetMainMenu()
         {
             Console.Clear();
             Console.WriteLine("VEHICLE RENTAL - MAIN MENU");
+            Console.WriteLine("[1] My Account");
             Console.WriteLine("[2] View Cars");
             Console.WriteLine("[3] View Vans");
             Console.WriteLine("[4] View Motorcycles");
@@ -28,6 +30,7 @@ namespace VehicleRentalApp
                 string select = Console.ReadLine().Trim();
                 switch (select)
                 {
+                    case "1": Program.UserAccount(); return;
                     case "2": Program.ViewCars(0); return;
                     case "3": Program.ViewVans(0); return;
                     case "4": Program.ViewMotors(0); return;
@@ -41,6 +44,8 @@ namespace VehicleRentalApp
                 }
             }
         }
+        
+        // Menu for before the user logs in, can view and search vehicles. 
         public void GetBeforeLogin()
         {
             Console.Clear();
