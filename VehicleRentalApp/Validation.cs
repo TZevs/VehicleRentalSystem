@@ -8,7 +8,8 @@ namespace VehicleRentalApp
 {
     internal class Validation
     {
-        // AddVehicle function Validation
+        // Functions for input validation.
+        // The loop, inside the function, continues until a valid input is entered.
         public float GetValidFloat(string prompt)
         {
             Errors err = new Errors();

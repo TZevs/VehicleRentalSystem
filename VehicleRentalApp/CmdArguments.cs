@@ -295,7 +295,7 @@ namespace VehicleRentalApp
             }
         }
 
-        // 'CmdAddVehicle' could be seperated into multiple add vehicle functions for each vehicle type.
+        // Future Improvement: 'CmdAddVehicle' could be seperated into multiple add vehicle functions for each vehicle type.
         // To make the code simpler and easier to read.
         public void CmdAddVehicle(string[] newV)
         {
