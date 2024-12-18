@@ -61,12 +61,12 @@ namespace VehicleRentalApp
         // Checks the lists for if they contain the argument passed in.
         public bool CheckOwnVehicles(int id)
         {
-            if (OwnVehicles == null || !OwnVehicles.Contains(id)) return false;
+            if (!OwnVehicles.Contains(id)) return false;
             else return true;
-        } 
+        }
         public bool CheckRentedVehicles(int id)
         {
-            if (RentedVehicles == null || !RentedVehicles.Contains(id)) return false;
+            if (!RentedVehicles.Contains(id)) return false;
             else return true;
         }
     }
