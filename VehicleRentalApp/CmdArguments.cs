@@ -20,13 +20,13 @@ namespace VehicleRentalApp
         // Functions take an argument of an array.
         public void CmdRentVehicle(string[] input)
         {
-            if (input.Length != 3)
+            if (input.Length != 2)
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
                 return;
             }
-            else if (!input[2].Contains('='))
+            else if (!input[1].Contains('='))
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
@@ -73,20 +73,37 @@ namespace VehicleRentalApp
             else if (checkInt != null)
             {
                 validUserID = (int)checkInt;
+                
+                // Verifies username and password
+                bool validUser = Program.users.ContainsKey(validUserID);
                 bool validPassword = Program.users[validUserID].GetPassword() == getID[1];
-                if (Program.users.ContainsKey(validUserID) && validPassword)
+                bool canRent = false;
+                if (validUser && validPassword)
                 {
-                    Program.vehicles[validVehicleID].Status = "Available";
-                    Program.users[validUserID].UserRentVehicle(validVehicleID);
-                    Console.WriteLine($"Rented: {Program.vehicles[validVehicleID].ConfirmDetails()}");
-                    Program.SerialiseUsers();
-                    Program.WritingAllVehicles();
+                    // Checks that the does not own the vehicle to be rented.
+                    canRent = Program.users[validUserID].CheckOwnVehicles(validVehicleID);
+                    if (!canRent)
+                    {
+                        Program.vehicles[validVehicleID].Status = "Rented";
+                        Program.users[validUserID].UserRentVehicle(validVehicleID);
+                        Console.WriteLine($"Rented: {Program.vehicles[validVehicleID].ConfirmDetails()}");
+                        Program.SerialiseUsers();
+                        Program.WritingAllVehicles();
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        err.PrintError(ErrorType.Warning, "Can't rent a vehicle you own.");
+                    }
                     return;
                 }
                 else
                 {
                     Errors err = new Errors();
-                    err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    if (!validUser)
+                    {
+                        err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    }
                     if (!validPassword)
                     {
                         err.PrintError(ErrorType.Error, $"Incorrect password for user '{validUserID}'");
@@ -98,13 +115,13 @@ namespace VehicleRentalApp
         }
         public void CmdReturnVehicle(string[] input)
         {
-            if (input.Length != 3)
+            if (input.Length != 2)
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
                 return;
             }
-            else if (!input[2].Contains('='))
+            else if (!input[1].Contains('='))
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
@@ -151,14 +168,26 @@ namespace VehicleRentalApp
             else if (checkInt != null)
             {
                 validUserID = (int)checkInt;
+                bool validUser = Program.users.ContainsKey(validUserID);
                 bool validPassword = Program.users[validUserID].GetPassword() == getID[1];
-                if (Program.users.ContainsKey(validUserID) && validPassword)
+                bool canReturn = false;
+                if (validUser && validPassword)
                 {
-                    Program.vehicles[validVehicleID].Status = "Available";
-                    Program.users[validUserID].UserReturnVehicle(validVehicleID);
-                    Console.WriteLine($"Returned: {Program.vehicles[validVehicleID].ConfirmDetails()}");
-                    Program.SerialiseUsers();
-                    Program.WritingAllVehicles();
+                    canReturn = Program.users[validUserID].CheckRentedVehicles(validVehicleID);
+                    if (canReturn)
+                    {
+                        Program.vehicles[validVehicleID].Status = "Available";
+                        Program.users[validUserID].UserReturnVehicle(validVehicleID);
+                        Console.WriteLine($"Returned: {Program.vehicles[validVehicleID].ConfirmDetails()}");
+                        Program.SerialiseUsers();
+                        Program.WritingAllVehicles();
+                    }
+                    else
+                    {
+                        Errors err = new Errors();
+                        err.PrintError(ErrorType.Warning, "Can't return a vehicle you did not rent.");
+                    }
+                    
                     return;
                 }
                 else
@@ -169,6 +198,10 @@ namespace VehicleRentalApp
                     {
                         err.PrintError(ErrorType.Error, $"Incorrect password for user '{validUserID}'");
                     }
+                    else if (!validUser)
+                    {
+                        err.PrintError(ErrorType.Warning, $"Cannot find user: '{validUserID}'");
+                    }
                     return;
                 }
             }
@@ -176,13 +209,13 @@ namespace VehicleRentalApp
         }
         public void CmdDelVehicle(string[] input)
         {
-            if (input.Length != 3)
+            if (input.Length != 2)
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
                 return;
             }
-            else if (!input[2].Contains('='))
+            else if (!input[1].Contains('='))
             {
                 Errors err = new Errors();
                 err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
@@ -209,6 +242,12 @@ namespace VehicleRentalApp
                 {
                     Errors err = new Errors();
                     err.PrintError(ErrorType.Info, $"Vehicle '{validVehicleID}' does not exist.");
+                    return;
+                }
+                else if (Program.vehicles[validVehicleID].Status == "Rented")
+                {
+                    Errors err = new Errors();
+                    err.PrintError(ErrorType.Warning, "You cannot delete a vehicle currently rented.");
                     return;
                 }
             }
@@ -239,7 +278,7 @@ namespace VehicleRentalApp
                     else
                     {
                         Errors err = new Errors();
-                        err.PrintError(ErrorType.Warning, $"Can not delete a vehicle you do not own.");
+                        err.PrintError(ErrorType.Warning, $"You do not own this vehicle.");
                         return;
                     }
                 }
