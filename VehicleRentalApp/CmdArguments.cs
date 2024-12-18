@@ -13,9 +13,26 @@ namespace VehicleRentalApp
 {
     internal class CmdArguments
     {
+        // Globally accessible Validation object.
+        // Each function uses this object to call its member functions.
         public Validation validate = new Validation();
+
+        // Functions take an argument of an array.
         public void CmdRentVehicle(string[] input)
         {
+            if (input.Length != 3)
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
+                return;
+            }
+            else if (!input[2].Contains('='))
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
+                return;
+            }
+
             string? errorMsg;
             int? checkInt;
             int validVehicleID = 0;
@@ -81,6 +98,19 @@ namespace VehicleRentalApp
         }
         public void CmdReturnVehicle(string[] input)
         {
+            if (input.Length != 3)
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
+                return;
+            }
+            else if (!input[2].Contains('='))
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
+                return;
+            }
+
             string? errorMsg;
             int? checkInt;
             int validVehicleID = 0;
@@ -146,6 +176,19 @@ namespace VehicleRentalApp
         }
         public void CmdDelVehicle(string[] input)
         {
+            if (input.Length != 3)
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Inputs requires 3 arguments.");
+                return;
+            }
+            else if (!input[2].Contains('='))
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
+                return;
+            }
+
             string? errorMsg;
             int? checkInt;
             int validVehicleID = 0;
@@ -212,16 +255,27 @@ namespace VehicleRentalApp
                 }
             }
         }
+
+        // 'CmdAddVehicle' could be seperated into multiple add vehicle functions for each vehicle type.
+        // To make the code simpler and easier to read.
         public void CmdAddVehicle(string[] newV)
         {
-            var timer = Stopwatch.StartNew();
             List<string> newVehicle = newV.Select(n => n.Replace('/', ' ')).ToList();
             List<string> errorOutput = new List<string>();
+
+            // Checks that the last item in the array is in the correct format.
+            if (!newVehicle[newVehicle.Count - 1].Contains('='))
+            {
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Last Argument Format: Username=Password");
+                return;
+            }
 
             int newKey = Program.vehicles.Count() == 0 ? 1 : Program.vehicles.Keys.Max() + 1;
 
             string[] user = newVehicle[newVehicle.Count - 1].Split('=');
             int ownerId = 0;
+            // Validates the usernames and password.
             try
             {
                 ownerId = Convert.ToInt32(user[0]);
@@ -242,21 +296,34 @@ namespace VehicleRentalApp
             catch (FormatException e)
             {
                 Errors err = new Errors();
+                err.PrintError(ErrorType.Warning, "Invalid Input");
+                return;
+            }
+            catch (Exception e) 
+            {
+                Errors err = new Errors();
                 err.PrintError(ErrorType.Error, "Invalid Input");
                 return;
             }
 
+            // Nullable variables.
+            // If the errorMsg variable is null then the data is valid. 
+            // If the errorMsg variable is not null then it is added to the errorOutput list.
             string? errorMsg;
             int? checkInt;
             decimal? checkDecimal;
             string? checkFuelType;
             string? checkTransmision;
+            
+            // The validated data is stored in the following variables to be passed into the vehicle constructors.
             int validYear = 0;
             int validSeatNum = 0;
             decimal validRate = 0m;
             string validFuelType = "";
             string validTransmission = "";
 
+            // Validates the input for the Vehicle base class member variables.
+            // Adds error message to the errorOutput list if input is not valid.
             validate.CmdValidInt(newVehicle[3], out errorMsg, out checkInt);
             if (errorMsg != null) errorOutput.Add(errorMsg);
             else if (checkInt != null)
@@ -306,11 +373,11 @@ namespace VehicleRentalApp
                 }
                 else
                 {
-                    Console.WriteLine($"New car fail");
+                    Console.ResetColor();
+                    Console.WriteLine($"Cannot add new Car.");
                     foreach (string error in errorOutput)
                     {
                         Console.WriteLine(error);
-                        Console.ResetColor();
                     }
                 }
             }
@@ -348,12 +415,12 @@ namespace VehicleRentalApp
                 }
                 else
                 {
+                    Console.ResetColor();
+                    Console.WriteLine("Cannot add new Van.");
                     foreach (string error in errorOutput)
                     {
                         Console.WriteLine(error);
-                        Console.ResetColor();
                     }
-                    return;
                 }
             }
             else if (newVehicle[0].ToUpper() == "M" && newVehicle.Count() == 12)
@@ -385,20 +452,20 @@ namespace VehicleRentalApp
                 }
                 else
                 {
+                    Console.ResetColor();
+                    Console.WriteLine("Cannot add new Motorcycle.");
                     foreach (string error in errorOutput)
                     {
                         Console.WriteLine(error);
-                        Console.ResetColor();
                     }
-                    return;
                 }
             }
             else
             {
-                Console.WriteLine($"Unknown vehicle type: '{newVehicle[0]}' or Incorrect number of inputs");
+                Errors err = new Errors();
+                err.PrintError(ErrorType.Error, $"Unknown vehicle type: '{newVehicle[0]}' or Incorrect number of inputs");
                 return;
             }
-            Console.WriteLine($"{timer.ElapsedMilliseconds}ms");
         }
     }
 }
