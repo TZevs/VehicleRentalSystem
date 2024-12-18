@@ -58,15 +58,21 @@ namespace VehicleRentalApp
             //users.Add(5, new Users(5, "Harry", "Miller", "Harry@Miller.com", "123Hello"));
             //WriteBinary();
         }
+
+        // Stores the user object after they have logged in for easy access to the data later on.
+        // Prevents having to iterate through the users collection everytime we want the data of the logged in user.
         public static Dictionary<int, Users> userCache = new Dictionary<int, Users>();
 
         public static Dictionary<int, Users> users = DeserialiseUsers("users.json");
         public static Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
         public static void SerialiseUsers()
         {
+            // Serializes the users collection into a JSON format. 
             var options = new JsonSerializerOptions
             {
+                // Stores all the variables with the JsonIncludes attribute next to them.
                 IncludeFields = true,
+                // Formats the file to be easily readable.
                 WriteIndented = true,
             };
             string jsonStr = JsonSerializer.Serialize(users, options);
@@ -74,6 +80,7 @@ namespace VehicleRentalApp
         }
         public static Dictionary<int, Users> DeserialiseUsers(string filePath)
         {
+            // Deserializes the JSON file, reconstructs the objects, and returns the data in a Dictionary.
             if (File.Exists(filePath))
             {
                 string jsonStr = File.ReadAllText(filePath);
@@ -81,12 +88,14 @@ namespace VehicleRentalApp
             }
             else
             {
+                // Returns an empty Dictionary if file does not exist. 
                 return new Dictionary<int, Users>();
             }
         }
         public static void WritingAllVehicles()
         {
-            using (FileStream fs = new FileStream("vBinary.bin", FileMode.OpenOrCreate, FileAccess.Write))
+            // Serializes the Vehicle objects in the collection to store in the binary file. 
+            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Create))
             using (BinaryWriter bw = new BinaryWriter(fs))
             {
                 foreach (var veh in vehicles)
@@ -95,46 +104,55 @@ namespace VehicleRentalApp
                 }
             }
         }
-        static void Main(string[] args) // Handles command line arguments if passed in.
+        static void Main(string[] args)
         {
-            using (FileStream fs = new FileStream("vBinary.bin", FileMode.Open, FileAccess.Read))
-            using (BinaryReader br = new BinaryReader(fs))
+            // Loads in the object data for the Vehicle collection.
+            // Deserializes the binary file data and reconstructs the objects. 
+            if (File.Exists("vBinary.bin"))
             {
-                while (br.BaseStream.Position < br.BaseStream.Length)
+                using (FileStream fs = new FileStream("vBinary.bin", FileMode.Open))
+                using (BinaryReader br = new BinaryReader(fs))
                 {
-                    string type = br.ReadString();
-                    int id = br.ReadInt32();
-                    if (type == "Car")
+                    while (br.BaseStream.Position < br.BaseStream.Length)
                     {
-                        Car newCar = new Car();
-                        newCar.ReadingVehicles(br);
-                        vehicles.Add(id, newCar);
-                    }
-                    else if (type == "Van")
-                    {
-                        Van newVan = new Van();
-                        newVan.ReadingVehicles(br);
-                        vehicles.Add(id, newVan);
-                    }
-                    else if (type == "Motorcycle")
-                    {
-                        Motorcycle newMotor = new Motorcycle();
-                        newMotor.ReadingVehicles(br);
-                        vehicles.Add(id, newMotor);
+                        string type = br.ReadString();
+                        int id = br.ReadInt32();
+                        if (type == "Car")
+                        {
+                            Car newCar = new Car();
+                            newCar.ReadingVehicles(br);
+                            vehicles.Add(id, newCar);
+                        }
+                        else if (type == "Van")
+                        {
+                            Van newVan = new Van();
+                            newVan.ReadingVehicles(br);
+                            vehicles.Add(id, newVan);
+                        }
+                        else if (type == "Motorcycle")
+                        {
+                            Motorcycle newMotor = new Motorcycle();
+                            newMotor.ReadingVehicles(br);
+                            vehicles.Add(id, newMotor);
+                        }
                     }
                 }
             }
-            if (args.Length == 0 || args[0].ToLower() == "--menu") 
+
+            // Handles command line arguments if passed in.
+            if (args.Length == 0 || args[0].ToLower() == "--menu")
             {
                 menu.GetBeforeLogin();
             }
             else if (args.Length >= 1)
             {
                 CmdArguments cmd = new CmdArguments();
+                Errors err = new Errors();
                 switch (args[0].ToLower())
                 {
                     case "--help":
                         Console.WriteLine("HELP MENU");
+                        Console.WriteLine("--menu : Opens up the menu");
                         Console.WriteLine("--rent : Requires Vehicle ID and your username and password");
                         Console.WriteLine("         Format: --rent 2 username=password");
                         Console.WriteLine("--return : Requires Vehicle ID and your username and password");
@@ -145,8 +163,8 @@ namespace VehicleRentalApp
                         Console.WriteLine();
                         Console.WriteLine("--add: VehicleType, Make, Model, Year, DailyRate, Transmission, Number of Seats, Fuel Type, + Vehicle specific details, and your username and password");
                         Console.WriteLine("         Format: --add C Land/Rover Defender 2019 230.23 Automatic 5 Petrol 100 username=password");
-                        Console.WriteLine("         Format: --add V VW Caddy 2021 104.48m Manual 2 Petrol 600 1.7 1.55 1.25 username=password");
-                        Console.WriteLine("         Format: --add M KTM SX 2024 270m Automatic 1 Diesel 500 true true username=password");
+                        Console.WriteLine("         Format: --add V VW Caddy 2021 104.48 Manual 2 Petrol 600 1.7 1.55 1.25 username=password");
+                        Console.WriteLine("         Format: --add M KTM SX 2024 270 Automatic 1 Diesel 500 true true username=password");
                         break;
                     case "--rent":
                         cmd.CmdRentVehicle(args.Skip(1).ToArray());
@@ -168,16 +186,21 @@ namespace VehicleRentalApp
                         }
                         else
                         {
-                            Console.WriteLine("Incorrect Input: Replace any spaces in names with a /.");
+                            err.PrintError(ErrorType.Info, "Incorrect Input: Replace any spaces in names with a /.");
                         }
                         break;
                     default:
-                        Console.WriteLine($"Unknown Command: '{args[0]}'");
-                        Console.WriteLine("Enter --help for assistance");
+                        err.PrintError(ErrorType.Warning, $"Unknown Command: '{args[0]}'");
+                        err.PrintError(ErrorType.Info, "Enter --help for assistance");
                         break;
                 }
             }
-        } 
+        }
+        static void UserAccount()
+        {
+            Users user = userCache.Values.First();
+            Console.WriteLine($"{user.GetFirstName} {user.GetLastName()}'s Account");
+        }
         public static void ViewCars(int page)
         {
             Console.Clear();
@@ -302,7 +325,7 @@ namespace VehicleRentalApp
                     searching.All(s =>
                         q.Value.GetModel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                         q.Value.GetMake().Contains(s, StringComparison.OrdinalIgnoreCase) ||
-                        q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) || 
+                        q.Value.GetTransmission().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                         q.Value.GetFuel().Contains(s, StringComparison.OrdinalIgnoreCase) ||
                         q.Value.GetYear().ToString().Contains(s)
                     )
@@ -327,6 +350,7 @@ namespace VehicleRentalApp
             {
                 if (users[id].GetPassword() == password)
                 {
+                    // User object is added to the UserCache Dictionary 
                     userCache.Add(id, users[id]);
                     menu.GetMainMenu();
                     return;
@@ -351,32 +375,28 @@ namespace VehicleRentalApp
         {
             Console.Clear();
             Console.WriteLine("REGISTER");
+
             Console.Write("First Name: ");
             string fName = Console.ReadLine();
             Console.Write("Last Name: ");
             string lName = Console.ReadLine();
+
             string email = validate.InputMatch("Email: ", "Confirm Email: ");
             string password = validate.InputMatch("Password: ", "Confirm Password: ");
 
-            int newKey = 0;
-            if (users.Count == 0)
-            {
-                newKey = 1;
-            }
-            else
-            {
-                newKey = users.Keys.Max() + 1;
-            }
+            int newKey = users.Count() == 0 ? 1 : users.Keys.Max() + 1;
+
             users.Add(newKey, new Users(newKey, fName, lName, email, password));
             Console.WriteLine($"Account Created use ID: {newKey} as your username.");
             SerialiseUsers();
 
             bool login = validate.GetValidBool("Login? [y / n]: ");
             if (login) { Login(); }
-            else { menu.GetBeforeLogin(); } 
+            else { menu.GetBeforeLogin(); }
         }
         public static void AddVehicles()
         {
+            // New vehicle objects are appended onto the end of the file to prevent having to write the entire collection to the file.
             Console.Clear();
             Console.WriteLine("ADD VEHICLES");
             Console.WriteLine("[C] = Car | [V] = Van | [M] = Motorcycle");
@@ -395,12 +415,13 @@ namespace VehicleRentalApp
             Console.Write("Model: ");
             string model = Console.ReadLine().Trim();
 
+            // Validating the shared Vehicles member variables with the validate object member functions.
             int yr = validate.GetValidYear("Year: ");
             decimal rate = validate.GetValidDecimal("Daily Rate: ");
             string transm = validate.GetValidTransmission("Transmission Type [Manual / Automatic]: ");
             int numOfSeats = validate.GetValidInt("Number of Seats: ");
             string fuelType = validate.GetValidFuel("Fuel Type [Diesel / Petrol / Electric]: ");
-            
+
             Users owner = userCache.Values.First();
             int ownerId = 0;
             if (userCache.Count() == 1)
@@ -412,19 +433,14 @@ namespace VehicleRentalApp
                 Console.WriteLine("User must be logged in");
                 Thread.Sleep(1000);
                 menu.GetBeforeLogin();
+                return;
             }
 
-            int newKey = 0;
-            if (vehicles.Count == 0)
-            {
-                newKey = 1;
-            }
-            else
-            {
-                newKey = vehicles.Keys.Max() + 1;
-            }
+            int newKey = vehicles.Count() == 0 ? 1 : vehicles.Keys.Max() + 1;
+
             if (typeInput == "Car")
             {
+                // Validating input for Car member variables.
                 int boot = validate.GetValidInt("Boot Capacity (In Litres): ");
 
                 Car newCar = new Car(ownerId, make, model, yr, rate, transm, numOfSeats, fuelType, boot);
@@ -433,12 +449,13 @@ namespace VehicleRentalApp
                 {
                     vehicles.Add(newKey, newCar);
                     newCar.AppendVehicles(newKey);
-                    owner.UserAddVehicle(newKey); 
+                    owner.UserAddVehicle(newKey);
                     SerialiseUsers();
                 }
             }
             else if (typeInput == "Van")
             {
+                // Validating input for Van member variables.
                 float loadCap = validate.GetValidFloat("Load Capacity(Kg): ");
                 Console.WriteLine("Internal Measurements");
                 float length = validate.GetValidFloat("Lenth (In metres): ");
@@ -457,6 +474,7 @@ namespace VehicleRentalApp
             }
             else if (typeInput == "Motorcycle")
             {
+                // Validating input for Motorcycle member variables.
                 int cc = validate.GetValidInt("CC: ");
                 bool storage = validate.GetValidBool("Storage [y / n]: ");
                 bool protection = validate.GetValidBool("With Protection (Helmet, etc) [y / n]: ");
@@ -472,9 +490,11 @@ namespace VehicleRentalApp
                 }
             }
 
-            Console.Write("Press enter for main menu >> ");
+            Console.WriteLine("\nPress Enter for Main Menu");
+            Console.Write(">> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
+            return;
         }
         public static void DeleteVehicles()
         {
@@ -489,11 +509,12 @@ namespace VehicleRentalApp
 
                 bool vehicleOwner = owner.CheckOwnVehicles(inputID);
                 bool vehicleExists = vehicles.ContainsKey(inputID);
+                bool isRented = vehicles[inputID].Status == "Available" ? true : false;
 
-                if (vehicleOwner && vehicleExists)
+                if (vehicleOwner && vehicleExists && isRented)
                 {
                     Console.WriteLine(vehicles[inputID].ConfirmDetails());
-                    bool confirmDel = validate.GetValidBool("Is this the vehicle you want to delete [y/n]: ");
+                    bool confirmDel = validate.GetValidBool("Is this the vehicle you want to delete [ y / n ]: ");
 
                     if (confirmDel)
                     {
@@ -513,6 +534,7 @@ namespace VehicleRentalApp
                     Errors err = new Errors();
                     if (!vehicleOwner) { err.PrintError(ErrorType.Warning, "You cannot delete a vehicle you do not own."); }
                     else if (!vehicleExists) { err.PrintError(ErrorType.Info, $"Vehicle ID: '{inputID}' not found."); }
+                    else if (!isRented) { err.PrintError(ErrorType.Warning, "You cannot delete a vehicle currently rented."); }
                 }
             }
             else
@@ -522,9 +544,11 @@ namespace VehicleRentalApp
                 menu.GetBeforeLogin();
             }
 
-            Console.Write("Press enter for main menu >> ");
+            Console.WriteLine("\nPress Enter for Main Menu");
+            Console.Write(">> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
+            return;
         }
         public static void RentVehicle()
         {
@@ -536,7 +560,7 @@ namespace VehicleRentalApp
             if (vehicles.ContainsKey(id))
             {
                 Users user = userCache.Values.First();
-                if (vehicles[id].Status == "Available" && !user.CheckOwnVehicles(id))
+                if (vehicles[id].Status == "Available" && !user.CheckOwnVehicles(id) && !user.CheckRentedVehicles(id))
                 {
                     Console.WriteLine("\n" + vehicles[id].ConfirmDetails());
                     bool confimAction = validate.GetValidBool($"Is this the vehicle you want to rent [y/n]: ");
@@ -553,7 +577,8 @@ namespace VehicleRentalApp
                 {
                     Errors err = new Errors();
                     if (vehicles[id].Status == "Rented") { err.PrintError(ErrorType.Info, $"Vehicle {id} is not available."); }
-                    else if (user.CheckOwnVehicles(id)) { err.PrintError(ErrorType.Info, $"Cannot rent a vehicle you own."); }
+                    else if (user.CheckOwnVehicles(id)) { err.PrintError(ErrorType.Warning, "Cannot rent a vehicle you own."); }
+                    else if (user.CheckRentedVehicles(id)) { err.PrintError(ErrorType.Warning, "You have already rented this vehicle."); }
                 }
             }
             else
@@ -562,9 +587,11 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter for main menu >> ");
+            Console.WriteLine("\nPress Enter for Main Menu");
+            Console.Write(">> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
+            return;
         }
         public static void ReturnVehicle()
         {
@@ -603,9 +630,11 @@ namespace VehicleRentalApp
                 err.PrintError(ErrorType.Error, $"Vehicle '{id}' not found.");
             }
 
-            Console.Write("Press enter for main menu >> ");
+            Console.WriteLine("\nPress Enter for Main Menu");
+            Console.Write(">> ");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { }
             menu.GetMainMenu();
+            return;
         }
     }
 }
