@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace VehicleRentalApp
 {
+    // Enum class contains readonly variables.
+    // Stores the type of errors the program can have.
     enum ErrorType
     {
-        Info,
-        Warning,
-        Error,
-        Critical
+        Info, // Incorrect data input (wrong password, etc)
+        Warning, // Invalid data input (format exception)
+        Error,  // Any other exception.
+        Critical // Issue that affects the apps use.
     }
 
     internal class Errors
@@ -48,7 +50,7 @@ namespace VehicleRentalApp
             Console.ResetColor();
             Console.WriteLine(message);
         }
-
+        // returns a string for when I do not want the error message to be outputted immediately.
         public string PrintErrorString(ErrorType error)
         {
             string message = string.Empty;

@@ -187,7 +187,8 @@ namespace VehicleRentalApp
             return input;
         }
 
-        // Commmand Argument Validation
+        // Commmand Line Argument Validation
+        // The last 2 arguments are either null or empty.  
         public void CmdValidInt(string cmdInput, out string? errorMsg, out int? validNum)
         {
             int input = 0;

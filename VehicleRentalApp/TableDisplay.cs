@@ -10,8 +10,11 @@ namespace VehicleRentalApp
 {
     internal class TableDisplay
     {
+        // Installed Spectre.Console package for tables
         public void DisplayVehicles(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
+            // Used to display the results of a search.
+            // Only displays the base class variables.
             string[] headers = { "ID", "Type", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type" };
 
             var all = new Table();
@@ -40,6 +43,7 @@ namespace VehicleRentalApp
         }
         public void DisplayCars(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
+            // Displays all the variables of a Car object. 
             string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type", "Boot Capacity" };
 
             var cars = new Table();
@@ -66,6 +70,7 @@ namespace VehicleRentalApp
         }
         public void DisplayMotors(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
+            // Displays all the variables of a Motorcycles object. 
             string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type", "CC", "Has Storage", "With Protective Gear" };
 
             var motors = new Table();
@@ -96,6 +101,7 @@ namespace VehicleRentalApp
         }
         public void DisplayVans(IEnumerable<KeyValuePair<int, Vehicle>> view)
         {
+            // Displays all the variables of a Van object. 
             string[] headers = { "ID", "Make", "Model", "Year", "Daily Rate", "Transmission", "No. Seats", "Fuel Type", "Load Capacity", "Internal Dimensions", "Volume" };
 
             var vans = new Table();

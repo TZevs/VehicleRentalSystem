@@ -33,12 +33,15 @@ namespace VehicleRentalApp
         public override int? GetCC() { return _CC; }
         public override bool? GetStorage() { return _Storage; }
         public override bool? GetWithProtection() { return _WithProtection; }
+        
         public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, " +
                 $"{Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_CC}, " +
                 $"{_Storage}, {_WithProtection}";
         }
+
+        // Defining reading and writing abstract methods for Car objects in the binary file.
         public override void WritingVehicles(BinaryWriter bw, int id)
         {
             bw.Write(TypeOfVehicle);

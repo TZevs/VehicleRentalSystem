@@ -28,6 +28,7 @@ namespace VehicleRentalApp
         }
         public override int? GetBootCap() { return _BootCapacity; }
         public override void SetVType() { TypeOfVehicle = "Car"; }
+        
         public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, {Transmission}, {SeatCapacity}, {FuelType}, {Status}, {_BootCapacity}";
