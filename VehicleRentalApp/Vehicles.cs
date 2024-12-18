@@ -35,7 +35,6 @@ namespace VehicleRentalApp
         public string GetFuel() { return FuelType; }
 
         // These are nullable as I want the default implementation to be nullable if the function is not defined.
-
         // Car member Getters
         public virtual int? GetBootCap() { return null; }
         // Van member Getters

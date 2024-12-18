@@ -41,7 +41,7 @@ namespace VehicleRentalApp
                 $"{_Storage}, {_WithProtection}";
         }
 
-        // Defining reading and writing abstract methods for Car objects in the binary file.
+        // Defining reading and writing abstract methods for Motorcycle objects in the binary file.
         public override void WritingVehicles(BinaryWriter bw, int id)
         {
             bw.Write(TypeOfVehicle);
