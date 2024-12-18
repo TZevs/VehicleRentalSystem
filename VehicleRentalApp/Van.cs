@@ -42,6 +42,7 @@ namespace VehicleRentalApp
         public override float? GetLoadCap() { return _LoadCapacity; }
         public override float? GetVolume() { return (float)Math.Round(_Volume, 2); }
         public override string? GetLWH() { return $"{_IntLength}m x {_IntWidth}m x {_IntHeight}m"; }
+        
         public override string ConfirmDetails()
         {
             return $"{TypeOfVehicle}, {Make}, {Model}, {Year}, {DailyRate}, " +
@@ -49,6 +50,7 @@ namespace VehicleRentalApp
                 $"{_IntLength}, {_IntWidth}, {_IntHeight}, {GetVolume()}";
         }
 
+        // Defining reading and writing abstract methods for Van objects in the binary file.
         public override void WritingVehicles(BinaryWriter bw, int id)
         {
             bw.Write(TypeOfVehicle);
